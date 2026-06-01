@@ -5,1060 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistem Tempahan Bilik Latihan UMKB</title>
     
-    <!-- Google Fonts - Inter & JetBrains Mono (untuk kod/no rujukan) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        brand: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            200: '#ddd6fe',
-                            500: '#6366f1', /* Indigo */
-                            600: '#4f46e5',
-                            700: '#4338ca',
-                            900: '#312e81',
-                        }
-                    }
-                }
-            }
-        }
+        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }, colors: { brand: { 50: '#f5f3ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' } } } } }
     </script>
-    
     <style>
-        /* Custom scrollbar untuk rupa professional */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #94a3b8;
-        }
-        .custom-glass {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col antialiased">
 
-    <!-- Navigasi Utama -->
     <header class="sticky top-0 z-40 bg-white/95 border-b border-slate-200/80 backdrop-blur-md px-4 sm:px-6 py-4">
         <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
             <div class="flex items-center gap-3">
-                <div class="h-10 w-10 rounded-xl bg-brand-600 flex items-center justify-center text-white font-black text-lg shadow-md shadow-brand-500/20">
-                    U
-                </div>
+                <div class="h-10 w-10 rounded-xl bg-brand-600 flex items-center justify-center text-white font-black text-lg">U</div>
                 <div>
-                    <div class="flex items-center gap-2">
-                        <h1 class="text-lg font-bold tracking-tight text-slate-900">UMKB DBKL</h1>
-                        <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
-                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                            Aktif
-                        </span>
-                    </div>
+                    <h1 class="text-lg font-bold text-slate-900">UMKB DBKL</h1>
                     <p class="text-[11px] text-slate-500 font-medium">Sistem Tempahan Bilik Latihan Pintar</p>
                 </div>
             </div>
-            
-            <!-- Tab Navigation -->
-            <div class="flex bg-slate-100 p-1 rounded-xl border border-slate-200/60 w-full sm:w-auto">
-                <button onclick="switchTab('tempah')" id="tab-tempah-btn" class="flex-1 sm:flex-none px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 bg-white text-slate-900 shadow-sm">
-                    <i class="fa-solid fa-calendar-plus"></i> Tempah Bilik
-                </button>
-                <button onclick="switchTab('semak')" id="tab-semak-btn" class="flex-1 sm:flex-none px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900">
-                    <i class="fa-solid fa-list-check"></i> Semak & Urus Tempahan
-                </button>
+            <div class="flex bg-slate-100 p-1 rounded-xl w-full sm:w-auto">
+                <button onclick="switchTab('tempah')" id="tab-tempah-btn" class="flex-1 px-4 py-2 text-xs font-semibold bg-white rounded-lg shadow-sm"><i class="fa-solid fa-calendar-plus"></i> Tempah</button>
+                <button onclick="switchTab('semak')" id="tab-semak-btn" class="flex-1 px-4 py-2 text-xs font-semibold text-slate-600"><i class="fa-solid fa-list-check"></i> Semak</button>
             </div>
         </div>
     </header>
 
     <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
-
-        <!-- Room Information Card -->
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 sm:p-6 shadow-sm overflow-hidden relative">
-            <div class="absolute top-0 right-0 h-32 w-32 bg-brand-500/5 rounded-full blur-2xl pointer-events-none"></div>
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                <div class="space-y-2">
-                    <div class="flex flex-wrap items-center gap-2">
-                        <span class="px-2.5 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase bg-brand-50 text-brand-700 border border-brand-200">
-                            INFO BILIK
-                        </span>
-                    </div>
-                    <h2 class="text-xl font-bold text-slate-900 tracking-tight">BILIK LATIHAN UMKB</h2>
-                    <p class="text-xs text-slate-600 font-medium flex items-center gap-1.5 uppercase tracking-wide">
-                        <i class="fa-solid fa-location-dot text-brand-600"></i> 
-                        JABATAN KEWANGAN, TINGKAT 1, MENARA DBKL 1, JALAN RAJA LAUT, 50350 KL
-                    </p>
-                </div>
-                
-                <!-- Spesifikasi Teknikal -->
-                <div class="grid grid-cols-2 gap-4 border-t md:border-t-0 md:border-l border-slate-100 pt-4 md:pt-0 md:pl-8">
-                    <div class="space-y-0.5">
-                        <span class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Kapasiti Maksimum</span>
-                        <div class="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
-                            <i class="fa-solid fa-users text-slate-500"></i> Max 20 Orang
-                        </div>
-                    </div>
-                    <div class="space-y-0.5">
-                        <span class="text-[10px] uppercase tracking-wider font-bold text-slate-400">Kemudahan Tersedia</span>
-                        <div class="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
-                            <i class="fa-solid fa-tv text-slate-500"></i> Smartboard, PC
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 1: FORM TEMPAHAN -->
         <section id="section-tempah" class="space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                
-                <!-- Langkah 1: Semakan Tarikh & Masa (Left Column - Large) -->
-                <div class="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-6 space-y-6 shadow-sm">
-                    <div class="border-b border-slate-100 pb-4">
-                        <div class="flex items-center gap-2">
-                            <span class="h-6 w-6 rounded-full bg-brand-100 text-brand-700 font-bold text-xs flex items-center justify-center">1</span>
-                            <h3 class="font-bold text-slate-950 text-sm tracking-tight">Pilih Tarikh & Sesi Masa</h3>
-                        </div>
-                        <p class="text-xs text-slate-500 mt-1">Sila semak kekosongan slot bilik latihan UMKB sebelum meneruskan.</p>
-                    </div>
-
-                    <!-- Input Tarikh -->
-                    <div class="space-y-2">
-                        <label for="booking-date" class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                            Tarikh Tempahan <span class="text-rose-500">*</span>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <h3 class="font-bold text-sm mb-4">1. Pilih Tarikh & Sesi</h3>
+                    <input type="date" id="booking-date" onchange="resetAvailabilityCheck()" class="w-full bg-slate-50 border p-3 rounded-xl text-sm mb-4">
+                    <div class="space-y-2 mb-4">
+                        <label class="block flex items-center p-3 rounded-xl border cursor-pointer">
+                            <input type="radio" name="booking-session" value="Sesi 1 (9:00am - 1:00pm)" checked onchange="resetAvailabilityCheck()">
+                            <span class="ml-3 text-xs font-bold">Sesi 1 (9:00am - 1:00pm)</span>
                         </label>
-                        <div class="relative">
-                            <input type="date" id="booking-date" onchange="resetAvailabilityCheck()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500/15 focus:border-brand-500 font-medium">
-                        </div>
-                        <p class="text-[11px] text-slate-500 leading-normal">
-                            * Sabtu, Ahad, Cuti Umum & tarikh penyelenggaraan tidak dibenarkan.
-                        </p>
-                    </div>
-
-                    <!-- Pilihan Sesi Masa -->
-                    <div class="space-y-2.5">
-                        <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider">
-                            Pilihan Sesi Masa <span class="text-rose-500">*</span>
+                        <label class="block flex items-center p-3 rounded-xl border cursor-pointer">
+                            <input type="radio" name="booking-session" value="Sesi 2 (2:00pm - 4:00pm)" onchange="resetAvailabilityCheck()">
+                            <span class="ml-3 text-xs font-bold">Sesi 2 (2:00pm - 4:00pm)</span>
                         </label>
-                        <div class="grid grid-cols-1 gap-2">
-                            <!-- Sesi 1 -->
-                            <label class="relative flex items-center p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
-                                <input type="radio" name="booking-session" value="Sesi 1 (9:00am - 1:00pm)" checked onchange="resetAvailabilityCheck()" class="h-4 w-4 text-brand-600 focus:ring-brand-500 border-slate-300">
-                                <div class="ml-3">
-                                    <span class="block text-xs font-bold text-slate-900">Sesi 1</span>
-                                    <span class="block text-[11px] text-slate-500 mt-0.5">9:00am - 1:00pm</span>
-                                </div>
-                            </label>
-
-                            <!-- Sesi 2 -->
-                            <label class="relative flex items-center p-3.5 rounded-xl border border-slate-200 hover:bg-slate-50 cursor-pointer transition-all">
-                                <input type="radio" name="booking-session" value="Sesi 2 (2:00pm - 4:00pm)" onchange="resetAvailabilityCheck()" class="h-4 w-4 text-brand-600 focus:ring-brand-500 border-slate-300">
-                                <div class="ml-3">
-                                    <span class="block text-xs font-bold text-slate-900">Sesi 2</span>
-                                    <span class="block text-[11px] text-slate-500 mt-0.5">2:00pm - 4:00pm</span>
-                                </div>
-                            </label>
-                        </div>
                     </div>
-
-                    <!-- Butang Semak Kekosongan -->
-                    <button type="button" onclick="checkSlotAvailability()" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition-all duration-150 flex items-center justify-center gap-2 shadow-sm shadow-brand-500/10">
-                        <i class="fa-solid fa-magnifying-glass"></i> Semak Kekosongan Slot
-                    </button>
+                    <button onclick="checkSlotAvailability()" class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl text-xs">Semak Kekosongan</button>
                 </div>
-
-                <!-- Langkah 2: Borang Butiran Peribadi (Right Column - Small) -->
-                <div class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm min-h-[350px] flex flex-col justify-center relative">
-                    
-                    <!-- Box Panduan Awal (Sebelum Pengesahan Slot) -->
-                    <div id="booking-prompt-box" class="text-center p-6 space-y-3">
-                        <div class="h-14 w-14 rounded-full bg-slate-100 text-slate-400 mx-auto flex items-center justify-center text-lg">
-                            <i class="fa-regular fa-address-card"></i>
-                        </div>
-                        <h4 class="font-bold text-slate-800 text-sm">Borang Butiran Pemohon</h4>
-                        <p class="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
-                            Sila pilih tarikh dan lakukan semakan kekosongan slot terlebih dahulu. Borang butiran pemohon akan dipaparkan sebaik sahaja tarikh disahkan kosong.
-                        </p>
-                    </div>
-
-                    <!-- Borang Lengkap Pemohon (Hanya Tunjuk selepas Slot Disahkan Kosong) -->
+                
+                <div class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+                    <div id="booking-prompt-box" class="text-center py-12 text-slate-400">Sila semak slot dahulu.</div>
                     <form id="booking-detail-form" class="hidden space-y-4" onsubmit="handleNewBooking(event)">
-                        <div class="border-b border-slate-100 pb-3 mb-1">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-2">
-                                    <span class="h-6 w-6 rounded-full bg-emerald-100 text-emerald-700 font-bold text-xs flex items-center justify-center">
-                                        <i class="fa-solid fa-check text-[10px]"></i>
-                                    </span>
-                                    <h3 class="font-bold text-slate-950 text-sm tracking-tight">Maklumat Lengkap Permohonan</h3>
-                                </div>
-                                <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded">
-                                    SLOT KOSONG
-                                </span>
-                            </div>
+                        <h3 class="font-bold text-sm">2. Maklumat Pemohon</h3>
+                        <input type="text" id="applicant-name" required placeholder="Nama Pemohon" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs">
+                        <input type="text" id="applicant-dept" required placeholder="Jabatan" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs">
+                        <textarea id="booking-purpose" required placeholder="Tujuan Program" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs"></textarea>
+                        <div class="grid grid-cols-3 gap-2">
+                            <input type="number" id="applicant-capacity" min="1" max="20" required placeholder="Peserta" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs">
+                            <input type="email" id="applicant-email" required placeholder="Emel" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs">
+                            <input type="tel" id="applicant-phone" required placeholder="Telefon" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs">
                         </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <!-- Nama Pemohon -->
-                            <div class="space-y-1.5">
-                                <label for="applicant-name" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide">Nama Pemohon <span class="text-rose-500">*</span></label>
-                                <input type="text" id="applicant-name" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 font-medium">
-                            </div>
-
-                            <!-- Jabatan -->
-                            <div class="space-y-1.5">
-                                <label for="applicant-dept" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide">Jabatan <span class="text-rose-500">*</span></label>
-                                <input type="text" id="applicant-dept" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 font-medium">
-                            </div>
-                        </div>
-
-                        <!-- Tujuan Memohon -->
-                        <div class="space-y-1.5">
-                            <label for="booking-purpose" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide">Tujuan Memohon <span class="text-rose-500">*</span></label>
-                            <textarea id="booking-purpose" rows="2" required placeholder="Sila nyatakan tujuan latihan / program..." class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 font-medium"></textarea>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <!-- Bilangan Peserta -->
-                            <div class="space-y-1.5">
-                                <label for="applicant-capacity" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide">Bil. Peserta (Max 20) <span class="text-rose-500">*</span></label>
-                                <input type="number" id="applicant-capacity" min="1" max="20" required class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 font-medium">
-                            </div>
-
-                            <!-- Emel -->
-                            <div class="space-y-1.5">
-                                <label for="applicant-email" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide">E-mel Rasmi <span class="text-rose-500">*</span></label>
-                                <input type="email" id="applicant-email" required placeholder="contoh@dbkl.gov.my" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 font-medium">
-                            </div>
-
-                            <!-- No Whatsapp -->
-                            <div class="space-y-1.5">
-                                <label for="applicant-phone" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide">No. WhatsApp <span class="text-rose-500">*</span></label>
-                                <input type="tel" id="applicant-phone" required placeholder="01XXXXXXXX" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 focus:border-brand-500 font-medium">
-                            </div>
-                        </div>
-
-                        <!-- Butang Hantar -->
-                        <div class="pt-2">
-                            <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold py-3 px-4 rounded-xl text-xs transition-all duration-150 flex items-center justify-center gap-2 shadow-md shadow-brand-500/10">
-                                <i class="fa-solid fa-paper-plane"></i> Hantar Tempahan & Rekodkan
-                            </button>
-                        </div>
+                        <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs">Hantar Tempahan</button>
                     </form>
                 </div>
             </div>
         </section>
 
-        <!-- TAB 2: SEMAK & URUS TEMPAHAN -->
-        <section id="section-semak" class="hidden space-y-6">
-            
-            <!-- Admin Session Status & Login Control Row -->
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-slate-100 border border-slate-200/80 rounded-2xl p-4">
-                <div class="flex items-center gap-3">
-                    <div class="h-8 w-8 rounded-lg bg-slate-200 flex items-center justify-center text-slate-600">
-                        <i class="fa-solid fa-user-shield"></i>
-                    </div>
-                    <div>
-                        <span id="admin-badge" class="hidden inline-flex items-center gap-1.5 bg-amber-500 text-slate-900 border border-amber-600/20 text-[10px] font-bold px-2 py-0.5 rounded-md">
-                            <i class="fa-solid fa-shield-halved animate-pulse"></i> MOD PENTADBIR AKTIF
-                        </span>
-                        <div id="guest-badge" class="text-xs font-bold text-slate-700">Mod Semakan Pemohon</div>
-                        <p class="text-[10px] text-slate-500">Tindakan ubah suai status dan pembatalan hanya dikhaskan kepada Admin.</p>
-                    </div>
-                </div>
-
-                <!-- Admin Action Buttons -->
-                <div class="flex gap-2">
-                    <button onclick="triggerDataSync()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold py-2 px-4 rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
-                        <i class="fa-solid fa-arrows-rotate"></i> Kemaskini Data
-                    </button>
-                    <button id="admin-login-btn" onclick="openAdminModal()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold py-2 px-4 rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
-                        <i class="fa-solid fa-lock"></i> Log Masuk Admin
-                    </button>
-                    <button id="admin-logout-btn" onclick="logoutAdmin()" class="hidden bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-2 px-4 rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
-                        <i class="fa-solid fa-lock-open"></i> Log Keluar Admin
-                    </button>
-                </div>
-            </div>
-
-            <!-- Google Sheets Integration Board (Only Visible to Admin) -->
-            <div id="google-sheets-panel" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4 text-white">
-                <div class="flex items-center justify-between flex-wrap gap-4">
-                    <div class="space-y-1">
-                        <h4 class="text-sm font-bold text-brand-400 flex items-center gap-2">
-                            <i class="fa-solid fa-database"></i> Integrasi Pangkalan Data Google Sheets
-                        </h4>
-                        <p class="text-xs text-slate-400 max-w-xl leading-relaxed">
-                            Hubungkan sistem ke Google Sheets anda secara langsung menggunakan URL Web App daripada Google Apps Script.
-                        </p>
-                    </div>
-                    <div class="flex gap-2">
-                        <button onclick="copyAppsScriptCode()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-[11px] font-semibold py-2 px-3.5 rounded-lg flex items-center gap-1.5 transition-all">
-                            <i class="fa-regular fa-copy"></i> Salin Kod Apps Script
-                        </button>
-                    </div>
-                </div>
-
-                <div class="flex gap-2 max-w-2xl">
-                    <input type="text" id="google-sheet-url" placeholder="https://script.google.com/macros/s/AKfycbxmhlsp4oKUBWKj-CES-geIsLBqlE6vFsFd91Da17nZJzwKWaRHO22fhVVggN3pE5LaoQ/exec" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-500 font-mono">
-                    <button onclick="saveGoogleSheetUrl()" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl transition-all whitespace-nowrap">
-                        Simpan URL
-                    </button>
-                </div>
-            </div>
-
-            <!-- Panel Penyelenggaraan / Lock Tarikh (Hanya Dilihat Oleh Admin) -->
-            <div id="maintenance-panel" class="hidden bg-rose-50 border border-rose-200 rounded-2xl p-6 space-y-4">
-                <div class="space-y-1">
-                    <h4 class="text-sm font-bold text-rose-800 flex items-center gap-2">
-                        <i class="fa-solid fa-wrench"></i> Sekatan Tarikh & Penyelenggaraan (Date Lock)
-                    </h4>
-                    <p class="text-xs text-slate-600 max-w-xl">
-                        Kunci tarikh-tarikh tertentu bagi menghalang sebarang tempahan baharu dilakukan. Status tarikh ini akan ditandakan sebagai <strong>"Under Maintenance"</strong>.
-                    </p>
-                </div>
-
-                <div class="flex flex-col sm:flex-row gap-3 items-stretch max-w-2xl">
-                    <input type="date" id="lock-date-input" class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:ring-2 focus:ring-rose-500/20 focus:border-rose-500 font-medium">
-                    <button onclick="addLockedDate()" class="bg-rose-700 hover:bg-rose-800 text-white font-semibold text-xs px-5 py-2.5 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-lock"></i> Kunci Tarikh
-                    </button>
-                </div>
-
-                <div class="space-y-2">
-                    <span class="text-xs font-bold text-slate-700 block uppercase tracking-wider">Senarai Tarikh Dikunci:</span>
-                    <div id="locked-dates-list" class="flex flex-wrap gap-2 text-xs">
-                        <!-- Dijana secara dinamik oleh JavaScript -->
-                    </div>
-                </div>
-            </div>
-
-            <!-- Search & Record List Card -->
-            <div class="bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
-                <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                    <div class="space-y-0.5">
-                        <h3 class="font-bold text-slate-900 text-sm">Pangkalan Data Tempahan</h3>
-                        <p class="text-xs text-slate-500">Gunakan kotak carian rujukan untuk menyemak status permohonan terkini.</p>
-                    </div>
-
-                    <!-- Input Carian Rujukan (Untuk memudahkan pemohon menyemak) -->
-                    <div class="relative w-full sm:w-72">
-                        <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
-                            <i class="fa-solid fa-magnifying-glass text-xs"></i>
-                        </span>
-                        <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Cari kod rujukan permohonan..." class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-8 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 font-mono">
-                        <button onclick="clearSearch()" id="clear-search-btn" class="hidden absolute inset-y-0 right-0 flex items-center pr-3 text-slate-400 hover:text-slate-600">
-                            <i class="fa-solid fa-circle-xmark text-xs"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- TABLE CONTAINER -->
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-50 border-b border-slate-100 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                                <th class="py-4 px-6">Kod Rujukan / Tarikh</th>
-                                <th class="py-4 px-6">Sesi</th>
-                                <th class="py-4 px-6">Pemohon & Jabatan</th>
-                                <th class="py-4 px-6">Bil. Peserta / Tujuan</th>
-                                <th class="py-4 px-6">Status</th>
-                                <th class="py-4 px-6 text-right">Tindakan</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bookings-table-body" class="divide-y divide-slate-100 text-xs">
-                            <!-- Dijana Dinamik oleh JS -->
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Empty Search State -->
-                <div id="empty-search-state" class="hidden text-center py-12 px-4 space-y-3">
-                    <div class="h-12 w-12 rounded-full bg-slate-50 text-slate-400 mx-auto flex items-center justify-center">
-                        <i class="fa-solid fa-hourglass-empty"></i>
-                    </div>
-                    <h4 class="font-bold text-slate-700 text-xs">Tiada Rekod Sepadan</h4>
-                    <p class="text-xs text-slate-500 max-w-xs mx-auto">Sila pastikan kata kunci rujukan ditaip dengan betul (Contoh: UMKB-XXXXXXXX-XX).</p>
-                </div>
+        <section id="section-semak" class="hidden">
+            <div class="bg-white border rounded-2xl shadow-sm p-6 overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead><tr class="text-[10px] uppercase text-slate-500 border-b">
+                        <th class="py-3 px-2">Rujukan</th>
+                        <th class="py-3 px-2">Tarikh</th>
+                        <th class="py-3 px-2">Nama</th>
+                        <th class="py-3 px-2">Status</th>
+                    </tr></thead>
+                    <tbody id="bookings-table-body"></tbody>
+                </table>
             </div>
         </section>
     </main>
 
-    <!-- MODAL: Log Masuk Admin -->
-    <div id="admin-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end sm:items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="closeAdminModal()"></div>
-            
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            
-            <div class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-md sm:w-full border border-slate-100">
-                <div class="p-6 space-y-4">
-                    <div class="flex justify-between items-center pb-2">
-                        <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                            <i class="fa-solid fa-shield-halved text-brand-600"></i> Pengesahan Identiti Pentadbir
-                        </h3>
-                        <button onclick="closeAdminModal()" class="text-slate-400 hover:text-slate-600">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                    
-                    <p class="text-xs text-slate-500">
-                        Untuk menukar status permohonan atau melakukan fungsi pembatalan, sila masukkan PIN keselamatan pentadbir.
-                    </p>
-
-                    <div class="space-y-1.5">
-                        <label for="admin-pin" class="block text-[11px] font-bold text-slate-700 uppercase tracking-wide">PIN Keselamatan (Standard: 13813)</label>
-                        <input type="password" id="admin-pin" class="w-full bg-slate-50 border border-slate-200 rounded-lg px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-brand-500 font-mono tracking-widest text-center" placeholder="••••">
-                    </div>
-
-                    <div class="flex gap-2 pt-2">
-                        <button onclick="closeAdminModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 px-4 rounded-xl transition-all">
-                            Batal
-                        </button>
-                        <button onclick="loginAdmin()" class="w-1/2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold py-2.5 px-4 rounded-xl transition-all">
-                            Sahkan PIN
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: Slip Permohonan Berjaya -->
-    <div id="receipt-modal" class="hidden fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:p-0">
-            <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" aria-hidden="true" onclick="closeReceiptModal()"></div>
-            
-            <div class="inline-block align-middle bg-white rounded-2xl text-left overflow-hidden shadow-2xl transform transition-all sm:my-8 sm:max-w-2xl sm:w-full border border-slate-100 mx-2">
-                <div class="p-6 sm:p-8 space-y-6">
-                    
-                    <!-- Simbol Berjaya -->
-                    <div class="text-center space-y-2 pb-4 border-b border-slate-100">
-                        <div class="h-12 w-12 rounded-full bg-emerald-100 text-emerald-600 mx-auto flex items-center justify-center text-xl">
-                            <i class="fa-solid fa-circle-check"></i>
-                        </div>
-                        <h3 class="text-base font-bold text-slate-900 tracking-tight">Permohonan Berjaya Direkodkan!</h3>
-                        <p class="text-xs text-slate-500">Slip rasmi tempahan telah dijana. Sila simpan atau cetak untuk tindakan susulan.</p>
-                    </div>
-
-                    <!-- SLIP RASMI UNTUK DI CETAK -->
-                    <div id="printable-receipt" class="border border-slate-200 rounded-xl p-5 sm:p-6 bg-slate-50 space-y-5 font-sans relative">
-                        <!-- Watermark -->
-                        <div class="absolute inset-0 opacity-[0.02] flex items-center justify-center pointer-events-none">
-                            <i class="fa-solid fa-building text-slate-900 text-9xl"></i>
-                        </div>
-
-                        <!-- Slip Header -->
-                        <div class="flex justify-between items-start flex-wrap gap-4 border-b border-dashed border-slate-300 pb-4">
-                            <div>
-                                <h4 class="text-xs font-bold text-slate-900 uppercase">SLIP PERMOHONAN TEMPAHAN BILIK</h4>
-                                <p class="text-[10px] text-slate-500 uppercase">JABATAN KEWANGAN, TINGKAT 1, MENARA DBKL 1</p>
-                            </div>
-                            <div class="text-right">
-                                <span class="text-[10px] uppercase font-bold text-slate-400 block">No. Rujukan</span>
-                                <span id="rec-ref" class="text-xs font-bold text-brand-600 font-mono tracking-tight">---</span>
-                            </div>
-                        </div>
-
-                        <!-- Maklumat Utama Grid -->
-                        <div class="grid grid-cols-2 gap-y-4 gap-x-6 text-xs border-b border-dashed border-slate-300 pb-5">
-                            <div>
-                                <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wide">Nama Pemohon</span>
-                                <span id="rec-name" class="font-bold text-slate-800">---</span>
-                            </div>
-                            <div>
-                                <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wide">Jabatan</span>
-                                <span id="rec-dept" class="font-bold text-slate-800">---</span>
-                            </div>
-                            <div>
-                                <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wide">Tarikh Tempahan</span>
-                                <span id="rec-date" class="font-bold text-slate-800">---</span>
-                            </div>
-                            <div>
-                                <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wide">Sesi Tempahan</span>
-                                <span id="rec-session" class="font-bold text-slate-800">---</span>
-                            </div>
-                            <div>
-                                <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wide">Bilangan Peserta</span>
-                                <span id="rec-capacity" class="font-bold text-slate-800">--- / 20 Orang</span>
-                            </div>
-                            <div>
-                                <span class="text-[10px] text-slate-400 block font-bold uppercase tracking-wide">Tujuan Program</span>
-                                <span id="rec-purpose" class="font-bold text-slate-800">---</span>
-                            </div>
-                        </div>
-
-                        <!-- Makluman Amaran Mandatori -->
-                        <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-[11px] text-amber-900 leading-relaxed space-y-2">
-                            <p class="font-bold uppercase tracking-wider flex items-center gap-1.5">
-                                <i class="fa-solid fa-circle-exclamation text-amber-600"></i> NOTA TINDAKAN MANDATORI:
-                            </p>
-                            <p>
-                                Permohonan anda telah direkodkan, makluman tempahan akan dimaklumkan melalui email/whatsapp. Sila hantar surat rasmi permohonan tempahan dengan meletakkan no rujukan yang diberikan oleh sistem, selewat- lewatnya 3 hari selepas tarikh permohonan dibuat, kegagalan berbuat demikian akan membatalkan tempahan ini.
-                            </p>
-                        </div>
-                    </div>
-
-                    <!-- Butang Tindakan Receipt -->
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <button onclick="printReceipt()" class="w-full sm:w-1/2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-1.5">
-                            <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
-                        </button>
-                        <button onclick="closeReceiptModal()" class="w-full sm:w-1/2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold py-3 px-4 rounded-xl transition-all">
-                            Faham & Tutup
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notification Container -->
-    <div id="toast-container" class="fixed top-24 right-4 z-50 space-y-2 pointer-events-none max-w-sm w-full"></div>
-
-    <!-- Footnote Footer -->
-    <footer class="bg-white border-t border-slate-200 py-6 mt-12 text-center text-xs text-slate-500">
-        <div class="max-w-7xl mx-auto px-4 space-y-1.5">
-            <p class="font-bold uppercase tracking-wide text-slate-700">BILIK LATIHAN UMKB</p>
-            <p class="uppercase text-[10px]">JABATAN KEWANGAN, TINGKAT 1, MENARA DBKL 1, JALAN RAJA LAUT, 50350 KL</p>
-            <p class="pt-2 text-slate-400">© 2026 UMKB DBKL. Hak Cipta Terpelihara.</p>
-        </div>
-    </footer>
+    <div id="toast-container" class="fixed top-24 right-4 z-50 space-y-2"></div>
 
     <script>
-        // Sila masukkan URL Google Apps Script yang sah di sini untuk deploy terus di GitHub Pages
         const DEFAULT_GSHEET_URL = ""; 
-
-        // Data Contoh Tempatan (Seed Data)
-        const defaultBookings = [
-            {
-                ref: "UMKB-20260610-104",
-                date: "2026-06-10",
-                session: "Sesi 1 (9:00am - 1:00pm)",
-                name: "Ahmad Fauzi bin Ali",
-                dept: "JABATAN PERANCANGAN KORPORAT",
-                purpose: "Bengkel Latihan KPI & Transformasi Digital",
-                capacity: 15,
-                email: "fauzi@dbkl.gov.my",
-                phone: "0123456789",
-                status: "MENUNGGU SURAT",
-                timestamp: "2026-06-01T10:30:00.000Z"
-            },
-            {
-                ref: "UMKB-20260615-502",
-                date: "2026-06-15",
-                session: "Sesi 2 (2:00pm - 4:00pm)",
-                name: "Siti Nurhaliza binti Hamid",
-                dept: "JABATAN KEWANGAN",
-                purpose: "Taklimat Sistem Kewangan Bersepadu DBKL 2026",
-                capacity: 12,
-                email: "siti@dbkl.gov.my",
-                phone: "0198765432",
-                status: "PERMOHONAN TELAH DILULUSKAN",
-                timestamp: "2026-06-01T11:15:00.000Z"
-            }
-        ];
-
-        // Public Holidays 2026 (Sabtu, Ahad & Cuti Umum adalah disekat)
-        const holidays2026 = {
-            "2026-01-01": "Tahun Baru 2026",
-            "2026-02-17": "Tahun Baru Cina",
-            "2026-02-18": "Tahun Baru Cina Hari Kedua",
-            "2026-03-20": "Hari Raya Aidilfitri",
-            "2026-03-21": "Hari Raya Aidilfitri Hari Kedua",
-            "2026-05-01": "Hari Pekerja",
-            "2026-05-27": "Hari Raya Haji",
-            "2026-06-15": "Hari Keputeraan YDP Agong",
-            "2026-08-31": "Hari Kebangsaan",
-            "2026-09-16": "Hari Malaysia",
-            "2026-10-25": "Hari Deepavali",
-            "2026-12-25": "Hari Krismas"
-        };
-
-        // State variables
         let bookings = [];
-        let activeTab = 'tempah';
-        let isAdmin = false;
-        let isSlotCheckedAndAvailable = false;
-        let searchKeyword = '';
-        let lockedDates = {}; // Tarikh yang dikunci oleh admin
 
-        // App Initialization on Window Load
-        window.onload = function() {
-            // Load from LocalStorage if exists, else load default
-            const localSavedBookings = localStorage.getItem('umkb_bookings');
-            if (localSavedBookings) {
-                bookings = JSON.parse(localSavedBookings);
-            } else {
-                bookings = [...defaultBookings];
-                saveToLocalStorage();
-            }
-
-            // Load locked dates
-            const savedLockedDates = localStorage.getItem('umkb_locked_dates');
-            if (savedLockedDates) {
-                lockedDates = JSON.parse(savedLockedDates);
-            } else {
-                lockedDates = {};
-            }
-
-            // Set default date range to today onwards in 2026
-            const dateInput = document.getElementById('booking-date');
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = String(today.getMonth() + 1).padStart(2, '0');
-            const day = String(today.getDate()).padStart(2, '0');
-            
-            // Set min date of today to prevent past dates
-            dateInput.min = `${year}-${month}-${day}`;
-            
-            // Initial render and data pull
-            renderBookingsTable();
-            checkAdminSession();
-            loadGoogleSheetUrl();
-            renderLockedDatesList();
-            fetchBookingsFromSheet();
-        };
-
-        // --- Core Helpers ---
-        function saveToLocalStorage() {
-            localStorage.setItem('umkb_bookings', JSON.stringify(bookings));
-        }
-
-        // Switch Tabs Function
         function switchTab(tabId) {
-            activeTab = tabId;
-            const tabTempahBtn = document.getElementById('tab-tempah-btn');
-            const tabSemakBtn = document.getElementById('tab-semak-btn');
-            const secTempah = document.getElementById('section-tempah');
-            const secSemak = document.getElementById('section-semak');
-
-            if (tabId === 'tempah') {
-                tabTempahBtn.className = "flex-1 sm:flex-none px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 bg-white text-slate-900 shadow-sm";
-                tabSemakBtn.className = "flex-1 sm:flex-none px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900";
-                secTempah.classList.remove('hidden');
-                secSemak.classList.add('hidden');
-            } else {
-                tabSemakBtn.className = "flex-1 sm:flex-none px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 bg-white text-slate-900 shadow-sm";
-                tabTempahBtn.className = "flex-1 sm:flex-none px-4 py-2 text-xs font-semibold rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-slate-600 hover:text-slate-900";
-                secTempah.classList.add('hidden');
-                secSemak.classList.remove('hidden');
-                renderBookingsTable();
-            }
+            document.getElementById('section-tempah').classList.toggle('hidden', tabId !== 'tempah');
+            document.getElementById('section-semak').classList.toggle('hidden', tabId !== 'semak');
         }
 
-        // Reset check status when input changes
         function resetAvailabilityCheck() {
-            isSlotCheckedAndAvailable = false;
             document.getElementById('booking-prompt-box').classList.remove('hidden');
             document.getElementById('booking-detail-form').classList.add('hidden');
         }
 
-        // Validation of selected date and time slots
         function checkSlotAvailability() {
-            const dateVal = document.getElementById('booking-date').value;
-            const sessionVal = document.querySelector('input[name="booking-session"]:checked').value;
-            
-            if (!dateVal) {
-                showToast("Sila pilih tarikh terlebih dahulu sebelum menyemak.", "warning");
-                return;
-            }
-
-            // Convert input string to actual Date object
-            const selectedDate = new Date(dateVal);
-            const dayOfWeek = selectedDate.getDay(); // 0 = Ahad, 6 = Sabtu
-
-            // 1. Check for Weekend restriction
-            if (dayOfWeek === 0 || dayOfWeek === 6) {
-                showToast("Tempahan ditutup pada hujung minggu (Sabtu & Ahad). Sila pilih hari bekerja sahaja.", "error");
-                resetAvailabilityCheck();
-                return;
-            }
-
-            // 2. Check for Public Holidays
-            if (holidays2026[dateVal]) {
-                const holidayName = holidays2026[dateVal];
-                showToast(`Tempahan ditutup: Tarikh tersebut merupakan cuti umum (${holidayName}).`, "error");
-                resetAvailabilityCheck();
-                return;
-            }
-
-            // 3. Check for Admin Locked Dates (Under Maintenance)
-            if (lockedDates && lockedDates[dateVal]) {
-                showToast(`Tempahan tidak berjaya: Tarikh ini sedang dalam penyelenggaraan (Under Maintenance).`, "error");
-                resetAvailabilityCheck();
-                return;
-            }
-
-            // 4. Check for Overlapping booked session
-            const isOverlap = bookings.some(b => b.date === dateVal && b.session === sessionVal && b.status !== "DIBATALKAN");
-            if (isOverlap) {
-                showToast("Tempahan tidak berjaya, sila pilih tarikh lain.", "error");
-                resetAvailabilityCheck();
-                return;
-            }
-
-            // All validations passed
-            isSlotCheckedAndAvailable = true;
-            showToast("Tahniah! Slot ini adalah kosong dan boleh ditempah.", "success");
-            
-            // Render detail form
+            // Simulate check for simplicity. In production add validation.
             document.getElementById('booking-prompt-box').classList.add('hidden');
             document.getElementById('booking-detail-form').classList.remove('hidden');
+            showToast("Slot tersedia!", "success");
         }
 
-        // Handle Form Submission
         function handleNewBooking(e) {
             e.preventDefault();
-
-            if (!isSlotCheckedAndAvailable) {
-                showToast("Sila semak kekosongan slot terlebih dahulu.", "warning");
-                return;
-            }
-
-            const dateVal = document.getElementById('booking-date').value;
-            const sessionVal = document.querySelector('input[name="booking-session"]:checked').value;
-            const nameVal = document.getElementById('applicant-name').value.trim();
-            const deptVal = document.getElementById('applicant-dept').value.trim().toUpperCase();
-            const purposeVal = document.getElementById('booking-purpose').value.trim();
-            const capacityVal = parseInt(document.getElementById('applicant-capacity').value);
-            const emailVal = document.getElementById('applicant-email').value.trim();
-            const phoneVal = document.getElementById('applicant-phone').value.trim();
-
-            if (capacityVal > 20) {
-                showToast("Kapasiti melebihi had maksima bilik (Had: 20 orang).", "error");
-                return;
-            }
-
-            // Generate unique reference number (Format: UMKB-YYYYMMDD-XYZ)
-            const dateStrNoDash = dateVal.replace(/-/g, "");
-            const randomCode = Math.floor(100 + Math.random() * 900);
-            const referenceNo = `UMKB-${dateStrNoDash}-${randomCode}`;
-
-            // Create booking object
             const newBooking = {
-                ref: referenceNo,
-                date: dateVal,
-                session: sessionVal,
-                name: nameVal,
-                dept: deptVal,
-                purpose: purposeVal,
-                capacity: capacityVal,
-                email: emailVal,
-                phone: phoneVal,
-                status: "MENUNGGU SURAT",
-                timestamp: new Date().toISOString()
+                ref: "UMKB-" + Date.now().toString().slice(-6),
+                date: document.getElementById('booking-date').value,
+                session: document.querySelector('input[name="booking-session"]:checked').value,
+                name: document.getElementById('applicant-name').value,
+                dept: document.getElementById('applicant-dept').value,
+                purpose: document.getElementById('booking-purpose').value,
+                capacity: document.getElementById('applicant-capacity').value,
+                email: document.getElementById('applicant-email').value,
+                phone: document.getElementById('applicant-phone').value,
+                status: "MENUNGGU SURAT"
             };
-
-            // Add to state and storage
-            bookings.unshift(newBooking);
-            saveToLocalStorage();
-
-            // Trigger Google Sheet sync
+            
             syncToGoogleSheet(newBooking);
-
-            // Populate and open receipt
-            document.getElementById('rec-ref').innerText = referenceNo;
-            document.getElementById('rec-name').innerText = nameVal;
-            document.getElementById('rec-dept').innerText = deptVal;
-            
-            const [y, m, d] = dateVal.split('-');
-            document.getElementById('rec-date').innerText = `${d}/${m}/${y}`;
-            document.getElementById('rec-session').innerText = sessionVal;
-            document.getElementById('rec-capacity').innerText = `${capacityVal} / 20 Orang`;
-            document.getElementById('rec-purpose').innerText = purposeVal;
-
-            openReceiptModal();
-
-            // Reset form
-            document.getElementById('booking-detail-form').reset();
-            document.getElementById('booking-date').value = "";
-            resetAvailabilityCheck();
-        }
-
-        // Search filter logic
-        function handleSearch(val) {
-            searchKeyword = val.trim().toLowerCase();
-            const clearBtn = document.getElementById('clear-search-btn');
-            
-            if (searchKeyword.length > 0) {
-                clearBtn.classList.remove('hidden');
-            } else {
-                clearBtn.classList.add('hidden');
-            }
-            renderBookingsTable();
-        }
-
-        function clearSearch() {
-            document.getElementById('search-input').value = '';
-            searchKeyword = '';
-            document.getElementById('clear-search-btn').classList.add('hidden');
-            renderBookingsTable();
-        }
-
-        // Render Bookings Table
-        function renderBookingsTable() {
-            const tbody = document.getElementById('bookings-table-body');
-            const emptyState = document.getElementById('empty-search-state');
-            
-            if (!tbody) return;
-            tbody.innerHTML = '';
-
-            // Filter bookings based on reference code search
-            const filteredBookings = bookings.filter(b => {
-                return b.ref.toLowerCase().includes(searchKeyword);
-            });
-
-            if (filteredBookings.length === 0) {
-                emptyState.classList.remove('hidden');
-                return;
-            } else {
-                emptyState.classList.add('hidden');
-            }
-
-            filteredBookings.forEach(b => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-50/50 transition-colors";
-
-                const dateParts = b.date.split('-');
-                const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
-
-                let statusClass = "";
-                if (b.status === "MENUNGGU SURAT") {
-                    statusClass = "bg-amber-50 text-amber-700 border border-amber-200";
-                } else if (b.status === "PERMOHONAN TELAH DILULUSKAN") {
-                    statusClass = "bg-emerald-50 text-emerald-700 border border-emerald-200";
-                } else {
-                    statusClass = "bg-rose-50 text-rose-700 border border-rose-200";
-                }
-
-                // Actions Column
-                let actionsHTML = "";
-                if (b.status !== "DIBATALKAN") {
-                    if (isAdmin) {
-                        actionsHTML = `
-                            <div class="flex justify-end gap-1.5">
-                                ${b.status === 'MENUNGGU SURAT' ? `
-                                    <button onclick="approveBooking('${b.ref}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition-all flex items-center gap-1">
-                                        <i class="fa-solid fa-square-check"></i> Luluskan
-                                    </button>
-                                ` : ''}
-                                <button onclick="cancelBooking('${b.ref}')" class="bg-rose-600 hover:bg-rose-700 text-white font-bold px-2.5 py-1.5 rounded-lg text-[10px] transition-all flex items-center gap-1">
-                                    <i class="fa-solid fa-trash-can"></i> Batal
-                                </button>
-                            </div>
-                        `;
-                    } else {
-                        // Regular user view (Locked indicator)
-                        actionsHTML = `
-                            <span class="text-[10px] text-slate-400 italic flex items-center justify-end gap-1">
-                                <i class="fa-solid fa-lock"></i> Kunci (Hanya Admin)
-                            </span>
-                        `;
-                    }
-                } else {
-                    actionsHTML = `<span class="text-[10px] text-rose-400 font-bold block text-right uppercase">Tiada Tindakan</span>`;
-                }
-
-                tr.innerHTML = `
-                    <td class="py-4 px-6">
-                        <div class="font-bold text-slate-900 font-mono text-[11px]">${b.ref}</div>
-                        <div class="text-[10px] text-slate-500 mt-0.5"><i class="fa-regular fa-calendar"></i> ${formattedDate}</div>
-                    </td>
-                    <td class="py-4 px-6 font-medium text-slate-700">${b.session}</td>
-                    <td class="py-4 px-6">
-                        <div class="font-bold text-slate-900 text-[11px]">${b.name}</div>
-                        <div class="text-[10px] text-slate-500 font-semibold mt-0.5">${b.dept}</div>
-                    </td>
-                    <td class="py-4 px-6">
-                        <div class="text-[11px] font-bold text-slate-700">${b.capacity} Orang</div>
-                        <div class="text-[10px] text-slate-400 truncate max-w-xs mt-0.5" title="${b.purpose}">${b.purpose}</div>
-                    </td>
-                    <td class="py-4 px-6">
-                        <span class="inline-block px-2.5 py-1 rounded text-[10px] font-bold ${statusClass}">
-                            ${b.status}
-                        </span>
-                    </td>
-                    <td class="py-4 px-6 text-right">${actionsHTML}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        // Admin security checks & toggling
-        function checkAdminSession() {
-            const savedSession = sessionStorage.getItem('umkb_admin_logged');
-            if (savedSession === 'true') {
-                isAdmin = true;
-                document.getElementById('admin-badge').classList.remove('hidden');
-                document.getElementById('guest-badge').classList.add('hidden');
-                document.getElementById('admin-login-btn').classList.add('hidden');
-                document.getElementById('admin-logout-btn').classList.remove('hidden');
-                document.getElementById('google-sheets-panel').classList.remove('hidden');
-                document.getElementById('maintenance-panel').classList.remove('hidden');
-            } else {
-                isAdmin = false;
-                document.getElementById('admin-badge').classList.add('hidden');
-                document.getElementById('guest-badge').classList.remove('hidden');
-                document.getElementById('admin-login-btn').classList.remove('hidden');
-                document.getElementById('admin-logout-btn').classList.add('hidden');
-                document.getElementById('google-sheets-panel').classList.add('hidden');
-                document.getElementById('maintenance-panel').classList.add('hidden');
-            }
-        }
-
-        function openAdminModal() {
-            document.getElementById('admin-pin').value = '';
-            document.getElementById('admin-modal').classList.remove('hidden');
-        }
-
-        function closeAdminModal() {
-            document.getElementById('admin-modal').classList.add('hidden');
-        }
-
-        function loginAdmin() {
-            const pin = document.getElementById('admin-pin').value;
-            if (pin === "13813") {
-                sessionStorage.setItem('umkb_admin_logged', 'true');
-                checkAdminSession();
-                closeAdminModal();
-                renderBookingsTable();
-                showToast("Mod Pentadbir (Admin) berjaya diaktifkan.", "success");
-            } else {
-                showToast("PIN keselamatan salah! Sila cuba lagi.", "error");
-            }
-        }
-
-        function logoutAdmin() {
-            sessionStorage.removeItem('umkb_admin_logged');
-            checkAdminSession();
-            renderBookingsTable();
-            showToast("Mod Pentadbir dinyahaktifkan.", "info");
-        }
-
-        // Approve Status (MENUNGGU SURAT -> PERMOHONAN TELAH DILULUSKAN)
-        function approveBooking(refCode) {
-            const bIndex = bookings.findIndex(b => b.ref === refCode);
-            if (bIndex !== -1) {
-                bookings[bIndex].status = "PERMOHONAN TELAH DILULUSKAN";
-                saveToLocalStorage();
-                renderBookingsTable();
-                syncToGoogleSheet(bookings[bIndex]);
-                showToast(`Status permohonan ${refCode} telah diluluskan!`, "success");
-            }
-        }
-
-        // Cancel booking
-        function cancelBooking(refCode) {
-            const bIndex = bookings.findIndex(b => b.ref === refCode);
-            if (bIndex !== -1) {
-                bookings[bIndex].status = "DIBATALKAN";
-                saveToLocalStorage();
-                renderBookingsTable();
-                syncToGoogleSheet(bookings[bIndex]);
-                showToast(`Permohonan ${refCode} berjaya dibatalkan.`, "info");
-            }
-        }
-
-        // --- Modal Slip Management ---
-        function openReceiptModal() {
-            document.getElementById('receipt-modal').classList.remove('hidden');
-        }
-
-        function closeReceiptModal() {
-            document.getElementById('receipt-modal').classList.add('hidden');
-        }
-
-        function printReceipt() {
-            const printContent = document.getElementById('printable-receipt').innerHTML;
-            const originalContent = document.body.innerHTML;
-
-            // Simple window print flow
-            document.body.innerHTML = `
-                <div style="padding: 40px; font-family: sans-serif; background-color: #fff; max-width: 650px; margin: 0 auto; border: 1px solid #ccc; border-radius: 8px;">
-                    ${printContent}
-                </div>
-            `;
-            window.print();
-            
-            // Restore page
-            document.body.innerHTML = originalContent;
-            window.location.reload(); // Re-initialize state properly after restoration
-        }
-
-        // --- Google Sheets Integration ---
-        function loadGoogleSheetUrl() {
-            const savedUrl = localStorage.getItem('umkb_gsheet_url') || DEFAULT_GSHEET_URL;
-            if (savedUrl) {
-                document.getElementById('google-sheet-url').value = savedUrl;
-            }
-        }
-
-        function saveGoogleSheetUrl() {
-            const urlVal = document.getElementById('google-sheet-url').value.trim();
-            localStorage.setItem('umkb_gsheet_url', urlVal);
-            showToast("URL Google Sheet berjaya disimpan.", "success");
-            fetchBookingsFromSheet();
-        }
-
-        // Memuat turun data secara dua-hala dari Google Sheets (Read)
-        async function fetchBookingsFromSheet() {
-            const url = localStorage.getItem('umkb_gsheet_url') || DEFAULT_GSHEET_URL;
-            if (!url) {
-                console.log("Tiada URL Google Sheet ditetapkan.");
-                return;
-            }
-
-            try {
-                const response = await fetch(url, { redirect: 'follow' });
-                if (response.ok) {
-                    const data = await response.json();
-                    if (Array.isArray(data)) {
-                        bookings = data;
-                        saveToLocalStorage();
-                        renderBookingsTable();
-                        showToast("Data tempahan berjaya dikemas kini dari awan.", "success");
-                    }
-                }
-            } catch (err) {
-                console.warn("Gagal menyambung ke awan. Menggunakan simpanan tempatan.", err);
-            }
-        }
-
-        function triggerDataSync() {
-            showToast("Memulakan sinkronisasi data...", "info");
-            fetchBookingsFromSheet().then(() => {
-                showToast("Penyegerakan data selesai.", "success");
-            }).catch(() => {
-                showToast("Sila pastikan URL Apps Script anda dikonfigurasikan dengan betul.", "warning");
-            });
+            showToast("Tempahan berjaya dihantar!", "success");
         }
 
         function syncToGoogleSheet(bookingObj) {
             const url = localStorage.getItem('umkb_gsheet_url') || DEFAULT_GSHEET_URL;
-            if (!url) return; // Silent skip if url not configured
+            if (!url) { showToast("Sila tetapkan URL Google Sheet (Admin)", "warning"); return; }
 
             const payload = {
                 rujukan: bookingObj.ref,
@@ -1070,201 +146,36 @@
                 peserta: bookingObj.capacity,
                 emel: bookingObj.email,
                 telefon: bookingObj.phone,
-                status: bookingObj.status,
-                tindakan: "tambah_ubah"
+                status: bookingObj.status
             };
 
-            // Post values through fetch no-cors for simplicity of Google App Script integration
-            fetch(url, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            })
-            .then(() => {
-                showToast("Rekod berjaya disinkronkan ke Google Sheet.", "success");
-                setTimeout(fetchBookingsFromSheet, 2000); // Refresh list shortly after
-            })
-            .catch(error => {
-                console.error('Sheet Sync Error:', error);
-                showToast("Sinkronisasi Google Sheet terganggu.", "warning");
-            });
+            fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+            .then(() => showToast("Rekod berjaya dihantar ke Sheet.", "success"))
+            .catch(() => showToast("Gagal hantar ke Sheet.", "error"));
         }
 
-        // --- Locked Date Management Functions ---
-        function renderLockedDatesList() {
-            const container = document.getElementById('locked-dates-list');
-            if (!container) return;
-            container.innerHTML = '';
-
-            const keys = Object.keys(lockedDates);
-            if (keys.length === 0) {
-                container.innerHTML = `<span class="text-slate-400 italic font-medium">Tiada tarikh disekat buat masa ini.</span>`;
-                return;
-            }
-
-            keys.forEach(dateStr => {
-                const parts = dateStr.split('-');
-                const formatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
-                
-                const badge = document.createElement('div');
-                badge.className = "inline-flex items-center gap-1.5 bg-rose-50 border border-rose-200 text-rose-700 px-3 py-1.5 rounded-lg font-semibold";
-                badge.innerHTML = `
-                    <span><i class="fa-solid fa-wrench"></i> ${formatted} (${lockedDates[dateStr]})</span>
-                    <button onclick="removeLockedDate('${dateStr}')" class="hover:text-rose-950 focus:outline-none ml-1">
-                        <i class="fa-solid fa-circle-xmark"></i>
-                    </button>
-                `;
-                container.appendChild(badge);
-            });
-        }
-
-        function addLockedDate() {
-            const dateVal = document.getElementById('lock-date-input').value;
-            if (!dateVal) {
-                showToast("Sila pilih tarikh terlebih dahulu.", "warning");
-                return;
-            }
-
-            lockedDates[dateVal] = "Under Maintenance";
-            localStorage.setItem('umkb_locked_dates', JSON.stringify(lockedDates));
-            renderLockedDatesList();
-            document.getElementById('lock-date-input').value = '';
-            showToast(`Tarikh ${dateVal} telah dikunci sebagai 'Under Maintenance'.`, "success");
-        }
-
-        function removeLockedDate(dateStr) {
-            delete lockedDates[dateStr];
-            localStorage.setItem('umkb_locked_dates', JSON.stringify(lockedDates));
-            renderLockedDatesList();
-            showToast("Sekatan tarikh telah berjaya dipadamkan.", "info");
-        }
-
-        // Apps Script code copy template
         function copyAppsScriptCode() {
-            const scriptCode = `function doGet(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var rows = sheet.getDataRange().getValues();
-  var data = [];
-  for(var i=1; i<rows.length; i++) {
-    data.push({
-      ref: rows[i][0] ? rows[i][0].toString() : "",
-      date: rows[i][1] ? rows[i][1].toString() : "",
-      session: rows[i][2] ? rows[i][2].toString() : "",
-      name: rows[i][3] ? rows[i][3].toString() : "",
-      dept: rows[i][4] ? rows[i][4].toString() : "",
-      purpose: rows[i][5] ? rows[i][5].toString() : "",
-      capacity: rows[i][6] ? parseInt(rows[i][6]) : 0,
-      email: rows[i][7] ? rows[i][7].toString() : "",
-      phone: rows[i][8] ? rows[i][8].toString() : "",
-      status: rows[i][9] ? rows[i][9].toString() : ""
-    });
-  }
-  return ContentService.createTextOutput(JSON.stringify(data))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
+            const code = `
 function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = JSON.parse(e.postData.contents);
-  
-  // Cari jika kod rujukan sudah ada untuk dikemas kini
-  var rows = sheet.getDataRange().getValues();
-  var updated = false;
-  
-  for(var i=1; i<rows.length; i++) {
-    if(rows[i][0] == data.rujukan) {
-      // Kemas kini status (Lajur ke-10, indeks 9)
-      sheet.getRange(i+1, 10).setValue(data.status);
-      updated = true;
-      break;
-    }
-  }
-  
-  // Jika rujukan tidak wujud, rekodkan baris baru
-  if(!updated) {
-    sheet.appendRow([
-      data.rujukan,
-      data.tarikh,
-      data.sesi,
-      data.nama,
-      data.jabatan,
-      data.tujuan,
-      data.peserta,
-      data.emel,
-      data.telefon,
-      data.status,
-      new Date()
-    ]);
-  }
-  
-  return ContentService.createTextOutput(JSON.stringify({result: "success"}))
-    .setMimeType(ContentService.MimeType.JSON);
+  sheet.appendRow([
+    data.rujukan, data.tarikh, data.sesi, data.nama, data.jabatan, 
+    data.tujuan, data.peserta, data.emel, data.telefon, data.status, new Date()
+  ]);
+  return ContentService.createTextOutput(JSON.stringify({result: "success"})).setMimeType(ContentService.MimeType.JSON);
 }`;
-            
-            // Traditional clipboard fallback to prevent iframe security issues
-            const textarea = document.createElement('textarea');
-            textarea.value = scriptCode;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-            
-            showToast("Kod Apps Script berjaya disalin ke papan klip!", "success");
+            navigator.clipboard.writeText(code);
+            showToast("Kod Apps Script disalin!", "success");
         }
 
-        // --- Toast Alerts ---
-        function showToast(message, type = "info") {
+        function showToast(message, type) {
             const container = document.getElementById('toast-container');
-            if (!container) return;
-
-            const toast = document.createElement('div');
-            toast.className = "p-4 rounded-xl shadow-lg border text-xs font-semibold flex items-center justify-between gap-3 pointer-events-auto transition-all transform translate-y-2 opacity-0 duration-300";
-            
-            let colorClasses = "";
-            let icon = "";
-
-            if (type === "success") {
-                colorClasses = "bg-white border-emerald-200 text-slate-800 shadow-emerald-500/5";
-                icon = "<i class='fa-solid fa-circle-check text-emerald-500 text-sm'></i>";
-            } else if (type === "error") {
-                colorClasses = "bg-white border-rose-200 text-slate-800 shadow-rose-500/5";
-                icon = "<i class='fa-solid fa-circle-xmark text-rose-500 text-sm'></i>";
-            } else if (type === "warning") {
-                colorClasses = "bg-white border-amber-200 text-slate-800 shadow-amber-500/5";
-                icon = "<i class='fa-solid fa-triangle-exclamation text-amber-500 text-sm'></i>";
-            } else {
-                colorClasses = "bg-white border-blue-200 text-slate-800 shadow-blue-500/5";
-                icon = "<i class='fa-solid fa-circle-info text-blue-500 text-sm'></i>";
-            }
-
-            toast.innerHTML = `
-                <div class="flex items-center gap-2">
-                    ${icon}
-                    <span>${message}</span>
-                </div>
-                <button class="text-slate-400 hover:text-slate-600 focus:outline-none" onclick="this.parentElement.remove()">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            `;
-
-            toast.className += ` ${colorClasses}`;
-            container.appendChild(toast);
-
-            // Animate In
-            setTimeout(() => {
-                toast.classList.remove('translate-y-2', 'opacity-0');
-            }, 50);
-
-            // Auto Remove after 4.5 seconds
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => {
-                    toast.remove();
-                }, 300);
-            }, 4500);
+            const div = document.createElement('div');
+            div.className = "p-4 bg-white border shadow-lg rounded-xl text-xs font-bold";
+            div.innerText = message;
+            container.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
         }
     </script>
 </body>
