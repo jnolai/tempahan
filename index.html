@@ -290,7 +290,10 @@
                 </div>
 
                 <!-- Admin Action Buttons -->
-                <div>
+                <div class="flex gap-2">
+                    <button onclick="triggerDataSync()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold py-2 px-4 rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
+                        <i class="fa-solid fa-arrows-rotate"></i> Kemaskini Data
+                    </button>
                     <button id="admin-login-btn" onclick="openAdminModal()" class="bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 text-xs font-bold py-2 px-4 rounded-xl transition-all flex items-center gap-1.5 shadow-sm">
                         <i class="fa-solid fa-lock"></i> Log Masuk Admin
                     </button>
@@ -320,7 +323,7 @@
 
                 <div class="flex gap-2 max-w-2xl">
                     <input type="text" id="google-sheet-url" placeholder="https://script.google.com/macros/s/xxxx/exec" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-brand-500 font-mono">
-                    <button onclick="saveGoogleSheetUrl()" class="bg-brand-600 hover:bg-brand-50 text-white font-semibold text-xs px-5 py-2.5 rounded-xl transition-all whitespace-nowrap">
+                    <button onclick="saveGoogleSheetUrl()" class="bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs px-5 py-2.5 rounded-xl transition-all whitespace-nowrap">
                         Simpan URL
                     </button>
                 </div>
@@ -545,6 +548,9 @@
     </footer>
 
     <script>
+        // Sila masukkan URL Google Apps Script yang sah di sini untuk deploy terus di GitHub Pages
+        const DEFAULT_GSHEET_URL = ""; 
+
         // Data Contoh Tempatan (Seed Data)
         const defaultBookings = [
             {
@@ -628,11 +634,12 @@
             // Set min date of today to prevent past dates
             dateInput.min = `${year}-${month}-${day}`;
             
-            // Initial render
+            // Initial render and data pull
             renderBookingsTable();
             checkAdminSession();
             loadGoogleSheetUrl();
             renderLockedDatesList();
+            fetchBookingsFromSheet();
         };
 
         // --- Core Helpers ---
@@ -836,7 +843,7 @@
                 tr.className = "hover:bg-slate-50/50 transition-colors";
 
                 const dateParts = b.date.split('-');
-                const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[2] ? dateParts[0] : ''}`;
+                const formattedDate = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
 
                 let statusClass = "";
                 if (b.status === "MENUNGGU SURAT") {
@@ -1003,7 +1010,7 @@
 
         // --- Google Sheets Integration ---
         function loadGoogleSheetUrl() {
-            const savedUrl = localStorage.getItem('umkb_gsheet_url');
+            const savedUrl = localStorage.getItem('umkb_gsheet_url') || DEFAULT_GSHEET_URL;
             if (savedUrl) {
                 document.getElementById('google-sheet-url').value = savedUrl;
             }
@@ -1013,10 +1020,44 @@
             const urlVal = document.getElementById('google-sheet-url').value.trim();
             localStorage.setItem('umkb_gsheet_url', urlVal);
             showToast("URL Google Sheet berjaya disimpan.", "success");
+            fetchBookingsFromSheet();
+        }
+
+        // Memuat turun data secara dua-hala dari Google Sheets (Read)
+        async function fetchBookingsFromSheet() {
+            const url = localStorage.getItem('umkb_gsheet_url') || DEFAULT_GSHEET_URL;
+            if (!url) {
+                console.log("Tiada URL Google Sheet ditetapkan.");
+                return;
+            }
+
+            try {
+                const response = await fetch(url, { redirect: 'follow' });
+                if (response.ok) {
+                    const data = await response.json();
+                    if (Array.isArray(data)) {
+                        bookings = data;
+                        saveToLocalStorage();
+                        renderBookingsTable();
+                        showToast("Data tempahan berjaya dikemas kini dari awan.", "success");
+                    }
+                }
+            } catch (err) {
+                console.warn("Gagal menyambung ke awan. Menggunakan simpanan tempatan.", err);
+            }
+        }
+
+        function triggerDataSync() {
+            showToast("Memulakan sinkronisasi data...", "info");
+            fetchBookingsFromSheet().then(() => {
+                showToast("Penyegerakan data selesai.", "success");
+            }).catch(() => {
+                showToast("Sila pastikan URL Apps Script anda dikonfigurasikan dengan betul.", "warning");
+            });
         }
 
         function syncToGoogleSheet(bookingObj) {
-            const url = localStorage.getItem('umkb_gsheet_url');
+            const url = localStorage.getItem('umkb_gsheet_url') || DEFAULT_GSHEET_URL;
             if (!url) return; // Silent skip if url not configured
 
             const payload = {
@@ -1044,6 +1085,7 @@
             })
             .then(() => {
                 showToast("Rekod berjaya disinkronkan ke Google Sheet.", "success");
+                setTimeout(fetchBookingsFromSheet, 2000); // Refresh list shortly after
             })
             .catch(error => {
                 console.error('Sheet Sync Error:', error);
@@ -1102,7 +1144,29 @@
 
         // Apps Script code copy template
         function copyAppsScriptCode() {
-            const scriptCode = `function doPost(e) {
+            const scriptCode = `function doGet(e) {
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  var rows = sheet.getDataRange().getValues();
+  var data = [];
+  for(var i=1; i<rows.length; i++) {
+    data.push({
+      ref: rows[i][0] ? rows[i][0].toString() : "",
+      date: rows[i][1] ? rows[i][1].toString() : "",
+      session: rows[i][2] ? rows[i][2].toString() : "",
+      name: rows[i][3] ? rows[i][3].toString() : "",
+      dept: rows[i][4] ? rows[i][4].toString() : "",
+      purpose: rows[i][5] ? rows[i][5].toString() : "",
+      capacity: rows[i][6] ? parseInt(rows[i][6]) : 0,
+      email: rows[i][7] ? rows[i][7].toString() : "",
+      phone: rows[i][8] ? rows[i][8].toString() : "",
+      status: rows[i][9] ? rows[i][9].toString() : ""
+    });
+  }
+  return ContentService.createTextOutput(JSON.stringify(data))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
   var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
   var data = JSON.parse(e.postData.contents);
   
