@@ -3,180 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Tempahan Bilik Latihan UMKB</title>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Sistem Tempahan Bilik Latihan UMKB DBKL</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['JetBrains Mono', 'monospace'] }, colors: { brand: { 50: '#f5f3ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' } } } } }
-    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        ::-webkit-scrollbar { width: 6px; height: 6px; }
-        ::-webkit-scrollbar-track { background: #f1f5f9; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        .custom-glass { background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); }
+        body { font-family: sans-serif; }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-900 font-sans min-h-screen flex flex-col antialiased">
+<body class="bg-slate-50 text-slate-900 min-h-screen">
 
-    <header class="sticky top-0 z-40 bg-white/95 border-b border-slate-200/80 backdrop-blur-md px-4 sm:px-6 py-4">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-            <div class="flex items-center gap-3">
-                <div class="h-10 w-10 rounded-xl bg-brand-600 flex items-center justify-center text-white font-black text-lg">U</div>
-                <div>
-                    <h1 class="text-lg font-bold text-slate-900">UMKB DBKL</h1>
-                    <p class="text-[11px] text-slate-500 font-medium">Sistem Tempahan Bilik Latihan Pintar</p>
-                </div>
-            </div>
-            <div class="flex bg-slate-100 p-1 rounded-xl w-full sm:w-auto">
-                <button onclick="switchTab('tempah')" id="tab-tempah-btn" class="flex-1 px-4 py-2 text-xs font-semibold bg-white rounded-lg shadow-sm"><i class="fa-solid fa-calendar-plus"></i> Tempah</button>
-                <button onclick="switchTab('semak')" id="tab-semak-btn" class="flex-1 px-4 py-2 text-xs font-semibold text-slate-600"><i class="fa-solid fa-list-check"></i> Semak</button>
-            </div>
+    <!-- Header -->
+    <header class="bg-white border-b px-4 py-4 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <h1 class="font-bold text-lg text-indigo-700">UMKB DBKL</h1>
+            <nav class="flex gap-2">
+                <button onclick="showSection('utama')" class="px-3 py-1 bg-slate-100 rounded text-xs font-bold">Utama</button>
+                <button onclick="showSection('tempah')" class="px-3 py-1 bg-slate-100 rounded text-xs font-bold">Tempah</button>
+            </nav>
         </div>
     </header>
 
-    <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
-        <section id="section-tempah" class="space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-                <div class="lg:col-span-5 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                    <h3 class="font-bold text-sm mb-4">1. Pilih Tarikh & Sesi</h3>
-                    <input type="date" id="booking-date" onchange="resetAvailabilityCheck()" class="w-full bg-slate-50 border p-3 rounded-xl text-sm mb-4">
-                    <div class="space-y-2 mb-4">
-                        <label class="block flex items-center p-3 rounded-xl border cursor-pointer">
-                            <input type="radio" name="booking-session" value="Sesi 1 (9:00am - 1:00pm)" checked onchange="resetAvailabilityCheck()">
-                            <span class="ml-3 text-xs font-bold">Sesi 1 (9:00am - 1:00pm)</span>
-                        </label>
-                        <label class="block flex items-center p-3 rounded-xl border cursor-pointer">
-                            <input type="radio" name="booking-session" value="Sesi 2 (2:00pm - 4:00pm)" onchange="resetAvailabilityCheck()">
-                            <span class="ml-3 text-xs font-bold">Sesi 2 (2:00pm - 4:00pm)</span>
-                        </label>
-                    </div>
-                    <button onclick="checkSlotAvailability()" class="w-full bg-brand-600 text-white font-bold py-3 rounded-xl text-xs">Semak Kekosongan</button>
-                </div>
-                
-                <div class="lg:col-span-7 bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-                    <div id="booking-prompt-box" class="text-center py-12 text-slate-400">Sila semak slot dahulu.</div>
-                    <form id="booking-detail-form" class="hidden space-y-4" onsubmit="handleNewBooking(event)">
-                        <h3 class="font-bold text-sm">2. Maklumat Pemohon</h3>
-                        <input type="text" id="applicant-name" required placeholder="Nama Pemohon" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs">
-                        <input type="text" id="applicant-dept" required placeholder="Jabatan" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs">
-                        <textarea id="booking-purpose" required placeholder="Tujuan Program" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs"></textarea>
-                        <div class="grid grid-cols-3 gap-2">
-                            <input type="number" id="applicant-capacity" min="1" max="20" required placeholder="Peserta" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs">
-                            <input type="email" id="applicant-email" required placeholder="Emel" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs">
-                            <input type="tel" id="applicant-phone" required placeholder="Telefon" class="w-full bg-slate-50 border rounded-lg px-3 py-2 text-xs">
-                        </div>
-                        <button type="submit" class="w-full bg-emerald-600 text-white font-bold py-3 rounded-xl text-xs">Hantar Tempahan</button>
-                    </form>
-                </div>
+    <main class="max-w-6xl mx-auto p-4">
+        
+        <!-- Utama Section (Dibuang class hidden supaya ia muncul secara lalai) -->
+        <section id="section-utama" class="py-10 text-center">
+            <h2 class="text-3xl font-extrabold mb-4">Selamat Datang ke Sistem UMKB</h2>
+            <p class="text-slate-600 mb-8">Sila gunakan menu untuk membuat tempahan bilik latihan.</p>
+            <button onclick="showSection('tempah')" class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-bold">Mula Tempah</button>
+        </section>
+
+        <!-- Tempah Section -->
+        <section id="section-tempah" class="hidden py-10">
+            <h3 class="font-bold text-xl mb-6">Pilih Tarikh Tempahan</h3>
+            <div id="calendar-grid" class="grid grid-cols-7 gap-2">
+                <!-- Kalendar akan dijana di sini -->
             </div>
         </section>
 
-        <section id="section-semak" class="hidden">
-            <div class="bg-white border rounded-2xl shadow-sm p-6 overflow-x-auto">
-                <table class="w-full text-left">
-                    <thead><tr class="text-[10px] uppercase text-slate-500 border-b">
-                        <th class="py-3 px-2">Rujukan</th>
-                        <th class="py-3 px-2">Tarikh</th>
-                        <th class="py-3 px-2">Nama</th>
-                        <th class="py-3 px-2">Status</th>
-                    </tr></thead>
-                    <tbody id="bookings-table-body"></tbody>
-                </table>
-            </div>
-        </section>
     </main>
 
-    <div id="toast-container" class="fixed top-24 right-4 z-50 space-y-2"></div>
-
     <script>
-        const DEFAULT_GSHEET_URL = ""; 
-        let bookings = [];
+        // Data Cuti Umum (Kuala Lumpur 2026)
+        const publicHolidays = ["2026-07-31", "2026-08-31"]; 
 
-        function switchTab(tabId) {
-            document.getElementById('section-tempah').classList.toggle('hidden', tabId !== 'tempah');
-            document.getElementById('section-semak').classList.toggle('hidden', tabId !== 'semak');
+        function showSection(id) {
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
+            document.getElementById('section-' + id).classList.remove('hidden');
         }
 
-        function resetAvailabilityCheck() {
-            document.getElementById('booking-prompt-box').classList.remove('hidden');
-            document.getElementById('booking-detail-form').classList.add('hidden');
-        }
-
-        function checkSlotAvailability() {
-            // Simulate check for simplicity. In production add validation.
-            document.getElementById('booking-prompt-box').classList.add('hidden');
-            document.getElementById('booking-detail-form').classList.remove('hidden');
-            showToast("Slot tersedia!", "success");
-        }
-
-        function handleNewBooking(e) {
-            e.preventDefault();
-            const newBooking = {
-                ref: "UMKB-" + Date.now().toString().slice(-6),
-                date: document.getElementById('booking-date').value,
-                session: document.querySelector('input[name="booking-session"]:checked').value,
-                name: document.getElementById('applicant-name').value,
-                dept: document.getElementById('applicant-dept').value,
-                purpose: document.getElementById('booking-purpose').value,
-                capacity: document.getElementById('applicant-capacity').value,
-                email: document.getElementById('applicant-email').value,
-                phone: document.getElementById('applicant-phone').value,
-                status: "MENUNGGU SURAT"
-            };
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            grid.innerHTML = '';
             
-            syncToGoogleSheet(newBooking);
-            showToast("Tempahan berjaya dihantar!", "success");
+            const today = new Date();
+            const minDate = new Date();
+            minDate.setDate(today.getDate() + 3);
+
+            // Bina 30 hari bermula dari hari ini
+            for (let i = 0; i < 30; i++) {
+                const date = new Date();
+                date.setDate(today.getDate() + i);
+                
+                const dateStr = date.toISOString().split('T')[0];
+                const day = date.getDay(); // 0 = Ahad, 6 = Sabtu
+                
+                const isDisabled = (day === 0 || day === 6 || publicHolidays.includes(dateStr) || date < minDate);
+
+                const btn = document.createElement('button');
+                btn.className = `p-4 border rounded ${isDisabled ? 'bg-slate-200 cursor-not-allowed' : 'bg-white hover:bg-indigo-50 border-indigo-200'}`;
+                btn.innerText = date.getDate();
+                if (!isDisabled) btn.onclick = () => alert("Anda memilih tarikh: " + dateStr);
+                grid.appendChild(btn);
+            }
         }
 
-        function syncToGoogleSheet(bookingObj) {
-            const url = localStorage.getItem('umkb_gsheet_url') || DEFAULT_GSHEET_URL;
-            if (!url) { showToast("Sila tetapkan URL Google Sheet (Admin)", "warning"); return; }
-
-            const payload = {
-                rujukan: bookingObj.ref,
-                tarikh: bookingObj.date,
-                sesi: bookingObj.session,
-                nama: bookingObj.name,
-                jabatan: bookingObj.dept,
-                tujuan: bookingObj.purpose,
-                peserta: bookingObj.capacity,
-                emel: bookingObj.email,
-                telefon: bookingObj.phone,
-                status: bookingObj.status
-            };
-
-            fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
-            .then(() => showToast("Rekod berjaya dihantar ke Sheet.", "success"))
-            .catch(() => showToast("Gagal hantar ke Sheet.", "error"));
-        }
-
-        function copyAppsScriptCode() {
-            const code = `
-function doPost(e) {
-  var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
-  var data = JSON.parse(e.postData.contents);
-  sheet.appendRow([
-    data.rujukan, data.tarikh, data.sesi, data.nama, data.jabatan, 
-    data.tujuan, data.peserta, data.emel, data.telefon, data.status, new Date()
-  ]);
-  return ContentService.createTextOutput(JSON.stringify({result: "success"})).setMimeType(ContentService.MimeType.JSON);
-}`;
-            navigator.clipboard.writeText(code);
-            showToast("Kod Apps Script disalin!", "success");
-        }
-
-        function showToast(message, type) {
-            const container = document.getElementById('toast-container');
-            const div = document.createElement('div');
-            div.className = "p-4 bg-white border shadow-lg rounded-xl text-xs font-bold";
-            div.innerText = message;
-            container.appendChild(div);
-            setTimeout(() => div.remove(), 3000);
-        }
+        // Jalankan kalendar sebaik sahaja halaman sedia
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCalendar();
+        });
     </script>
 </body>
 </html>
+```
+
+Sekiranya kod di atas masih tidak memaparkan apa-apa dalam tetingkap *Preview*, ini menunjukkan persekitaran pratonton anda mungkin menyekat JavaScript sepenuhnya. Jika ini berlaku, sila muat naik fail ini ke **GitHub** dan akses terus melalui pautan `github.io` yang diberikan oleh GitHub Pages.
