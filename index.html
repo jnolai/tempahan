@@ -73,13 +73,15 @@
       <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
         <i class="fa-solid fa-circle-check text-2xl"></i>
       </div>
-      <h3 class="text-xl font-bold text-slate-800 mb-1">Permohonan Dihantar!</h3>
-      <p class="text-xs text-slate-500 mb-5">Sila salin dan simpan <strong>No. ID Tempahan</strong> ini untuk membuat semakan status permohonan anda.</p>
+      <h3 class="text-xl font-bold text-slate-800 mb-1">Permohonan Berjaya Dihantar!</h3>
+      <p class="text-xs text-slate-500 mb-5 leading-relaxed">
+        Sila salin dan simpan <strong>No. ID Tempahan</strong> ini untuk membuat semakan kelulusan secara dalam talian.
+      </p>
       
       <!-- Kad Salin ID -->
-      <div class="bg-slate-50 border-2 border-dashed border-blue-300 rounded-2xl p-4 mb-6">
+      <div class="bg-blue-50/70 border-2 border-dashed border-blue-300 rounded-2xl p-4 mb-6">
         <div class="text-[11px] uppercase font-bold text-blue-700 tracking-wider mb-1">No. ID Tempahan Anda</div>
-        <div class="text-xl font-mono font-black text-slate-900 tracking-wide select-all mb-3" x-text="successModal.id"></div>
+        <div class="text-xl font-mono font-black text-slate-900 tracking-wider select-all mb-3" x-text="successModal.id"></div>
         
         <button @click="copyId(successModal.id)" 
                 class="w-full py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-sm"
@@ -93,8 +95,8 @@
         <button @click="successModal.show = false; copied = false;" class="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
           Tutup
         </button>
-        <button @click="goToStatusTab(successModal.id)" class="py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl text-xs transition">
-          Semak Status Terus
+        <button @click="goToStatusTab(successModal.id)" class="py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-semibold rounded-xl text-xs transition">
+          Semak Status
         </button>
       </div>
     </div>
@@ -114,7 +116,7 @@
         </div>
 
         <form @submit.prevent="submitBooking" class="space-y-6">
-          <!-- Pilihan Tarikh Tempahan -->
+          <!-- Tarikh -->
           <div>
             <div class="flex justify-between items-center mb-1">
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Tarikh Tempahan</label>
@@ -132,7 +134,7 @@
             </div>
           </div>
 
-          <!-- Pilihan 4 Sesi Masa -->
+          <!-- Sesi Masa -->
           <div>
             <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Pilih Sesi Masa</label>
             <div class="space-y-2.5">
@@ -244,12 +246,12 @@
               <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg mt-0.5"></i>
               <div class="text-xs leading-relaxed">
                 <span class="font-bold block text-sm mb-0.5">Slot Masa Tidak Tersedia!</span>
-                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih. Sila tukar ke sesi atau tarikh lain.
+                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih. Sila pilih sesi atau tarikh lain.
               </div>
             </div>
           </div>
 
-          <!-- Butiran Pemohon (Termasuk Emel & No Telefon) -->
+          <!-- Butiran Pemohon -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Nama Pemohon</label>
@@ -257,7 +259,7 @@
                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             </div>
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Emel Pemohon</label>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Emel Pemohon (Rekod)</label>
               <input type="email" x-model="form.email" placeholder="Cth: ahmad@dbkl.gov.my" required
                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             </div>
@@ -344,8 +346,9 @@
             </div>
             <div><span class="text-slate-500 text-xs">Tarikh:</span> <p class="font-semibold text-slate-800" x-text="formatDate(searchResult['Tarikh Tempahan'] || searchResult.tarikh)"></p></div>
             <div><span class="text-slate-500 text-xs">Sesi Masa:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Sesi Masa'] || searchResult.sesi"></p></div>
-            <div><span class="text-slate-500 text-xs">Pemohon:</span> <p class="font-semibold text-slate-800" x-text="(searchResult['Nama Pemohon'] || searchResult.nama) + ' (' + (searchResult['Emel Pemohon'] || searchResult.email || '-') + ')'"></p></div>
+            <div><span class="text-slate-500 text-xs">Pemohon:</span> <p class="font-semibold text-slate-800" x-text="(searchResult['Nama Pemohon'] || searchResult.nama) + ' (' + (searchResult['Bahagian / Unit'] || searchResult.bahagian || '-') + ')'"></p></div>
             <div><span class="text-slate-500 text-xs">No. Telefon:</span> <p class="font-semibold text-slate-800" x-text="searchResult['No. Telefon'] || searchResult.telefon || '-'"></p></div>
+            <div><span class="text-slate-500 text-xs">Emel:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Emel Pemohon'] || searchResult.email || '-'"></p></div>
             <div><span class="text-slate-500 text-xs">Tajuk Program:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Tajuk Program / Latihan'] || searchResult.tajuk"></p></div>
             <div><span class="text-slate-500 text-xs">Catatan Pentadbir:</span> <p class="text-slate-700 italic" x-text="(searchResult['Catatan Admin'] || searchResult.catatan) || 'Tiada catatan'"></p></div>
           </div>
@@ -436,20 +439,40 @@
               <tbody class="divide-y divide-slate-100">
                 <template x-for="row in filteredRecords" :key="row['ID Tempahan'] || row.id">
                   <tr class="hover:bg-slate-50/70 transition">
+                    <!-- Tarikh & ID -->
                     <td class="px-4 py-3">
                       <div class="font-semibold text-slate-800" x-text="formatDate(row['Tarikh Tempahan'] || row.tarikh)"></div>
                       <div class="text-[10px] font-mono text-slate-400" x-text="row['ID Tempahan'] || row.id"></div>
                     </td>
+
+                    <!-- Sesi -->
                     <td class="px-4 py-3 font-medium text-slate-700" x-text="row['Sesi Masa'] || row.sesi"></td>
+
+                    <!-- Maklumat Penuh Pemohon & Kontak -->
                     <td class="px-4 py-3">
-                      <div class="font-semibold text-slate-800" x-text="row['Nama Pemohon'] || row.nama"></div>
-                      <div class="text-blue-600 text-[11px]" x-text="row['Emel Pemohon'] || row.email || '-'"></div>
-                      <div class="text-slate-400 text-[10px]" x-text="(row['Bahagian / Unit'] || row.bahagian) + ' • ' + (row['No. Telefon'] || row.telefon)"></div>
+                      <div class="font-bold text-slate-800 text-sm" x-text="row['Nama Pemohon'] || row.nama"></div>
+                      <div class="text-slate-500 text-[11px] font-medium mb-1" x-text="row['Bahagian / Unit'] || row.bahagian || '-'"></div>
+                      
+                      <!-- Emel Pemohon -->
+                      <div class="text-blue-600 text-[11px] flex items-center space-x-1.5">
+                        <i class="fa-regular fa-envelope text-[10px] w-3"></i>
+                        <span x-text="row['Emel Pemohon'] || row.email || '-'"></span>
+                      </div>
+                      
+                      <!-- No Telefon Pemohon -->
+                      <div class="text-emerald-700 text-[11px] flex items-center space-x-1.5 mt-0.5 font-medium">
+                        <i class="fa-solid fa-phone text-[10px] w-3"></i>
+                        <span x-text="row['No. Telefon'] || row.telefon || '-'"></span>
+                      </div>
                     </td>
+
+                    <!-- Program & Peserta -->
                     <td class="px-4 py-3">
                       <div class="font-medium text-slate-800 truncate max-w-[200px]" x-text="row['Tajuk Program / Latihan'] || row.tajuk"></div>
                       <div class="text-slate-400" x-text="(row['Bil. Peserta'] || row.peserta) + ' Orang'"></div>
                     </td>
+
+                    <!-- Status -->
                     <td class="px-4 py-3">
                       <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold"
                         :class="{
@@ -460,6 +483,8 @@
                         x-text="row['Status'] || row.status">
                       </span>
                     </td>
+
+                    <!-- Butang Tindakan -->
                     <td class="px-4 py-3 text-center">
                       <div class="flex justify-center space-x-1">
                         <button @click="updateStatus(row, 'Lulus')" title="Luluskan" class="p-1.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-lg transition">
@@ -486,12 +511,12 @@
 
   </main>
 
-  <!-- Logik Utama Alpine.js -->
+  <!-- Logik Alpine.js -->
   <script>
     function bookingApp() {
       return {
-        // Masukkan URL Google Apps Script Web App anda di sini
-        SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxmkPF18UpJJiUhBHIiPZ3WtbYXeoXefvAiP1oW3l9to8829P37n0GSEVl7IdJMRxJm/exec',
+        // Gantikan URL di bawah dengan Web App URL anda daripada Deploy > New Deployment
+        SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyWtAmQKktUZTkLlPRy4dj0u0OXo-FCBSR1XivDcJFB-UY3HXFTwOBTx18_CdHauKWj/exec',
         
         currentTab: 'booking',
         loading: false,
@@ -526,12 +551,12 @@
         init() {
           const today = new Date();
 
-          // Minimum 2 hari awal
+          // Syarat: Minimum 2 hari awal
           const minD = new Date(today);
           minD.setDate(today.getDate() + 2);
           this.minDate = this.formatDateISO(minD);
 
-          // Maksimum 30 hari
+          // Syarat: Maksimum 30 hari ke hadapan
           const maxD = new Date(today);
           maxD.setDate(today.getDate() + 30);
           this.maxDate = this.formatDateISO(maxD);
@@ -700,7 +725,7 @@
             try {
               result = JSON.parse(textResp);
             } catch (jsonErr) {
-              console.warn('Pelayan tidak memulangkan format JSON:', textResp);
+              console.warn('Pelayan tidak memulangkan format JSON tulen:', textResp);
             }
 
             const assignedId = result.bookingId || result.id || result.idTempahan || backupId;
