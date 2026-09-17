@@ -1,89 +1,725 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Tempahan Bilik Latihan UMKB DBKL</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        body { font-family: sans-serif; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistem Tempahan Bilik Latihan UMKB</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js CDN -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+  <!-- FontAwesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    [x-cloak] { display: none !important; }
+  </style>
 </head>
-<body class="bg-slate-50 text-slate-900 min-h-screen">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen" x-data="bookingApp()">
 
-    <!-- Header -->
-    <header class="bg-white border-b px-4 py-4 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <h1 class="font-bold text-lg text-indigo-700">UMKB DBKL</h1>
-            <nav class="flex gap-2">
-                <button onclick="showSection('utama')" class="px-3 py-1 bg-slate-100 rounded text-xs font-bold">Utama</button>
-                <button onclick="showSection('tempah')" class="px-3 py-1 bg-slate-100 rounded text-xs font-bold">Tempah</button>
-            </nav>
+  <!-- Bar Navigasi Atas -->
+  <header class="bg-blue-900 text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+      <div class="flex items-center space-x-3">
+        <div class="bg-blue-800 p-2 rounded-lg text-blue-200">
+          <i class="fa-solid fa-chalkboard-user text-xl"></i>
         </div>
-    </header>
+        <div>
+          <h1 class="font-bold text-lg leading-tight">Bilik Latihan UMKB</h1>
+          <p class="text-xs text-blue-200">Unit Maklumat Kewangan Berkomputer</p>
+        </div>
+      </div>
 
-    <main class="max-w-6xl mx-auto p-4">
-        
-        <!-- Utama Section (Dibuang class hidden supaya ia muncul secara lalai) -->
-        <section id="section-utama" class="py-10 text-center">
-            <h2 class="text-3xl font-extrabold mb-4">Selamat Datang ke Sistem UMKB</h2>
-            <p class="text-slate-600 mb-8">Sila gunakan menu untuk membuat tempahan bilik latihan.</p>
-            <button onclick="showSection('tempah')" class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-bold">Mula Tempah</button>
-        </section>
+      <!-- Tab Navigasi -->
+      <nav class="flex space-x-1 sm:space-x-2">
+        <button @click="currentTab = 'booking'"
+          :class="currentTab === 'booking' ? 'bg-blue-800 text-white font-semibold' : 'text-blue-200 hover:bg-blue-800/50'"
+          class="px-3 py-2 rounded-lg text-sm transition flex items-center space-x-1.5">
+          <i class="fa-solid fa-calendar-plus text-xs"></i>
+          <span>Borang Tempahan</span>
+        </button>
+        <button @click="currentTab = 'status'"
+          :class="currentTab === 'status' ? 'bg-blue-800 text-white font-semibold' : 'text-blue-200 hover:bg-blue-800/50'"
+          class="px-3 py-2 rounded-lg text-sm transition flex items-center space-x-1.5">
+          <i class="fa-solid fa-magnifying-glass text-xs"></i>
+          <span class="hidden sm:inline">Semak Status</span>
+        </button>
+        <button @click="currentTab = 'admin'"
+          :class="currentTab === 'admin' ? 'bg-blue-800 text-white font-semibold' : 'text-blue-200 hover:bg-blue-800/50'"
+          class="px-3 py-2 rounded-lg text-sm transition flex items-center space-x-1.5">
+          <i class="fa-solid fa-shield-halved text-xs"></i>
+          <span>Admin</span>
+        </button>
+      </nav>
+    </div>
+  </header>
 
-        <!-- Tempah Section -->
-        <section id="section-tempah" class="hidden py-10">
-            <h3 class="font-bold text-xl mb-6">Pilih Tarikh Tempahan</h3>
-            <div id="calendar-grid" class="grid grid-cols-7 gap-2">
-                <!-- Kalendar akan dijana di sini -->
+  <!-- Notifikasi Pop-up (Toast) -->
+  <div x-cloak x-show="toast.show" 
+       x-transition:enter="transition ease-out duration-300 transform"
+       x-transition:enter-start="opacity-0 translate-y-2"
+       x-transition:enter-end="opacity-100 translate-y-0"
+       x-transition:leave="transition ease-in duration-200 transform"
+       x-transition:leave-start="opacity-100 translate-y-0"
+       x-transition:leave-end="opacity-0 translate-y-2"
+       :class="toast.type === 'error' ? 'bg-rose-600' : 'bg-emerald-600'"
+       class="fixed bottom-5 right-5 text-white px-5 py-3 rounded-xl shadow-xl z-50 flex items-center space-x-3 text-sm font-medium">
+    <i :class="toast.type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check'" class="fa-solid text-lg"></i>
+    <span x-text="toast.message"></span>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- ================= TAB 1: BORANG TEMPAHAN ================= -->
+    <section x-show="currentTab === 'booking'" class="max-w-2xl mx-auto" x-cloak>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+        <div class="border-b border-slate-100 pb-5 mb-6">
+          <h2 class="text-xl font-bold text-slate-800 flex items-center space-x-2">
+            <span class="p-2 bg-blue-50 text-blue-600 rounded-lg text-sm"><i class="fa-regular fa-calendar-check"></i></span>
+            <span>Permohonan Tempahan Bilik</span>
+          </h2>
+          <p class="text-xs text-slate-500 mt-1">Tempahan dibuka minimum 2 hari sebelum tarikh penggunaan dan sehingga 30 hari ke hadapan.</p>
+        </div>
+
+        <form @submit.prevent="submitBooking" class="space-y-6">
+          <!-- Pilihan Tarikh Tempahan -->
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Tarikh Tempahan</label>
+              <span class="text-[11px] text-blue-600 font-medium">Tempoh: 2 hari awal hingga 30 hari</span>
             </div>
-        </section>
-
-    </main>
-
-    <script>
-        // Data Cuti Umum (Kuala Lumpur 2026)
-        const publicHolidays = ["2026-07-31", "2026-08-31"]; 
-
-        function showSection(id) {
-            document.querySelectorAll('main > section').forEach(s => s.classList.add('hidden'));
-            document.getElementById('section-' + id).classList.remove('hidden');
-        }
-
-        function renderCalendar() {
-            const grid = document.getElementById('calendar-grid');
-            grid.innerHTML = '';
+            <input type="date" x-model="form.tarikh" required 
+              :min="minDate" 
+              :max="maxDate"
+              @change="validateDateRule"
+              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             
-            const today = new Date();
-            const minDate = new Date();
-            minDate.setDate(today.getDate() + 3);
+            <div x-cloak x-show="dateError" class="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-start space-x-2">
+              <i class="fa-solid fa-circle-info text-amber-600 mt-0.5"></i>
+              <span x-text="dateError"></span>
+            </div>
+          </div>
 
-            // Bina 30 hari bermula dari hari ini
-            for (let i = 0; i < 30; i++) {
-                const date = new Date();
-                date.setDate(today.getDate() + i);
-                
-                const dateStr = date.toISOString().split('T')[0];
-                const day = date.getDay(); // 0 = Ahad, 6 = Sabtu
-                
-                const isDisabled = (day === 0 || day === 6 || publicHolidays.includes(dateStr) || date < minDate);
+          <!-- Pilihan 4 Sesi Masa -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Pilih Sesi Masa</label>
+            <div class="space-y-2.5">
+              
+              <!-- Sesi 1 -->
+              <label class="relative flex items-center justify-between p-3.5 border rounded-xl transition"
+                     :class="[
+                       isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') 
+                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
+                         : (form.sesi === 'Sesi 1: 09:00 AM - 11:00 AM' ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-600 cursor-pointer' : 'border-slate-200 hover:bg-slate-50 cursor-pointer')
+                     ]">
+                <div class="flex items-center space-x-3">
+                  <input type="radio" name="sesi" value="Sesi 1: 09:00 AM - 11:00 AM" x-model="form.sesi" 
+                         :disabled="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')"
+                         class="text-blue-600 focus:ring-blue-500">
+                  <div>
+                    <div class="text-sm font-semibold text-slate-800">Sesi 1 (Pagi)</div>
+                    <div class="text-xs text-slate-500">09:00 AM – 11:00 AM (2 Jam)</div>
+                  </div>
+                </div>
+                <template x-if="!isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">Tersedia</span>
+                </template>
+                <template x-if="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800">Penuh / Bertindih</span>
+                </template>
+              </label>
 
-                const btn = document.createElement('button');
-                btn.className = `p-4 border rounded ${isDisabled ? 'bg-slate-200 cursor-not-allowed' : 'bg-white hover:bg-indigo-50 border-indigo-200'}`;
-                btn.innerText = date.getDate();
-                if (!isDisabled) btn.onclick = () => alert("Anda memilih tarikh: " + dateStr);
-                grid.appendChild(btn);
+              <!-- Sesi 2 -->
+              <label class="relative flex items-center justify-between p-3.5 border rounded-xl transition"
+                     :class="[
+                       isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') 
+                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
+                         : (form.sesi === 'Sesi 2: 11:30 AM - 01:00 PM' ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-600 cursor-pointer' : 'border-slate-200 hover:bg-slate-50 cursor-pointer')
+                     ]">
+                <div class="flex items-center space-x-3">
+                  <input type="radio" name="sesi" value="Sesi 2: 11:30 AM - 01:00 PM" x-model="form.sesi" 
+                         :disabled="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')"
+                         class="text-blue-600 focus:ring-blue-500">
+                  <div>
+                    <div class="text-sm font-semibold text-slate-800">Sesi 2 (Tengah Hari)</div>
+                    <div class="text-xs text-slate-500">11:30 AM – 01:00 PM (1.5 Jam)</div>
+                  </div>
+                </div>
+                <template x-if="!isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">Tersedia</span>
+                </template>
+                <template x-if="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800">Penuh / Bertindih</span>
+                </template>
+              </label>
+
+              <!-- Sesi 3 -->
+              <label class="relative flex items-center justify-between p-3.5 border rounded-xl transition"
+                     :class="[
+                       isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') 
+                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
+                         : (form.sesi === 'Sesi 3: 02:30 PM - 04:30 PM' ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-600 cursor-pointer' : 'border-slate-200 hover:bg-slate-50 cursor-pointer')
+                     ]">
+                <div class="flex items-center space-x-3">
+                  <input type="radio" name="sesi" value="Sesi 3: 02:30 PM - 04:30 PM" x-model="form.sesi" 
+                         :disabled="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')"
+                         class="text-blue-600 focus:ring-blue-500">
+                  <div>
+                    <div class="text-sm font-semibold text-slate-800">Sesi 3 (Petang)</div>
+                    <div class="text-xs text-slate-500">02:30 PM – 04:30 PM (2 Jam)</div>
+                  </div>
+                </div>
+                <template x-if="!isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">Tersedia</span>
+                </template>
+                <template x-if="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800">Penuh / Bertindih</span>
+                </template>
+              </label>
+
+              <!-- Sesi 4 (Sehari Penuh) -->
+              <label class="relative flex items-center justify-between p-3.5 border rounded-xl transition"
+                     :class="[
+                       isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') 
+                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
+                         : (form.sesi === 'Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)' ? 'border-indigo-600 bg-indigo-50/70 ring-1 ring-indigo-600 cursor-pointer' : 'border-slate-200 hover:bg-slate-50 cursor-pointer')
+                     ]">
+                <div class="flex items-center space-x-3">
+                  <input type="radio" name="sesi" value="Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)" x-model="form.sesi" 
+                         :disabled="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')"
+                         class="text-indigo-600 focus:ring-indigo-500">
+                  <div>
+                    <div class="flex items-center space-x-2">
+                      <span class="text-sm font-semibold text-slate-800">Sesi 4 (Sehari Penuh)</span>
+                      <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Pakej Penuh</span>
+                    </div>
+                    <div class="text-xs text-slate-500">09:00 AM – 04:30 PM (Termasuk Sesi Pagi, T/Hari & Petang)</div>
+                  </div>
+                </div>
+                <template x-if="!isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">Tersedia</span>
+                </template>
+                <template x-if="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')">
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800">Penuh / Bertindih</span>
+                </template>
+              </label>
+
+            </div>
+
+            <!-- Notis Amaran Bertindih -->
+            <div x-cloak x-show="isSlotBooked(form.sesi)" 
+                 class="mt-3 p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 flex items-start space-x-3">
+              <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg mt-0.5"></i>
+              <div class="text-xs leading-relaxed">
+                <span class="font-bold block text-sm mb-0.5">Slot Masa Tidak Tersedia!</span>
+                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih dengan slot lain. Sila tukar ke sesi lain atau pilih tarikh baharu.
+              </div>
+            </div>
+          </div>
+
+          <!-- Maklumat Pemohon -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Nama Pemohon</label>
+              <input type="text" x-model="form.nama" placeholder="Cth: Ahmad Razak" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Bahagian / Unit</label>
+              <input type="text" x-model="form.bahagian" placeholder="Cth: UMKB / Jabatan Kewangan" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">No. Telefon</label>
+              <input type="tel" x-model="form.telefon" placeholder="Cth: 012-3456789" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Bilangan Peserta</label>
+              <input type="number" min="1" max="40" x-model="form.peserta" placeholder="Kapasiti maks: 30-40" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+            </div>
+          </div>
+
+          <!-- Tajuk Program -->
+          <div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Tajuk Program / Latihan</label>
+            <input type="text" x-model="form.tajuk" placeholder="Cth: Bengkel Penggunaan Sistem Kewangan" required
+              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+          </div>
+
+          <!-- Butang Hantar -->
+          <button type="submit" :disabled="loading || isSlotBooked(form.sesi) || dateError !== ''"
+            class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition duration-150 flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed">
+            <template x-if="!loading && !isSlotBooked(form.sesi) && !dateError">
+              <span class="flex items-center space-x-2">
+                <i class="fa-solid fa-paper-plane"></i>
+                <span>Hantar Permohonan Tempahan</span>
+              </span>
+            </template>
+            <template x-if="!loading && (isSlotBooked(form.sesi) || dateError !== '')">
+              <span class="flex items-center space-x-2">
+                <i class="fa-solid fa-ban"></i>
+                <span>Slot Tidak Tersedia / Bertindih</span>
+              </span>
+            </template>
+            <template x-if="loading">
+              <span class="flex items-center space-x-2">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <span>Memproses Tempahan...</span>
+              </span>
+            </template>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================= TAB 2: SEMAKAN STATUS AWAM ================= -->
+    <section x-show="currentTab === 'status'" class="max-w-xl mx-auto" x-cloak>
+      <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+        <div class="border-b border-slate-100 pb-5 mb-6 text-center">
+          <h2 class="text-xl font-bold text-slate-800">Semak Status Permohonan</h2>
+          <p class="text-xs text-slate-500 mt-1">Masukkan ID Tempahan atau No. Telefon anda</p>
+        </div>
+
+        <div class="flex space-x-2 mb-6">
+          <input type="text" x-model="searchQuery" placeholder="Cth: TRN-20260919-001 / 0123456789"
+            class="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          <button @click="searchBooking" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium text-sm hover:bg-blue-700 transition">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+
+        <template x-if="searchResult">
+          <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 text-sm">
+            <div class="flex justify-between items-center pb-3 border-b border-slate-200">
+              <span class="font-bold text-slate-700" x-text="searchResult['ID Tempahan'] || searchResult.id"></span>
+              <span class="px-2.5 py-1 rounded-full text-xs font-semibold"
+                :class="{
+                  'bg-emerald-100 text-emerald-800': (searchResult['Status'] || searchResult.status) === 'Lulus',
+                  'bg-amber-100 text-amber-800': (searchResult['Status'] || searchResult.status) === 'Menunggu',
+                  'bg-rose-100 text-rose-800': (searchResult['Status'] || searchResult.status) === 'Ditolak'
+                }"
+                x-text="searchResult['Status'] || searchResult.status">
+              </span>
+            </div>
+            <div><span class="text-slate-500 text-xs">Tarikh:</span> <p class="font-semibold text-slate-800" x-text="formatDate(searchResult['Tarikh Tempahan'] || searchResult.tarikh)"></p></div>
+            <div><span class="text-slate-500 text-xs">Sesi:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Sesi Masa'] || searchResult.sesi"></p></div>
+            <div><span class="text-slate-500 text-xs">Tajuk Program:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Tajuk Program / Latihan'] || searchResult.tajuk"></p></div>
+            <div><span class="text-slate-500 text-xs">Catatan Admin:</span> <p class="text-slate-700 italic" x-text="(searchResult['Catatan Admin'] || searchResult.catatan) || 'Tiada catatan'"></p></div>
+          </div>
+        </template>
+        <template x-if="searchNotFound">
+          <div class="text-center py-6 text-slate-400 text-sm">
+            <i class="fa-regular fa-circle-question text-3xl mb-2 text-slate-300"></i>
+            <p>Tiada rekod tempahan dijumpai bagi carian tersebut.</p>
+          </div>
+        </template>
+      </div>
+    </section>
+
+    <!-- ================= TAB 3: DASHBOARD ADMIN ================= -->
+    <section x-show="currentTab === 'admin'" x-cloak>
+      <div x-show="!adminLoggedIn" class="max-w-sm mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 p-6 text-center">
+        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+          <i class="fa-solid fa-lock text-xl"></i>
+        </div>
+        <h3 class="font-bold text-slate-800 text-lg">Akses Pentadbir UMKB</h3>
+        <p class="text-xs text-slate-500 mt-1 mb-4">Sila masukkan PIN keselamatan untuk mengurus permohonan.</p>
+        <form @submit.prevent="loginAdmin">
+          <input type="password" x-model="adminPin" placeholder="Masukkan PIN" class="w-full px-3 py-2 text-center text-lg tracking-widest border border-slate-200 rounded-xl mb-3 focus:ring-2 focus:ring-blue-600 focus:outline-none">
+          <button type="submit" class="w-full py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition">Log Masuk</button>
+        </form>
+      </div>
+
+      <div x-show="adminLoggedIn" class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 class="text-2xl font-bold text-slate-800">Papan Semakan Pentadbir</h2>
+            <p class="text-xs text-slate-500">Urus kelulusan permohonan bilik latihan UMKB</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button @click="fetchBookings" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm flex items-center space-x-1.5">
+              <i class="fa-solid fa-rotate" :class="{'fa-spin': loading}"></i>
+              <span>Kemaskini</span>
+            </button>
+            <button @click="adminLoggedIn = false" class="px-3 py-2 bg-rose-50 text-rose-600 rounded-xl text-xs font-semibold hover:bg-rose-100 transition">
+              Log Keluar
+            </button>
+          </div>
+        </div>
+
+        <!-- Kad Ringkasan KPI -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+            <div class="text-xs font-medium text-slate-500">Jumlah Tempahan</div>
+            <div class="text-2xl font-bold text-slate-800 mt-1" x-text="records.length"></div>
+          </div>
+          <div class="bg-amber-50/70 p-4 rounded-xl border border-amber-200 shadow-sm">
+            <div class="text-xs font-medium text-amber-700">Menunggu Kelulusan</div>
+            <div class="text-2xl font-bold text-amber-800 mt-1" x-text="countStatus('Menunggu')"></div>
+          </div>
+          <div class="bg-emerald-50/70 p-4 rounded-xl border border-emerald-200 shadow-sm">
+            <div class="text-xs font-medium text-emerald-700">Diluluskan</div>
+            <div class="text-2xl font-bold text-emerald-800 mt-1" x-text="countStatus('Lulus')"></div>
+          </div>
+          <div class="bg-rose-50/70 p-4 rounded-xl border border-rose-200 shadow-sm">
+            <div class="text-xs font-medium text-rose-700">Ditolak</div>
+            <div class="text-2xl font-bold text-rose-800 mt-1" x-text="countStatus('Ditolak')"></div>
+          </div>
+        </div>
+
+        <!-- Jadual Semakan Tempahan -->
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex flex-wrap gap-2 justify-between items-center">
+            <div class="flex space-x-1">
+              <button @click="adminFilter = 'Semua'" :class="adminFilter === 'Semua' ? 'bg-blue-900 text-white' : 'bg-slate-100 text-slate-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold">Semua</button>
+              <button @click="adminFilter = 'Menunggu'" :class="adminFilter === 'Menunggu' ? 'bg-amber-600 text-white' : 'bg-slate-100 text-slate-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold">Menunggu</button>
+              <button @click="adminFilter = 'Lulus'" :class="adminFilter === 'Lulus' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold">Lulus</button>
+              <button @click="adminFilter = 'Ditolak'" :class="adminFilter === 'Ditolak' ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold">Ditolak</button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-100">
+                <tr>
+                  <th class="px-4 py-3">Tarikh / ID</th>
+                  <th class="px-4 py-3">Sesi Masa</th>
+                  <th class="px-4 py-3">Pemohon & Unit</th>
+                  <th class="px-4 py-3">Program / Peserta</th>
+                  <th class="px-4 py-3">Status</th>
+                  <th class="px-4 py-3 text-center">Tindakan Admin</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <template x-for="row in filteredRecords" :key="row['ID Tempahan'] || row.id">
+                  <tr class="hover:bg-slate-50/70 transition">
+                    <td class="px-4 py-3">
+                      <div class="font-semibold text-slate-800" x-text="formatDate(row['Tarikh Tempahan'] || row.tarikh)"></div>
+                      <div class="text-[10px] text-slate-400" x-text="row['ID Tempahan'] || row.id"></div>
+                    </td>
+                    <td class="px-4 py-3 font-medium text-slate-700" x-text="row['Sesi Masa'] || row.sesi"></td>
+                    <td class="px-4 py-3">
+                      <div class="font-semibold text-slate-800" x-text="row['Nama Pemohon'] || row.nama"></div>
+                      <div class="text-slate-500" x-text="(row['Bahagian / Unit'] || row.bahagian) + ' • ' + (row['No. Telefon'] || row.telefon)"></div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <div class="font-medium text-slate-800 truncate max-w-[200px]" x-text="row['Tajuk Program / Latihan'] || row.tajuk"></div>
+                      <div class="text-slate-400" x-text="(row['Bil. Peserta'] || row.peserta) + ' Orang'"></div>
+                    </td>
+                    <td class="px-4 py-3">
+                      <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold"
+                        :class="{
+                          'bg-emerald-100 text-emerald-800': (row['Status'] || row.status) === 'Lulus',
+                          'bg-amber-100 text-amber-800': (row['Status'] || row.status) === 'Menunggu',
+                          'bg-rose-100 text-rose-800': (row['Status'] || row.status) === 'Ditolak'
+                        }"
+                        x-text="row['Status'] || row.status">
+                      </span>
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                      <div class="flex justify-center space-x-1">
+                        <button @click="updateStatus(row, 'Lulus')" title="Luluskan" class="p-1.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-lg transition">
+                          <i class="fa-solid fa-check"></i>
+                        </button>
+                        <button @click="updateStatus(row, 'Ditolak')" title="Tolak" class="p-1.5 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-lg transition">
+                          <i class="fa-solid fa-xmark"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </template>
+                <template x-if="filteredRecords.length === 0">
+                  <tr>
+                    <td colspan="6" class="px-4 py-8 text-center text-slate-400">Tiada rekod tempahan ditemui.</td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Logik Alpine.js & Komunikasi API -->
+  <script>
+    function bookingApp() {
+      return {
+        // =========================================================================
+        // 1. GANTIKAN DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+        // =========================================================================
+        SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxQJZ3l8YQRyx-JcXK0IfpqXNtWk7KURGJrSUHOS0rv4ewJ7vZ73rC1t5M5A0Hsi3M-/exec',
+        
+        currentTab: 'booking',
+        loading: false,
+        adminLoggedIn: false,
+        adminPin: '',
+        
+        // 2. PIN PENTADBIR (Boleh tukar mengikut keperluan anda)
+        ADMIN_SECRET: '1234',
+        
+        adminFilter: 'Semua',
+
+        minDate: '',
+        maxDate: '',
+        dateError: '',
+
+        form: {
+          tarikh: '',
+          sesi: 'Sesi 1: 09:00 AM - 11:00 AM',
+          nama: '',
+          bahagian: '',
+          telefon: '',
+          peserta: '',
+          tajuk: ''
+        },
+
+        toast: { show: false, message: '', type: 'success' },
+        records: [],
+        searchQuery: '',
+        searchResult: null,
+        searchNotFound: false,
+
+        init() {
+          const today = new Date();
+
+          // 1. Had Minimum: 2 hari awal dari tarikh semasa
+          const minD = new Date(today);
+          minD.setDate(today.getDate() + 2);
+          this.minDate = this.formatDateISO(minD);
+
+          // 2. Had Maksimum: 30 hari ke hadapan
+          const maxD = new Date(today);
+          maxD.setDate(today.getDate() + 30);
+          this.maxDate = this.formatDateISO(maxD);
+
+          this.form.tarikh = this.minDate;
+          this.fetchBookings();
+        },
+
+        formatDateISO(dateObj) {
+          const y = dateObj.getFullYear();
+          const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+          const d = String(dateObj.getDate()).padStart(2, '0');
+          return `${y}-${m}-${d}`;
+        },
+
+        validateDateRule() {
+          this.dateError = '';
+          if (!this.form.tarikh) return false;
+
+          if (this.form.tarikh < this.minDate) {
+            this.dateError = 'Permohonan ditutup: Tempahan mestilah dihantar sekurang-kurangnya 2 hari awal dari tarikh penggunaan.';
+            return false;
+          }
+          if (this.form.tarikh > this.maxDate) {
+            this.dateError = 'Tempahan belum dibuka: Slot hanya dibuka untuk tempahan sehingga sebulan (30 hari) ke hadapan sahaja.';
+            return false;
+          }
+          return true;
+        },
+
+        showToast(msg, type = 'success') {
+          this.toast = { show: true, message: msg, type };
+          setTimeout(() => { this.toast.show = false; }, 4000);
+        },
+
+        // Logik Semakan Pertindihan Slot Termasuk Sesi 4
+        isSlotBooked(targetSesi) {
+          if (!this.form.tarikh || !targetSesi) return false;
+          
+          return this.records.some(r => {
+            const rTarikh = this.formatDateYMD(r['Tarikh Tempahan'] || r.tarikh);
+            const rSesi = r['Sesi Masa'] || r.sesi;
+            const rStatus = r['Status'] || r.status;
+            
+            if (rTarikh !== this.form.tarikh || (rStatus !== 'Lulus' && rStatus !== 'Menunggu')) {
+              return false;
             }
-        }
 
-        // Jalankan kalendar sebaik sahaja halaman sedia
-        document.addEventListener('DOMContentLoaded', () => {
-            renderCalendar();
-        });
-    </script>
+            // Sesi sama persis
+            if (rSesi === targetSesi) return true;
+
+            // Sesi 4 sedang aktif -> kunci Sesi 1, 2, 3
+            if (rSesi.includes('Sesi 4') && (targetSesi.includes('Sesi 1') || targetSesi.includes('Sesi 2') || targetSesi.includes('Sesi 3'))) {
+              return true;
+            }
+
+            // Mana-mana Sesi 1, 2, 3 sedang aktif -> kunci Sesi 4
+            if (targetSesi.includes('Sesi 4') && (rSesi.includes('Sesi 1') || rSesi.includes('Sesi 2') || rSesi.includes('Sesi 3'))) {
+              return true;
+            }
+
+            return false;
+          });
+        },
+
+        loginAdmin() {
+          if (this.adminPin === this.ADMIN_SECRET) {
+            this.adminLoggedIn = true;
+            this.adminPin = '';
+            this.fetchBookings();
+          } else {
+            this.showToast('PIN keselamatan tidak sah!', 'error');
+          }
+        },
+
+        // Ambil Data dari Google Sheets (CORS-friendly GET)
+        async fetchBookings() {
+          if (!this.SCRIPT_URL || this.SCRIPT_URL.includes('PASTE_URL')) return;
+          this.loading = true;
+          try {
+            const res = await fetch(this.SCRIPT_URL);
+            const json = await res.json();
+            if (json.status === 'success') {
+              this.records = json.records || [];
+            }
+          } catch (e) {
+            console.error('Ralat mengambil data:', e);
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        // Hantar Data Tempahan ke Google Sheets (CORS-friendly POST)
+        async submitBooking() {
+          if (!this.validateDateRule()) {
+            this.showToast(this.dateError, 'error');
+            return;
+          }
+
+          if (this.isSlotBooked(this.form.sesi)) {
+            this.showToast(`Maaf, ${this.form.sesi} pada tarikh ini telah ditempah atau bertindih.`, 'error');
+            return;
+          }
+
+          this.loading = true;
+          try {
+            if (!this.SCRIPT_URL || this.SCRIPT_URL.includes('PASTE_URL')) {
+              // Simulasi Offline jika URL belum dipasang
+              setTimeout(() => {
+                const dummyId = 'TRN-' + Date.now().toString().slice(-6);
+                this.records.unshift({
+                  'ID Tempahan': dummyId,
+                  'Tarikh Tempahan': this.form.tarikh,
+                  'Sesi Masa': this.form.sesi,
+                  'Nama Pemohon': this.form.nama,
+                  'Bahagian / Unit': this.form.bahagian,
+                  'No. Telefon': this.form.telefon,
+                  'Bil. Peserta': this.form.peserta,
+                  'Tajuk Program / Latihan': this.form.tajuk,
+                  'Status': 'Menunggu',
+                  'Catatan Admin': ''
+                });
+                this.showToast(`Tempahan berjaya dihantar! ID: ${dummyId}`);
+                this.resetForm();
+                this.loading = false;
+              }, 600);
+              return;
+            }
+
+            // Hantar dengan raw text payload bagi mengelakkan sekatan preflight OPTIONS di Apps Script
+            const res = await fetch(this.SCRIPT_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(this.form)
+            });
+            const result = await res.json();
+
+            if (result.status === 'success') {
+              this.showToast(`Tempahan berjaya dihantar! ID: ${result.bookingId}`);
+              this.resetForm();
+              this.fetchBookings();
+            } else {
+              this.showToast(result.message || 'Slot masa ini telah ditempah oleh pemohon lain.', 'error');
+              this.fetchBookings();
+            }
+          } catch (err) {
+            this.showToast('Ralat semasa menghubungi pelayan.', 'error');
+          } finally {
+            this.loading = false;
+          }
+        },
+
+        resetForm() {
+          this.form = {
+            tarikh: this.minDate,
+            sesi: 'Sesi 1: 09:00 AM - 11:00 AM',
+            nama: '',
+            bahagian: '',
+            telefon: '',
+            peserta: '',
+            tajuk: ''
+          };
+          this.dateError = '';
+        },
+
+        searchBooking() {
+          const q = this.searchQuery.trim().toLowerCase();
+          if (!q) return;
+          const found = this.records.find(r => {
+            const id = (r['ID Tempahan'] || r.id || '').toString().toLowerCase();
+            const tel = (r['No. Telefon'] || r.telefon || '').toString().toLowerCase();
+            return id.includes(q) || tel.includes(q);
+          });
+
+          if (found) {
+            this.searchResult = found;
+            this.searchNotFound = false;
+          } else {
+            this.searchResult = null;
+            this.searchNotFound = true;
+          }
+        },
+
+        async updateStatus(row, newStatus) {
+          const id = row['ID Tempahan'] || row.id;
+          row['Status'] = newStatus;
+          row.status = newStatus;
+          this.showToast(`Permohonan ${id} dikemaskini ke: ${newStatus}`);
+
+          if (this.SCRIPT_URL && !this.SCRIPT_URL.includes('PASTE_URL')) {
+            await fetch(this.SCRIPT_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ action: 'updateStatus', id: id, status: newStatus })
+            });
+          }
+        },
+
+        countStatus(status) {
+          return this.records.filter(r => (r['Status'] || r.status) === status).length;
+        },
+
+        get filteredRecords() {
+          if (this.adminFilter === 'Semua') return this.records;
+          return this.records.filter(r => (r['Status'] || r.status) === this.adminFilter);
+        },
+
+        formatDate(d) {
+          if (!d) return '-';
+          try {
+            const dt = new Date(d);
+            return isNaN(dt.getTime()) ? d : dt.toLocaleDateString('ms-MY', { day: '2-digit', month: 'short', year: 'numeric' });
+          } catch {
+            return d;
+          }
+        },
+
+        formatDateYMD(d) {
+          if (!d) return '';
+          try {
+            const dt = new Date(d);
+            if (isNaN(dt.getTime())) return d;
+            return this.formatDateISO(dt);
+          } catch {
+            return d;
+          }
+        }
+      };
+    }
+  </script>
 </body>
 </html>
-```
-
-Sekiranya kod di atas masih tidak memaparkan apa-apa dalam tetingkap *Preview*, ini menunjukkan persekitaran pratonton anda mungkin menyekat JavaScript sepenuhnya. Jika ini berlaku, sila muat naik fail ini ke **GitHub** dan akses terus melalui pautan `github.io` yang diberikan oleh GitHub Pages.
