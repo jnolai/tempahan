@@ -67,35 +67,34 @@
     <span x-text="toast.message"></span>
   </div>
 
-  <!-- Modal Pop-up Kejayaan & Salin No ID Tempahan -->
+  <!-- Modal Pop-up Salin ID Tempahan -->
   <div x-cloak x-show="successModal.show" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200">
-      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
-        <i class="fa-solid fa-circle-check text-3xl"></i>
+      <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
+        <i class="fa-solid fa-circle-check text-2xl"></i>
       </div>
-      <h3 class="text-xl font-bold text-slate-800 mb-1">Permohonan Berjaya Dihantar!</h3>
-      <p class="text-xs text-slate-500 mb-5">Sila salin dan simpan No. ID Tempahan anda untuk tujuan semakan dan pengesahan status kelulusan.</p>
+      <h3 class="text-xl font-bold text-slate-800 mb-1">Permohonan Dihantar!</h3>
+      <p class="text-xs text-slate-500 mb-5">Sila salin dan simpan <strong>No. ID Tempahan</strong> ini untuk membuat semakan status permohonan anda.</p>
       
       <!-- Kad Salin ID -->
-      <div class="bg-slate-50 border-2 border-dashed border-blue-300 rounded-2xl p-4 mb-6 flex items-center justify-between">
-        <div class="text-left">
-          <div class="text-[10px] uppercase font-bold text-blue-700 tracking-wider">No. ID Tempahan Anda</div>
-          <div class="text-lg font-mono font-extrabold text-slate-900 select-all" x-text="successModal.id"></div>
-        </div>
+      <div class="bg-slate-50 border-2 border-dashed border-blue-300 rounded-2xl p-4 mb-6">
+        <div class="text-[11px] uppercase font-bold text-blue-700 tracking-wider mb-1">No. ID Tempahan Anda</div>
+        <div class="text-xl font-mono font-black text-slate-900 tracking-wide select-all mb-3" x-text="successModal.id"></div>
+        
         <button @click="copyId(successModal.id)" 
-                class="px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition shadow-sm"
+                class="w-full py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-sm"
                 :class="copied ? 'bg-emerald-600 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'">
           <i :class="copied ? 'fa-solid fa-check' : 'fa-regular fa-copy'"></i>
-          <span x-text="copied ? 'Disalin!' : 'Salin ID'"></span>
+          <span x-text="copied ? 'Berjaya Disalin!' : 'Salin No. ID Tempahan'"></span>
         </button>
       </div>
 
       <div class="grid grid-cols-2 gap-3">
-        <button @click="successModal.show = false" class="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+        <button @click="successModal.show = false; copied = false;" class="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
           Tutup
         </button>
-        <button @click="goToStatusTab(successModal.id)" class="py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition shadow-md shadow-blue-600/20">
-          Semak Status
+        <button @click="goToStatusTab(successModal.id)" class="py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl text-xs transition">
+          Semak Status Terus
         </button>
       </div>
     </div>
@@ -133,41 +132,32 @@
             </div>
           </div>
 
-          <!-- Pilihan 4 Sesi Masa Beserta Penanda Status Aktif -->
+          <!-- Pilihan 4 Sesi Masa -->
           <div>
-            <div class="flex justify-between items-center mb-2">
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Pilih Sesi Masa</label>
-              <span class="text-[11px] text-slate-500 italic">Sesi bertanda merah tidak boleh dipilih</span>
-            </div>
+            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Pilih Sesi Masa</label>
             <div class="space-y-2.5">
               
               <!-- Sesi 1 -->
               <label class="relative flex items-center justify-between p-3.5 border rounded-xl transition"
                      :class="[
                        isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') 
-                         ? 'border-rose-200 bg-rose-50/50 cursor-not-allowed opacity-80' 
+                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
                          : (form.sesi === 'Sesi 1: 09:00 AM - 11:00 AM' ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-600 cursor-pointer' : 'border-slate-200 hover:bg-slate-50 cursor-pointer')
                      ]">
                 <div class="flex items-center space-x-3">
                   <input type="radio" name="sesi" value="Sesi 1: 09:00 AM - 11:00 AM" x-model="form.sesi" 
                          :disabled="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')"
-                         class="text-blue-600 focus:ring-blue-500 disabled:text-slate-400">
+                         class="text-blue-600 focus:ring-blue-500">
                   <div>
-                    <div class="text-sm font-semibold" :class="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') ? 'text-rose-900' : 'text-slate-800'">Sesi 1 (Pagi)</div>
+                    <div class="text-sm font-semibold text-slate-800">Sesi 1 (Pagi)</div>
                     <div class="text-xs text-slate-500">09:00 AM – 11:00 AM (2 Jam)</div>
                   </div>
                 </div>
                 <template x-if="!isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')">
-                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 flex items-center space-x-1">
-                    <i class="fa-solid fa-circle text-[8px]"></i>
-                    <span>Tersedia</span>
-                  </span>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">Tersedia</span>
                 </template>
                 <template x-if="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')">
-                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800 flex items-center space-x-1">
-                    <i class="fa-solid fa-lock text-[10px]"></i>
-                    <span>Ditempah / Aktif</span>
-                  </span>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800">Penuh / Bertindih</span>
                 </template>
               </label>
 
@@ -175,29 +165,23 @@
               <label class="relative flex items-center justify-between p-3.5 border rounded-xl transition"
                      :class="[
                        isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') 
-                         ? 'border-rose-200 bg-rose-50/50 cursor-not-allowed opacity-80' 
+                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
                          : (form.sesi === 'Sesi 2: 11:30 AM - 01:00 PM' ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-600 cursor-pointer' : 'border-slate-200 hover:bg-slate-50 cursor-pointer')
                      ]">
                 <div class="flex items-center space-x-3">
                   <input type="radio" name="sesi" value="Sesi 2: 11:30 AM - 01:00 PM" x-model="form.sesi" 
                          :disabled="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')"
-                         class="text-blue-600 focus:ring-blue-500 disabled:text-slate-400">
+                         class="text-blue-600 focus:ring-blue-500">
                   <div>
-                    <div class="text-sm font-semibold" :class="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') ? 'text-rose-900' : 'text-slate-800'">Sesi 2 (Tengah Hari)</div>
+                    <div class="text-sm font-semibold text-slate-800">Sesi 2 (Tengah Hari)</div>
                     <div class="text-xs text-slate-500">11:30 AM – 01:00 PM (1.5 Jam)</div>
                   </div>
                 </div>
                 <template x-if="!isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')">
-                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 flex items-center space-x-1">
-                    <i class="fa-solid fa-circle text-[8px]"></i>
-                    <span>Tersedia</span>
-                  </span>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">Tersedia</span>
                 </template>
                 <template x-if="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')">
-                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800 flex items-center space-x-1">
-                    <i class="fa-solid fa-lock text-[10px]"></i>
-                    <span>Ditempah / Aktif</span>
-                  </span>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800">Penuh / Bertindih</span>
                 </template>
               </label>
 
@@ -205,29 +189,23 @@
               <label class="relative flex items-center justify-between p-3.5 border rounded-xl transition"
                      :class="[
                        isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') 
-                         ? 'border-rose-200 bg-rose-50/50 cursor-not-allowed opacity-80' 
+                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
                          : (form.sesi === 'Sesi 3: 02:30 PM - 04:30 PM' ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-600 cursor-pointer' : 'border-slate-200 hover:bg-slate-50 cursor-pointer')
                      ]">
                 <div class="flex items-center space-x-3">
                   <input type="radio" name="sesi" value="Sesi 3: 02:30 PM - 04:30 PM" x-model="form.sesi" 
                          :disabled="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')"
-                         class="text-blue-600 focus:ring-blue-500 disabled:text-slate-400">
+                         class="text-blue-600 focus:ring-blue-500">
                   <div>
-                    <div class="text-sm font-semibold" :class="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') ? 'text-rose-900' : 'text-slate-800'">Sesi 3 (Petang)</div>
+                    <div class="text-sm font-semibold text-slate-800">Sesi 3 (Petang)</div>
                     <div class="text-xs text-slate-500">02:30 PM – 04:30 PM (2 Jam)</div>
                   </div>
                 </div>
                 <template x-if="!isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')">
-                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 flex items-center space-x-1">
-                    <i class="fa-solid fa-circle text-[8px]"></i>
-                    <span>Tersedia</span>
-                  </span>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">Tersedia</span>
                 </template>
                 <template x-if="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')">
-                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800 flex items-center space-x-1">
-                    <i class="fa-solid fa-lock text-[10px]"></i>
-                    <span>Ditempah / Aktif</span>
-                  </span>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800">Penuh / Bertindih</span>
                 </template>
               </label>
 
@@ -235,49 +213,43 @@
               <label class="relative flex items-center justify-between p-3.5 border rounded-xl transition"
                      :class="[
                        isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') 
-                         ? 'border-rose-200 bg-rose-50/50 cursor-not-allowed opacity-80' 
+                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
                          : (form.sesi === 'Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)' ? 'border-indigo-600 bg-indigo-50/70 ring-1 ring-indigo-600 cursor-pointer' : 'border-slate-200 hover:bg-slate-50 cursor-pointer')
                      ]">
                 <div class="flex items-center space-x-3">
                   <input type="radio" name="sesi" value="Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)" x-model="form.sesi" 
                          :disabled="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')"
-                         class="text-indigo-600 focus:ring-indigo-500 disabled:text-slate-400">
+                         class="text-indigo-600 focus:ring-indigo-500">
                   <div>
                     <div class="flex items-center space-x-2">
-                      <span class="text-sm font-semibold" :class="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') ? 'text-rose-900' : 'text-slate-800'">Sesi 4 (Sehari Penuh)</span>
+                      <span class="text-sm font-semibold text-slate-800">Sesi 4 (Sehari Penuh)</span>
                       <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Pakej Penuh</span>
                     </div>
-                    <div class="text-xs text-slate-500">09:00 AM – 04:30 PM (Merangkumi Pagi, Tengah Hari & Petang)</div>
+                    <div class="text-xs text-slate-500">09:00 AM – 04:30 PM (Merangkumi Sesi Pagi, Tengah Hari & Petang)</div>
                   </div>
                 </div>
                 <template x-if="!isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')">
-                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800 flex items-center space-x-1">
-                    <i class="fa-solid fa-circle text-[8px]"></i>
-                    <span>Tersedia</span>
-                  </span>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-800">Tersedia</span>
                 </template>
                 <template x-if="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')">
-                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800 flex items-center space-x-1">
-                    <i class="fa-solid fa-lock text-[10px]"></i>
-                    <span>Ditempah / Bertindih</span>
-                  </span>
+                  <span class="text-xs font-semibold px-2.5 py-1 rounded-md bg-rose-100 text-rose-800">Penuh / Bertindih</span>
                 </template>
               </label>
 
             </div>
 
-            <!-- Notis Amaran Bertindih -->
+            <!-- Notis Bertindih -->
             <div x-cloak x-show="isSlotBooked(form.sesi)" 
                  class="mt-3 p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 flex items-start space-x-3">
               <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg mt-0.5"></i>
               <div class="text-xs leading-relaxed">
-                <span class="font-bold block text-sm mb-0.5">Sesi Pilihan Tidak Tersedia!</span>
-                Maaf, slot <strong x-text="form.sesi"></strong> pada <strong x-text="formatDate(form.tarikh)"></strong> telah mempunyai tempahan aktif. Sila pilih slot masa atau tarikh lain.
+                <span class="font-bold block text-sm mb-0.5">Slot Masa Tidak Tersedia!</span>
+                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih. Sila tukar ke sesi atau tarikh lain.
               </div>
             </div>
           </div>
 
-          <!-- Butiran Pemohon -->
+          <!-- Butiran Pemohon (Termasuk Emel & No Telefon) -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Nama Pemohon</label>
@@ -285,18 +257,18 @@
                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             </div>
             <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Emel Rasmi Pemohon</label>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Emel Pemohon</label>
               <input type="email" x-model="form.email" placeholder="Cth: ahmad@dbkl.gov.my" required
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
-            </div>
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Bahagian / Unit</label>
-              <input type="text" x-model="form.bahagian" placeholder="Cth: UMKB / Jabatan Kewangan" required
                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             </div>
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">No. Telefon</label>
               <input type="tel" x-model="form.telefon" placeholder="Cth: 012-3456789" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Bahagian / Unit</label>
+              <input type="text" x-model="form.bahagian" placeholder="Cth: UMKB / Jabatan Kewangan" required
                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             </div>
           </div>
@@ -350,7 +322,7 @@
         </div>
 
         <div class="flex space-x-2 mb-6">
-          <input type="text" x-model="searchQuery" placeholder="Cth: TRN-20260919-001 / 0123456789"
+          <input type="text" x-model="searchQuery" placeholder="Cth: TRN-20260919-001 atau 0123456789"
             class="flex-1 px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
           <button @click="searchBooking" class="px-5 py-2.5 bg-blue-600 text-white rounded-xl font-medium text-sm hover:bg-blue-700 transition">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -372,7 +344,8 @@
             </div>
             <div><span class="text-slate-500 text-xs">Tarikh:</span> <p class="font-semibold text-slate-800" x-text="formatDate(searchResult['Tarikh Tempahan'] || searchResult.tarikh)"></p></div>
             <div><span class="text-slate-500 text-xs">Sesi Masa:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Sesi Masa'] || searchResult.sesi"></p></div>
-            <div><span class="text-slate-500 text-xs">Pemohon / Emel:</span> <p class="font-semibold text-slate-800" x-text="(searchResult['Nama Pemohon'] || searchResult.nama) + ' (' + (searchResult['Emel Pemohon'] || searchResult.email || '-') + ')'"></p></div>
+            <div><span class="text-slate-500 text-xs">Pemohon:</span> <p class="font-semibold text-slate-800" x-text="(searchResult['Nama Pemohon'] || searchResult.nama) + ' (' + (searchResult['Emel Pemohon'] || searchResult.email || '-') + ')'"></p></div>
+            <div><span class="text-slate-500 text-xs">No. Telefon:</span> <p class="font-semibold text-slate-800" x-text="searchResult['No. Telefon'] || searchResult.telefon || '-'"></p></div>
             <div><span class="text-slate-500 text-xs">Tajuk Program:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Tajuk Program / Latihan'] || searchResult.tajuk"></p></div>
             <div><span class="text-slate-500 text-xs">Catatan Pentadbir:</span> <p class="text-slate-700 italic" x-text="(searchResult['Catatan Admin'] || searchResult.catatan) || 'Tiada catatan'"></p></div>
           </div>
@@ -454,7 +427,7 @@
                 <tr>
                   <th class="px-4 py-3">Tarikh / ID</th>
                   <th class="px-4 py-3">Sesi Masa</th>
-                  <th class="px-4 py-3">Pemohon & Emel</th>
+                  <th class="px-4 py-3">Pemohon & Kontak</th>
                   <th class="px-4 py-3">Program / Peserta</th>
                   <th class="px-4 py-3">Status</th>
                   <th class="px-4 py-3 text-center">Tindakan Admin</th>
@@ -470,7 +443,7 @@
                     <td class="px-4 py-3 font-medium text-slate-700" x-text="row['Sesi Masa'] || row.sesi"></td>
                     <td class="px-4 py-3">
                       <div class="font-semibold text-slate-800" x-text="row['Nama Pemohon'] || row.nama"></div>
-                      <div class="text-slate-500 text-[11px]" x-text="row['Emel Pemohon'] || row.email || '-'"></div>
+                      <div class="text-blue-600 text-[11px]" x-text="row['Emel Pemohon'] || row.email || '-'"></div>
                       <div class="text-slate-400 text-[10px]" x-text="(row['Bahagian / Unit'] || row.bahagian) + ' • ' + (row['No. Telefon'] || row.telefon)"></div>
                     </td>
                     <td class="px-4 py-3">
@@ -517,10 +490,12 @@
   <script>
     function bookingApp() {
       return {
-        SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyYU1SPBxD2pASWr2u_s7my8-Vy-NdKQfmUbcJcIsjg7Isu9ynV1LWNpbBsSiEcnC6b/exec',
+        // Masukkan URL Google Apps Script Web App anda di sini
+        SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxmkPF18UpJJiUhBHIiPZ3WtbYXeoXefvAiP1oW3l9to8829P37n0GSEVl7IdJMRxJm/exec',
         
         currentTab: 'booking',
         loading: false,
+        copied: false,
         adminLoggedIn: false,
         adminPin: '',
         ADMIN_SECRET: '1234',
@@ -535,15 +510,14 @@
           sesi: 'Sesi 1: 09:00 AM - 11:00 AM',
           nama: '',
           email: '',
-          bahagian: '',
           telefon: '',
+          bahagian: '',
           peserta: '',
           tajuk: ''
         },
 
         toast: { show: false, message: '', type: 'success' },
         successModal: { show: false, id: '' },
-        copied: false,
         records: [],
         searchQuery: '',
         searchResult: null,
@@ -552,12 +526,12 @@
         init() {
           const today = new Date();
 
-          // Had minimum 2 hari awal
+          // Minimum 2 hari awal
           const minD = new Date(today);
           minD.setDate(today.getDate() + 2);
           this.minDate = this.formatDateISO(minD);
 
-          // Had maksimum 30 hari ke hadapan
+          // Maksimum 30 hari
           const maxD = new Date(today);
           maxD.setDate(today.getDate() + 30);
           this.maxDate = this.formatDateISO(maxD);
@@ -590,37 +564,36 @@
 
         showToast(msg, type = 'success') {
           this.toast = { show: true, message: msg, type };
-          setTimeout(() => { this.toast.show = false; }, 4000);
+          setTimeout(() => { this.toast.show = false; }, 5000);
         },
 
         copyId(text) {
-          if (!text) return;
-          navigator.clipboard.writeText(text).then(() => {
-            this.copied = true;
-            this.showToast('No. ID Tempahan berjaya disalin!');
-            setTimeout(() => { this.copied = false; }, 2500);
-          }).catch(() => {
-            // Kaedah sandaran sekiranya Clipboard API disekat
-            const el = document.createElement('textarea');
-            el.value = text;
-            document.body.appendChild(el);
-            el.select();
+          if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(text);
+          } else {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.left = "-999999px";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
             document.execCommand('copy');
-            document.body.removeChild(el);
-            this.copied = true;
-            this.showToast('No. ID Tempahan berjaya disalin!');
-            setTimeout(() => { this.copied = false; }, 2500);
-          });
+            textArea.remove();
+          }
+          this.copied = true;
+          this.showToast('No. ID Tempahan berjaya disalin!');
+          setTimeout(() => { this.copied = false; }, 3000);
         },
 
         goToStatusTab(id) {
           this.successModal.show = false;
+          this.copied = false;
           this.currentTab = 'status';
           this.searchQuery = id;
           this.searchBooking();
         },
 
-        // Semakan Slot Masa Aktif (Status 'Lulus' atau 'Menunggu')
         isSlotBooked(targetSesi) {
           if (!this.form.tarikh || !targetSesi) return false;
           
@@ -629,20 +602,18 @@
             const rSesi = r['Sesi Masa'] || r.sesi;
             const rStatus = r['Status'] || r.status;
             
-            // Hanya semak rekod yang sah & bertarikh sama
             if (rTarikh !== this.form.tarikh || (rStatus !== 'Lulus' && rStatus !== 'Menunggu')) {
               return false;
             }
 
-            // Sesi sama tepat
             if (rSesi === targetSesi) return true;
 
-            // Sesi 4 (Sehari Penuh) bertindih dengan semua slot pecahan lain (Sesi 1, 2, 3)
+            // Sesi 4 menghalang sesi 1, 2, 3
             if (rSesi.includes('Sesi 4') && (targetSesi.includes('Sesi 1') || targetSesi.includes('Sesi 2') || targetSesi.includes('Sesi 3'))) {
               return true;
             }
 
-            // Sebarang sesi (1, 2, atau 3) menghalang pengambilan Sesi 4 Penuh
+            // Sesi 1, 2, atau 3 menghalang Sesi 4
             if (targetSesi.includes('Sesi 4') && (rSesi.includes('Sesi 1') || rSesi.includes('Sesi 2') || rSesi.includes('Sesi 3'))) {
               return true;
             }
@@ -684,20 +655,18 @@
           }
 
           if (this.isSlotBooked(this.form.sesi)) {
-            this.showToast(`Maaf, ${this.form.sesi} pada tarikh ini telah mempunyai tempahan aktif.`, 'error');
+            this.showToast(`Maaf, ${this.form.sesi} pada tarikh ini telah ditempah atau bertindih.`, 'error');
             return;
           }
 
           this.loading = true;
           this.copied = false;
 
-          // Jana fallback ID sekiranya Apps Script response terputus sambungan
           const nowStr = new Date();
           const backupId = "TRN-" + this.formatDateISO(nowStr).replace(/-/g, "") + "-" + String(nowStr.getHours()).padStart(2, '0') + String(nowStr.getMinutes()).padStart(2, '0') + String(nowStr.getSeconds()).padStart(2, '0');
 
           try {
             if (!this.SCRIPT_URL || this.SCRIPT_URL.includes('PASTE_URL')) {
-              // Mod Demo / Tempatan
               setTimeout(() => {
                 this.records.unshift({
                   'ID Tempahan': backupId,
@@ -705,8 +674,8 @@
                   'Sesi Masa': this.form.sesi,
                   'Nama Pemohon': this.form.nama,
                   'Emel Pemohon': this.form.email,
-                  'Bahagian / Unit': this.form.bahagian,
                   'No. Telefon': this.form.telefon,
+                  'Bahagian / Unit': this.form.bahagian,
                   'Bil. Peserta': this.form.peserta,
                   'Tajuk Program / Latihan': this.form.tajuk,
                   'Status': 'Menunggu',
@@ -747,8 +716,7 @@
             }
 
           } catch (err) {
-            console.error('Ralat semasa hantar:', err);
-            // Tetap paparkan ID fallback bagi memastikan pengguna memperoleh No. Rujukan
+            console.error('Ralat semasa menghantar:', err);
             this.successModal.id = backupId;
             this.successModal.show = true;
             this.resetForm();
@@ -764,8 +732,8 @@
             sesi: 'Sesi 1: 09:00 AM - 11:00 AM',
             nama: '',
             email: '',
-            bahagian: '',
             telefon: '',
+            bahagian: '',
             peserta: '',
             tajuk: ''
           };
