@@ -77,7 +77,7 @@
             <span class="p-2 bg-blue-50 text-blue-600 rounded-lg text-sm"><i class="fa-regular fa-calendar-check"></i></span>
             <span>Permohonan Tempahan Bilik</span>
           </h2>
-          <p class="text-xs text-slate-500 mt-1">Tempahan dibuka minimum 2 hari sebelum tarikh penggunaan dan sehingga 30 hari ke hadapan.</p>
+          <p class="text-xs text-slate-500 mt-1">Tempahan dibuka sekurang-kurangnya 2 hari awal dan sehingga 30 hari ke hadapan. ID tempahan akan dihantar terus ke e-mel anda.</p>
         </div>
 
         <form @submit.prevent="submitBooking" class="space-y-6">
@@ -192,7 +192,7 @@
                       <span class="text-sm font-semibold text-slate-800">Sesi 4 (Sehari Penuh)</span>
                       <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Pakej Penuh</span>
                     </div>
-                    <div class="text-xs text-slate-500">09:00 AM – 04:30 PM (Termasuk Sesi Pagi, T/Hari & Petang)</div>
+                    <div class="text-xs text-slate-500">09:00 AM – 04:30 PM (Merangkumi Pagi, Tengah Hari & Petang)</div>
                   </div>
                 </div>
                 <template x-if="!isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')">
@@ -211,16 +211,21 @@
               <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg mt-0.5"></i>
               <div class="text-xs leading-relaxed">
                 <span class="font-bold block text-sm mb-0.5">Slot Masa Tidak Tersedia!</span>
-                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih dengan slot lain. Sila tukar ke sesi lain atau pilih tarikh baharu.
+                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih dengan sesi lain. Sila tukar ke sesi lain atau pilih tarikh berbeza.
               </div>
             </div>
           </div>
 
-          <!-- Maklumat Pemohon -->
+          <!-- Maklumat Pemohon Termasuk E-mel -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Nama Pemohon</label>
               <input type="text" x-model="form.nama" placeholder="Cth: Ahmad Razak" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Emel Rasmi (Terima ID Tempahan)</label>
+              <input type="email" x-model="form.email" placeholder="Cth: ahmad@dbkl.gov.my" required
                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             </div>
             <div>
@@ -233,18 +238,20 @@
               <input type="tel" x-model="form.telefon" placeholder="Cth: 012-3456789" required
                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             </div>
-            <div>
-              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Bilangan Peserta</label>
-              <input type="number" min="1" max="40" x-model="form.peserta" placeholder="Kapasiti maks: 30-40" required
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
-            </div>
           </div>
 
-          <!-- Tajuk Program -->
-          <div>
-            <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Tajuk Program / Latihan</label>
-            <input type="text" x-model="form.tajuk" placeholder="Cth: Bengkel Penggunaan Sistem Kewangan" required
-              class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+          <!-- Butiran Program -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Tajuk Program / Latihan</label>
+              <input type="text" x-model="form.tajuk" placeholder="Cth: Bengkel Penggunaan Sistem Kewangan" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+            </div>
+            <div>
+              <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Bil. Peserta</label>
+              <input type="number" min="1" max="40" x-model="form.peserta" placeholder="Maks: 40" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+            </div>
           </div>
 
           <!-- Butang Hantar -->
@@ -253,7 +260,7 @@
             <template x-if="!loading && !isSlotBooked(form.sesi) && !dateError">
               <span class="flex items-center space-x-2">
                 <i class="fa-solid fa-paper-plane"></i>
-                <span>Hantar Permohonan Tempahan</span>
+                <span>Hantar Permohonan & Hantar E-mel ID</span>
               </span>
             </template>
             <template x-if="!loading && (isSlotBooked(form.sesi) || dateError !== '')">
@@ -265,7 +272,7 @@
             <template x-if="loading">
               <span class="flex items-center space-x-2">
                 <i class="fa-solid fa-spinner fa-spin"></i>
-                <span>Memproses Tempahan...</span>
+                <span>Memproses Tempahan & Menghantar E-mel...</span>
               </span>
             </template>
           </button>
@@ -278,7 +285,7 @@
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
         <div class="border-b border-slate-100 pb-5 mb-6 text-center">
           <h2 class="text-xl font-bold text-slate-800">Semak Status Permohonan</h2>
-          <p class="text-xs text-slate-500 mt-1">Masukkan ID Tempahan atau No. Telefon anda</p>
+          <p class="text-xs text-slate-500 mt-1">Masukkan ID Tempahan atau No. Telefon yang didaftarkan</p>
         </div>
 
         <div class="flex space-x-2 mb-6">
@@ -304,6 +311,7 @@
             </div>
             <div><span class="text-slate-500 text-xs">Tarikh:</span> <p class="font-semibold text-slate-800" x-text="formatDate(searchResult['Tarikh Tempahan'] || searchResult.tarikh)"></p></div>
             <div><span class="text-slate-500 text-xs">Sesi:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Sesi Masa'] || searchResult.sesi"></p></div>
+            <div><span class="text-slate-500 text-xs">Pemohon / Emel:</span> <p class="font-semibold text-slate-800" x-text="(searchResult['Nama Pemohon'] || searchResult.nama) + ' (' + (searchResult['Emel Pemohon'] || searchResult.email || '-') + ')'"></p></div>
             <div><span class="text-slate-500 text-xs">Tajuk Program:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Tajuk Program / Latihan'] || searchResult.tajuk"></p></div>
             <div><span class="text-slate-500 text-xs">Catatan Admin:</span> <p class="text-slate-700 italic" x-text="(searchResult['Catatan Admin'] || searchResult.catatan) || 'Tiada catatan'"></p></div>
           </div>
@@ -385,7 +393,7 @@
                 <tr>
                   <th class="px-4 py-3">Tarikh / ID</th>
                   <th class="px-4 py-3">Sesi Masa</th>
-                  <th class="px-4 py-3">Pemohon & Unit</th>
+                  <th class="px-4 py-3">Pemohon & Emel</th>
                   <th class="px-4 py-3">Program / Peserta</th>
                   <th class="px-4 py-3">Status</th>
                   <th class="px-4 py-3 text-center">Tindakan Admin</th>
@@ -401,7 +409,8 @@
                     <td class="px-4 py-3 font-medium text-slate-700" x-text="row['Sesi Masa'] || row.sesi"></td>
                     <td class="px-4 py-3">
                       <div class="font-semibold text-slate-800" x-text="row['Nama Pemohon'] || row.nama"></div>
-                      <div class="text-slate-500" x-text="(row['Bahagian / Unit'] || row.bahagian) + ' • ' + (row['No. Telefon'] || row.telefon)"></div>
+                      <div class="text-slate-500 text-[11px]" x-text="row['Emel Pemohon'] || row.email || '-'"></div>
+                      <div class="text-slate-400 text-[10px]" x-text="(row['Bahagian / Unit'] || row.bahagian) + ' • ' + (row['No. Telefon'] || row.telefon)"></div>
                     </td>
                     <td class="px-4 py-3">
                       <div class="font-medium text-slate-800 truncate max-w-[200px]" x-text="row['Tajuk Program / Latihan'] || row.tajuk"></div>
@@ -448,16 +457,16 @@
     function bookingApp() {
       return {
         // =========================================================================
-        // 1. GANTIKAN DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+        // GANTIKAN DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
         // =========================================================================
-        SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxQJZ3l8YQRyx-JcXK0IfpqXNtWk7KURGJrSUHOS0rv4ewJ7vZ73rC1t5M5A0Hsi3M-/exec',
+        SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyYU1SPBxD2pASWr2u_s7my8-Vy-NdKQfmUbcJcIsjg7Isu9ynV1LWNpbBsSiEcnC6b/exec',
         
         currentTab: 'booking',
         loading: false,
         adminLoggedIn: false,
         adminPin: '',
         
-        // 2. PIN PENTADBIR (Boleh tukar mengikut keperluan anda)
+        // PIN Pentadbir
         ADMIN_SECRET: '1234',
         
         adminFilter: 'Semua',
@@ -470,6 +479,7 @@
           tarikh: '',
           sesi: 'Sesi 1: 09:00 AM - 11:00 AM',
           nama: '',
+          email: '',
           bahagian: '',
           telefon: '',
           peserta: '',
@@ -485,7 +495,7 @@
         init() {
           const today = new Date();
 
-          // 1. Had Minimum: 2 hari awal dari tarikh semasa
+          // 1. Had Minimum: 2 hari awal
           const minD = new Date(today);
           minD.setDate(today.getDate() + 2);
           this.minDate = this.formatDateISO(minD);
@@ -526,7 +536,7 @@
           setTimeout(() => { this.toast.show = false; }, 4000);
         },
 
-        // Logik Semakan Pertindihan Slot Termasuk Sesi 4
+        // Logik Semakan Pertindihan Slot Termasuk Sesi 4 Sehari Penuh
         isSlotBooked(targetSesi) {
           if (!this.form.tarikh || !targetSesi) return false;
           
@@ -539,15 +549,14 @@
               return false;
             }
 
-            // Sesi sama persis
             if (rSesi === targetSesi) return true;
 
-            // Sesi 4 sedang aktif -> kunci Sesi 1, 2, 3
+            // Sesi 4 sedia ada menghalang Sesi 1, 2, 3
             if (rSesi.includes('Sesi 4') && (targetSesi.includes('Sesi 1') || targetSesi.includes('Sesi 2') || targetSesi.includes('Sesi 3'))) {
               return true;
             }
 
-            // Mana-mana Sesi 1, 2, 3 sedang aktif -> kunci Sesi 4
+            // Sesi 1, 2, atau 3 sedia ada menghalang permohonan Sesi 4
             if (targetSesi.includes('Sesi 4') && (rSesi.includes('Sesi 1') || rSesi.includes('Sesi 2') || rSesi.includes('Sesi 3'))) {
               return true;
             }
@@ -566,7 +575,6 @@
           }
         },
 
-        // Ambil Data dari Google Sheets (CORS-friendly GET)
         async fetchBookings() {
           if (!this.SCRIPT_URL || this.SCRIPT_URL.includes('PASTE_URL')) return;
           this.loading = true;
@@ -583,7 +591,6 @@
           }
         },
 
-        // Hantar Data Tempahan ke Google Sheets (CORS-friendly POST)
         async submitBooking() {
           if (!this.validateDateRule()) {
             this.showToast(this.dateError, 'error');
@@ -598,7 +605,6 @@
           this.loading = true;
           try {
             if (!this.SCRIPT_URL || this.SCRIPT_URL.includes('PASTE_URL')) {
-              // Simulasi Offline jika URL belum dipasang
               setTimeout(() => {
                 const dummyId = 'TRN-' + Date.now().toString().slice(-6);
                 this.records.unshift({
@@ -606,6 +612,7 @@
                   'Tarikh Tempahan': this.form.tarikh,
                   'Sesi Masa': this.form.sesi,
                   'Nama Pemohon': this.form.nama,
+                  'Emel Pemohon': this.form.email,
                   'Bahagian / Unit': this.form.bahagian,
                   'No. Telefon': this.form.telefon,
                   'Bil. Peserta': this.form.peserta,
@@ -613,14 +620,14 @@
                   'Status': 'Menunggu',
                   'Catatan Admin': ''
                 });
-                this.showToast(`Tempahan berjaya dihantar! ID: ${dummyId}`);
+                this.showToast(`Tempahan berjaya! ID: ${dummyId} telah dihantar ke emel.`);
                 this.resetForm();
                 this.loading = false;
               }, 600);
               return;
             }
 
-            // Hantar dengan raw text payload bagi mengelakkan sekatan preflight OPTIONS di Apps Script
+            // Guna text/plain bagi mengelakkan sekatan CORS Preflight OPTIONS di Apps Script
             const res = await fetch(this.SCRIPT_URL, {
               method: 'POST',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
@@ -629,7 +636,7 @@
             const result = await res.json();
 
             if (result.status === 'success') {
-              this.showToast(`Tempahan berjaya dihantar! ID: ${result.bookingId}`);
+              this.showToast(`Tempahan berjaya! ID: ${result.bookingId} dihantar ke e-mel.`);
               this.resetForm();
               this.fetchBookings();
             } else {
@@ -648,6 +655,7 @@
             tarikh: this.minDate,
             sesi: 'Sesi 1: 09:00 AM - 11:00 AM',
             nama: '',
+            email: '',
             bahagian: '',
             telefon: '',
             peserta: '',
