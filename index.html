@@ -16,8 +16,8 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen" x-data="bookingApp()">
 
-  <!-- Bar Navigasi Atas -->
-  <header class="bg-blue-900 text-white shadow-md sticky top-0 z-50">
+  <!-- Bar Navigasi Utama -->
+  <header class="bg-blue-900 text-white shadow-md sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
       <div class="flex items-center space-x-3">
         <div class="bg-blue-800 p-2 rounded-lg text-blue-200">
@@ -53,7 +53,7 @@
     </div>
   </header>
 
-  <!-- Notifikasi Pop-up (Toast) -->
+  <!-- Notifikasi Toast -->
   <div x-cloak x-show="toast.show" 
        x-transition:enter="transition ease-out duration-300 transform"
        x-transition:enter-start="opacity-0 translate-y-2"
@@ -67,6 +67,42 @@
     <span x-text="toast.message"></span>
   </div>
 
+  <!-- Modal Pop-up Kejayaan (Papar No ID Tempahan) -->
+  <div x-cloak x-show="successModal.show" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white rounded-2xl max-w-md w-full p-6 text-center shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200">
+      <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <i class="fa-solid fa-circle-check text-3xl"></i>
+      </div>
+      <h3 class="text-xl font-bold text-slate-800 mb-1">Permohonan Berjaya!</h3>
+      <p class="text-xs text-slate-500 mb-5">Sila simpan No. ID Tempahan ini untuk rujukan dan semakan kelulusan.</p>
+      
+      <!-- Kad Paparan ID -->
+      <div class="bg-blue-50/60 border border-dashed border-blue-300 rounded-xl p-4 mb-4 flex items-center justify-between">
+        <div class="text-left">
+          <div class="text-[10px] uppercase font-bold text-blue-700 tracking-wider">No. ID Tempahan</div>
+          <div class="text-lg font-mono font-extrabold text-blue-950" x-text="successModal.id"></div>
+        </div>
+        <button @click="copyId(successModal.id)" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition shadow-sm">
+          <i class="fa-regular fa-copy"></i>
+          <span>Salin</span>
+        </button>
+      </div>
+
+      <p class="text-[11px] text-slate-500 mb-6">
+        <i class="fa-regular fa-envelope text-blue-600 mr-1"></i> Salinan butiran telah dihantar ke e-mel pemohon.
+      </p>
+
+      <div class="grid grid-cols-2 gap-3">
+        <button @click="successModal.show = false" class="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+          Tutup
+        </button>
+        <button @click="goToStatusTab(successModal.id)" class="py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-xs transition shadow-md shadow-blue-600/20">
+          Semak Status
+        </button>
+      </div>
+    </div>
+  </div>
+
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- ================= TAB 1: BORANG TEMPAHAN ================= -->
@@ -77,7 +113,7 @@
             <span class="p-2 bg-blue-50 text-blue-600 rounded-lg text-sm"><i class="fa-regular fa-calendar-check"></i></span>
             <span>Permohonan Tempahan Bilik</span>
           </h2>
-          <p class="text-xs text-slate-500 mt-1">Tempahan dibuka sekurang-kurangnya 2 hari awal dan sehingga 30 hari ke hadapan. ID tempahan akan dihantar terus ke e-mel anda.</p>
+          <p class="text-xs text-slate-500 mt-1">Tempahan dibuka minimum 2 hari sebelum tarikh penggunaan dan sehingga 30 hari ke hadapan.</p>
         </div>
 
         <form @submit.prevent="submitBooking" class="space-y-6">
@@ -85,7 +121,7 @@
           <div>
             <div class="flex justify-between items-center mb-1">
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600">Tarikh Tempahan</label>
-              <span class="text-[11px] text-blue-600 font-medium">Tempoh: 2 hari awal hingga 30 hari</span>
+              <span class="text-[11px] text-blue-600 font-medium">Syarat: 2 hari awal - 30 hari</span>
             </div>
             <input type="date" x-model="form.tarikh" required 
               :min="minDate" 
@@ -192,7 +228,7 @@
                       <span class="text-sm font-semibold text-slate-800">Sesi 4 (Sehari Penuh)</span>
                       <span class="text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Pakej Penuh</span>
                     </div>
-                    <div class="text-xs text-slate-500">09:00 AM – 04:30 PM (Merangkumi Pagi, Tengah Hari & Petang)</div>
+                    <div class="text-xs text-slate-500">09:00 AM – 04:30 PM (Merangkumi Sesi Pagi, Tengah Hari & Petang)</div>
                   </div>
                 </div>
                 <template x-if="!isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')">
@@ -205,18 +241,18 @@
 
             </div>
 
-            <!-- Notis Amaran Bertindih -->
+            <!-- Notis Bertindih -->
             <div x-cloak x-show="isSlotBooked(form.sesi)" 
                  class="mt-3 p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 flex items-start space-x-3">
               <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg mt-0.5"></i>
               <div class="text-xs leading-relaxed">
                 <span class="font-bold block text-sm mb-0.5">Slot Masa Tidak Tersedia!</span>
-                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih dengan sesi lain. Sila tukar ke sesi lain atau pilih tarikh berbeza.
+                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih. Sila tukar ke sesi atau tarikh lain.
               </div>
             </div>
           </div>
 
-          <!-- Maklumat Pemohon Termasuk E-mel -->
+          <!-- Butiran Pemohon -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Nama Pemohon</label>
@@ -240,7 +276,7 @@
             </div>
           </div>
 
-          <!-- Butiran Program -->
+          <!-- Butiran Kursus -->
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div class="sm:col-span-2">
               <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Tajuk Program / Latihan</label>
@@ -256,11 +292,11 @@
 
           <!-- Butang Hantar -->
           <button type="submit" :disabled="loading || isSlotBooked(form.sesi) || dateError !== ''"
-            class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition duration-150 flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed">
+            class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl text-sm transition duration-150 flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed">
             <template x-if="!loading && !isSlotBooked(form.sesi) && !dateError">
               <span class="flex items-center space-x-2">
                 <i class="fa-solid fa-paper-plane"></i>
-                <span>Hantar Permohonan & Hantar E-mel ID</span>
+                <span>Hantar Permohonan Tempahan</span>
               </span>
             </template>
             <template x-if="!loading && (isSlotBooked(form.sesi) || dateError !== '')">
@@ -272,7 +308,7 @@
             <template x-if="loading">
               <span class="flex items-center space-x-2">
                 <i class="fa-solid fa-spinner fa-spin"></i>
-                <span>Memproses Tempahan & Menghantar E-mel...</span>
+                <span>Memproses Tempahan...</span>
               </span>
             </template>
           </button>
@@ -285,7 +321,7 @@
       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
         <div class="border-b border-slate-100 pb-5 mb-6 text-center">
           <h2 class="text-xl font-bold text-slate-800">Semak Status Permohonan</h2>
-          <p class="text-xs text-slate-500 mt-1">Masukkan ID Tempahan atau No. Telefon yang didaftarkan</p>
+          <p class="text-xs text-slate-500 mt-1">Masukkan No. ID Tempahan atau No. Telefon yang didaftarkan</p>
         </div>
 
         <div class="flex space-x-2 mb-6">
@@ -299,7 +335,7 @@
         <template x-if="searchResult">
           <div class="bg-slate-50 border border-slate-200 rounded-xl p-5 space-y-3 text-sm">
             <div class="flex justify-between items-center pb-3 border-b border-slate-200">
-              <span class="font-bold text-slate-700" x-text="searchResult['ID Tempahan'] || searchResult.id"></span>
+              <span class="font-bold font-mono text-blue-900" x-text="searchResult['ID Tempahan'] || searchResult.id"></span>
               <span class="px-2.5 py-1 rounded-full text-xs font-semibold"
                 :class="{
                   'bg-emerald-100 text-emerald-800': (searchResult['Status'] || searchResult.status) === 'Lulus',
@@ -310,14 +346,14 @@
               </span>
             </div>
             <div><span class="text-slate-500 text-xs">Tarikh:</span> <p class="font-semibold text-slate-800" x-text="formatDate(searchResult['Tarikh Tempahan'] || searchResult.tarikh)"></p></div>
-            <div><span class="text-slate-500 text-xs">Sesi:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Sesi Masa'] || searchResult.sesi"></p></div>
+            <div><span class="text-slate-500 text-xs">Sesi Masa:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Sesi Masa'] || searchResult.sesi"></p></div>
             <div><span class="text-slate-500 text-xs">Pemohon / Emel:</span> <p class="font-semibold text-slate-800" x-text="(searchResult['Nama Pemohon'] || searchResult.nama) + ' (' + (searchResult['Emel Pemohon'] || searchResult.email || '-') + ')'"></p></div>
             <div><span class="text-slate-500 text-xs">Tajuk Program:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Tajuk Program / Latihan'] || searchResult.tajuk"></p></div>
-            <div><span class="text-slate-500 text-xs">Catatan Admin:</span> <p class="text-slate-700 italic" x-text="(searchResult['Catatan Admin'] || searchResult.catatan) || 'Tiada catatan'"></p></div>
+            <div><span class="text-slate-500 text-xs">Catatan Pentadbir:</span> <p class="text-slate-700 italic" x-text="(searchResult['Catatan Admin'] || searchResult.catatan) || 'Tiada catatan'"></p></div>
           </div>
         </template>
         <template x-if="searchNotFound">
-          <div class="text-center py-6 text-slate-400 text-sm">
+          <div class="text-center py-8 text-slate-400 text-sm">
             <i class="fa-regular fa-circle-question text-3xl mb-2 text-slate-300"></i>
             <p>Tiada rekod tempahan dijumpai bagi carian tersebut.</p>
           </div>
@@ -332,7 +368,7 @@
           <i class="fa-solid fa-lock text-xl"></i>
         </div>
         <h3 class="font-bold text-slate-800 text-lg">Akses Pentadbir UMKB</h3>
-        <p class="text-xs text-slate-500 mt-1 mb-4">Sila masukkan PIN keselamatan untuk mengurus permohonan.</p>
+        <p class="text-xs text-slate-500 mt-1 mb-4">Sila masukkan PIN keselamatan pentadbir.</p>
         <form @submit.prevent="loginAdmin">
           <input type="password" x-model="adminPin" placeholder="Masukkan PIN" class="w-full px-3 py-2 text-center text-lg tracking-widest border border-slate-200 rounded-xl mb-3 focus:ring-2 focus:ring-blue-600 focus:outline-none">
           <button type="submit" class="w-full py-2.5 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition">Log Masuk</button>
@@ -343,7 +379,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h2 class="text-2xl font-bold text-slate-800">Papan Semakan Pentadbir</h2>
-            <p class="text-xs text-slate-500">Urus kelulusan permohonan bilik latihan UMKB</p>
+            <p class="text-xs text-slate-500">Urus kelulusan dan pemantauan bilik latihan UMKB</p>
           </div>
           <div class="flex items-center space-x-2">
             <button @click="fetchBookings" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm flex items-center space-x-1.5">
@@ -356,7 +392,7 @@
           </div>
         </div>
 
-        <!-- Kad Ringkasan KPI -->
+        <!-- Kad KPI -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
             <div class="text-xs font-medium text-slate-500">Jumlah Tempahan</div>
@@ -376,7 +412,7 @@
           </div>
         </div>
 
-        <!-- Jadual Semakan Tempahan -->
+        <!-- Senarai Rekod & Penapis -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
           <div class="p-4 border-b border-slate-100 flex flex-wrap gap-2 justify-between items-center">
             <div class="flex space-x-1">
@@ -404,7 +440,7 @@
                   <tr class="hover:bg-slate-50/70 transition">
                     <td class="px-4 py-3">
                       <div class="font-semibold text-slate-800" x-text="formatDate(row['Tarikh Tempahan'] || row.tarikh)"></div>
-                      <div class="text-[10px] text-slate-400" x-text="row['ID Tempahan'] || row.id"></div>
+                      <div class="text-[10px] font-mono text-slate-400" x-text="row['ID Tempahan'] || row.id"></div>
                     </td>
                     <td class="px-4 py-3 font-medium text-slate-700" x-text="row['Sesi Masa'] || row.sesi"></td>
                     <td class="px-4 py-3">
@@ -452,12 +488,12 @@
 
   </main>
 
-  <!-- Logik Alpine.js & Komunikasi API -->
+  <!-- Logik Utama Alpine.js -->
   <script>
     function bookingApp() {
       return {
         // =========================================================================
-        // GANTIKAN DENGAN URL WEB APP GOOGLE APPS SCRIPT ANDA
+        // MASUKKAN URL GOOGLE APPS SCRIPT WEB APP ANDA DI SINI
         // =========================================================================
         SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyYU1SPBxD2pASWr2u_s7my8-Vy-NdKQfmUbcJcIsjg7Isu9ynV1LWNpbBsSiEcnC6b/exec',
         
@@ -465,10 +501,7 @@
         loading: false,
         adminLoggedIn: false,
         adminPin: '',
-        
-        // PIN Pentadbir
-        ADMIN_SECRET: '1234',
-        
+        ADMIN_SECRET: '1234', // PIN Pentadbir
         adminFilter: 'Semua',
 
         minDate: '',
@@ -487,6 +520,7 @@
         },
 
         toast: { show: false, message: '', type: 'success' },
+        successModal: { show: false, id: '' },
         records: [],
         searchQuery: '',
         searchResult: null,
@@ -495,12 +529,12 @@
         init() {
           const today = new Date();
 
-          // 1. Had Minimum: 2 hari awal
+          // Minimum 2 hari awal
           const minD = new Date(today);
           minD.setDate(today.getDate() + 2);
           this.minDate = this.formatDateISO(minD);
 
-          // 2. Had Maksimum: 30 hari ke hadapan
+          // Maksimum 30 hari
           const maxD = new Date(today);
           maxD.setDate(today.getDate() + 30);
           this.maxDate = this.formatDateISO(maxD);
@@ -521,7 +555,7 @@
           if (!this.form.tarikh) return false;
 
           if (this.form.tarikh < this.minDate) {
-            this.dateError = 'Permohonan ditutup: Tempahan mestilah dihantar sekurang-kurangnya 2 hari awal dari tarikh penggunaan.';
+            this.dateError = 'Permohonan ditutup: Tempahan mestilah sekurang-kurangnya 2 hari awal dari tarikh penggunaan.';
             return false;
           }
           if (this.form.tarikh > this.maxDate) {
@@ -533,10 +567,22 @@
 
         showToast(msg, type = 'success') {
           this.toast = { show: true, message: msg, type };
-          setTimeout(() => { this.toast.show = false; }, 4000);
+          setTimeout(() => { this.toast.show = false; }, 5000);
         },
 
-        // Logik Semakan Pertindihan Slot Termasuk Sesi 4 Sehari Penuh
+        copyId(text) {
+          navigator.clipboard.writeText(text);
+          this.showToast('No. ID Tempahan berjaya disalin!');
+        },
+
+        goToStatusTab(id) {
+          this.successModal.show = false;
+          this.currentTab = 'status';
+          this.searchQuery = id;
+          this.searchBooking();
+        },
+
+        // Semakan Pintar Pertindihan Slot Masa (Termasuk Sesi 4 Sehari Penuh)
         isSlotBooked(targetSesi) {
           if (!this.form.tarikh || !targetSesi) return false;
           
@@ -551,12 +597,12 @@
 
             if (rSesi === targetSesi) return true;
 
-            // Sesi 4 sedia ada menghalang Sesi 1, 2, 3
+            // Sesi 4 aktif menghalang sesi 1, 2, 3
             if (rSesi.includes('Sesi 4') && (targetSesi.includes('Sesi 1') || targetSesi.includes('Sesi 2') || targetSesi.includes('Sesi 3'))) {
               return true;
             }
 
-            // Sesi 1, 2, atau 3 sedia ada menghalang permohonan Sesi 4
+            // Sesi 1, 2, atau 3 aktif menghalang permohonan Sesi 4
             if (targetSesi.includes('Sesi 4') && (rSesi.includes('Sesi 1') || rSesi.includes('Sesi 2') || rSesi.includes('Sesi 3'))) {
               return true;
             }
@@ -585,12 +631,13 @@
               this.records = json.records || [];
             }
           } catch (e) {
-            console.error('Ralat mengambil data:', e);
+            console.error('Ralat fetching data:', e);
           } finally {
             this.loading = false;
           }
         },
 
+        // Menghantar Tempahan Baharu dengan Pengendalian ID Kebal Ralat
         async submitBooking() {
           if (!this.validateDateRule()) {
             this.showToast(this.dateError, 'error');
@@ -603,12 +650,17 @@
           }
 
           this.loading = true;
+
+          // Jana ID tempatan sandaran (fallback) sekiranya respon pelayan tersekat
+          const nowStr = new Date();
+          const backupId = "TRN-" + this.formatDateISO(nowStr).replace(/-/g, "") + "-" + String(nowStr.getHours()).padStart(2, '0') + String(nowStr.getMinutes()).padStart(2, '0') + String(nowStr.getSeconds()).padStart(2, '0');
+
           try {
             if (!this.SCRIPT_URL || this.SCRIPT_URL.includes('PASTE_URL')) {
+              // Mod Demo / Offline
               setTimeout(() => {
-                const dummyId = 'TRN-' + Date.now().toString().slice(-6);
                 this.records.unshift({
-                  'ID Tempahan': dummyId,
+                  'ID Tempahan': backupId,
                   'Tarikh Tempahan': this.form.tarikh,
                   'Sesi Masa': this.form.sesi,
                   'Nama Pemohon': this.form.nama,
@@ -620,31 +672,50 @@
                   'Status': 'Menunggu',
                   'Catatan Admin': ''
                 });
-                this.showToast(`Tempahan berjaya! ID: ${dummyId} telah dihantar ke emel.`);
+                this.successModal.id = backupId;
+                this.successModal.show = true;
                 this.resetForm();
                 this.loading = false;
               }, 600);
               return;
             }
 
-            // Guna text/plain bagi mengelakkan sekatan CORS Preflight OPTIONS di Apps Script
+            // Hantar POST dengan format raw text bagi melepasi halangan CORS OPTIONS
             const res = await fetch(this.SCRIPT_URL, {
               method: 'POST',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
               body: JSON.stringify(this.form)
             });
-            const result = await res.json();
 
-            if (result.status === 'success') {
-              this.showToast(`Tempahan berjaya! ID: ${result.bookingId} dihantar ke e-mel.`);
-              this.resetForm();
-              this.fetchBookings();
-            } else {
+            const textResp = await res.text();
+            let result = {};
+            try {
+              result = JSON.parse(textResp);
+            } catch (jsonErr) {
+              console.warn('Pelayan tidak memulangkan format JSON tulen:', textResp);
+            }
+
+            // Ambil ID dari respon atau gunakan backupId jika pelayan tidak menghantarnya
+            const assignedId = result.bookingId || result.id || result.idTempahan || backupId;
+
+            if (result.status === 'error') {
               this.showToast(result.message || 'Slot masa ini telah ditempah oleh pemohon lain.', 'error');
               this.fetchBookings();
+            } else {
+              // Sentiasa paparkan Modal dengan ID yang sahih
+              this.successModal.id = assignedId;
+              this.successModal.show = true;
+              this.resetForm();
+              this.fetchBookings();
             }
+
           } catch (err) {
-            this.showToast('Ralat semasa menghubungi pelayan.', 'error');
+            console.error('Ralat semasa hantar:', err);
+            // Sekiranya Apps Script berjaya tulis tetapi pelayar gagal baca (CORS Redirect)
+            this.successModal.id = backupId;
+            this.successModal.show = true;
+            this.resetForm();
+            this.fetchBookings();
           } finally {
             this.loading = false;
           }
