@@ -12,14 +12,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     [x-cloak] { display: none !important; }
-    /* Menghilangkan getaran zoom pada iOS Safari */
+    /* Menghalang iOS Safari daripada zoom automatik semasa mengisi borang */
     input, select, textarea { font-size: 16px !important; }
     @media (min-width: 640px) {
       input, select, textarea { font-size: 0.875rem !important; }
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen pb-24 md:pb-10 antialiased selection:bg-blue-600 selection:text-white" x-data="bookingApp()">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white" x-data="bookingApp()">
 
   <!-- Bar Navigasi Desktop & Tablet -->
   <header class="bg-blue-900 text-white shadow-md sticky top-0 z-40">
@@ -135,7 +135,8 @@
     </div>
   </div>
 
-  <main class="max-w-7xl mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-8">
+  <!-- Kandungan Utama Aplikasi -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-8">
 
     <!-- ================= TAB 1: BORANG TEMPAHAN ================= -->
     <section x-show="currentTab === 'booking'" class="max-w-2xl mx-auto" x-cloak>
@@ -279,7 +280,7 @@
               <i class="fa-solid fa-triangle-exclamation text-rose-600 text-base mt-0.5 flex-shrink-0"></i>
               <div class="text-xs leading-relaxed">
                 <span class="font-bold block mb-0.5">Slot Masa Tidak Tersedia</span>
-                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih.
+                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih. Sila pilih sesi atau tarikh lain.
               </div>
             </div>
           </div>
@@ -292,7 +293,7 @@
                 class="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             </div>
             <div>
-              <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Emel Pemohon</label>
+              <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Emel Pemohon (Rekod)</label>
               <input type="email" x-model="form.email" placeholder="Cth: ahmad@dbkl.gov.my" required
                 class="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             </div>
@@ -312,7 +313,7 @@
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
             <div class="sm:col-span-2">
               <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Tajuk Program / Latihan</label>
-              <input type="text" x-model="form.tajuk" placeholder="Cth: Bengkel Sistem Kewangan" required
+              <input type="text" x-model="form.tajuk" placeholder="Cth: Bengkel Penggunaan Sistem Kewangan" required
                 class="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
             </div>
             <div>
@@ -328,7 +329,7 @@
             <template x-if="!loading && !isSlotBooked(form.sesi) && !dateError">
               <span class="flex items-center space-x-2">
                 <i class="fa-solid fa-paper-plane"></i>
-                <span>Hantar Permohonan</span>
+                <span>Hantar Permohonan Tempahan</span>
               </span>
             </template>
             <template x-if="!loading && (isSlotBooked(form.sesi) || dateError !== '')">
@@ -340,7 +341,7 @@
             <template x-if="loading">
               <span class="flex items-center space-x-2">
                 <i class="fa-solid fa-spinner fa-spin"></i>
-                <span>Memproses Permohonan...</span>
+                <span>Memproses Tempahan...</span>
               </span>
             </template>
           </button>
@@ -353,11 +354,11 @@
       <div class="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/80 p-5 sm:p-8">
         <div class="border-b border-slate-100 pb-4 sm:pb-5 mb-5 sm:mb-6 text-center">
           <h2 class="text-lg sm:text-xl font-bold text-slate-800">Semak Status Permohonan</h2>
-          <p class="text-xs text-slate-500 mt-1">Masukkan No. ID Tempahan atau No. Telefon pemohon</p>
+          <p class="text-xs text-slate-500 mt-1">Masukkan No. ID Tempahan atau No. Telefon yang didaftarkan</p>
         </div>
 
         <div class="flex space-x-2 mb-6">
-          <input type="text" x-model="searchQuery" placeholder="Cth: TRN-2026... atau 0123456789"
+          <input type="text" x-model="searchQuery" placeholder="Cth: TRN-20260918-001 atau 0123456789"
             @keyup.enter="searchBooking"
             class="flex-1 px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
           <button @click="searchBooking" class="px-5 py-3 sm:py-2.5 bg-blue-600 text-white rounded-xl font-medium text-sm hover:bg-blue-700 transition shadow-sm active:scale-95">
@@ -383,6 +384,7 @@
               <div><span class="text-slate-500 text-[11px] block">Sesi Masa:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Sesi Masa'] || searchResult.sesi"></p></div>
               <div><span class="text-slate-500 text-[11px] block">Pemohon:</span> <p class="font-semibold text-slate-800" x-text="(searchResult['Nama Pemohon'] || searchResult.nama) + ' (' + (searchResult['Bahagian / Unit'] || searchResult.bahagian || '-') + ')'"></p></div>
               <div><span class="text-slate-500 text-[11px] block">No. Telefon:</span> <p class="font-semibold text-slate-800" x-text="searchResult['No. Telefon'] || searchResult.telefon || '-'"></p></div>
+              <div><span class="text-slate-500 text-[11px] block">Emel:</span> <p class="font-semibold text-slate-800 truncate" x-text="searchResult['Emel Pemohon'] || searchResult.email || '-'"></p></div>
             </div>
             <div class="pt-2 border-t border-slate-200">
               <span class="text-slate-500 text-[11px] block">Tajuk Program:</span>
@@ -406,20 +408,20 @@
 
     <!-- ================= TAB 3: DASHBOARD ADMIN ================= -->
     <section x-show="currentTab === 'admin'" x-cloak>
-      <!-- Skrin Log Masuk Admin -->
+      <!-- Log Masuk Admin -->
       <div x-show="!adminLoggedIn" class="max-w-sm mx-auto bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/80 p-6 sm:p-8 text-center">
         <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
           <i class="fa-solid fa-lock text-xl"></i>
         </div>
-        <h3 class="font-bold text-slate-800 text-lg">Akses Pentadbir</h3>
-        <p class="text-xs text-slate-500 mt-1 mb-4">Sila masukkan PIN keselamatan pentadbir UMKB.</p>
+        <h3 class="font-bold text-slate-800 text-lg">Akses Pentadbir UMKB</h3>
+        <p class="text-xs text-slate-500 mt-1 mb-4">Sila masukkan PIN keselamatan pentadbir.</p>
         <form @submit.prevent="loginAdmin">
           <input type="password" x-model="adminPin" placeholder="PIN" class="w-full px-3 py-3 text-center text-lg tracking-widest border border-slate-200 rounded-xl mb-3 focus:ring-2 focus:ring-blue-600 focus:outline-none">
           <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition">Log Masuk</button>
         </form>
       </div>
 
-      <!-- Papan Pemuka Admin Setelah Log Masuk -->
+      <!-- Dashboard Setelah Log Masuk -->
       <div x-show="adminLoggedIn" class="space-y-4 sm:space-y-6">
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div>
@@ -437,7 +439,7 @@
           </div>
         </div>
 
-        <!-- Kad KPI (2 Kolum pada Mobile, 4 Kolum pada Desktop) -->
+        <!-- Kad KPI (2 Kolum Mobile / 4 Kolum Desktop) -->
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           <div class="bg-white p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 shadow-sm">
             <div class="text-[11px] sm:text-xs font-medium text-slate-500">Jumlah Tempahan</div>
@@ -457,7 +459,7 @@
           </div>
         </div>
 
-        <!-- Penapis Status (Boleh diskrol mendatar pada mobile) -->
+        <!-- Penapis Status & Jadual Rekod -->
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
           <div class="p-3 sm:p-4 border-b border-slate-100 flex items-center justify-between overflow-x-auto">
             <div class="flex space-x-1.5 flex-nowrap min-w-max">
@@ -468,7 +470,7 @@
             </div>
           </div>
 
-          <!-- 1. Paparan Khas Mobile (Card View) -->
+          <!-- 1. Paparan Card View (Mobile & Skrin Kecil) -->
           <div class="block lg:hidden divide-y divide-slate-100">
             <template x-for="row in filteredRecords" :key="row['ID Tempahan'] || row.id">
               <div class="p-4 space-y-3">
@@ -502,7 +504,7 @@
                   </div>
                 </div>
 
-                <!-- Butang Tindakan Mobile -->
+                <!-- Butang Tindakan Kelulusan Mudah Alih -->
                 <div class="flex space-x-2 pt-2 border-t border-slate-100">
                   <button @click="updateStatus(row, 'Lulus')" class="flex-1 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl text-xs font-semibold transition flex items-center justify-center space-x-1.5 active:scale-95">
                     <i class="fa-solid fa-check"></i>
@@ -520,7 +522,7 @@
             </template>
           </div>
 
-          <!-- 2. Paparan Laptop, Desktop & Tablet Lebar (Table View) -->
+          <!-- 2. Paparan Table View (Laptop, Desktop & Tablet Lebar) -->
           <div class="hidden lg:block overflow-x-auto">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-100">
@@ -593,10 +595,20 @@
 
   </main>
 
-  <!-- Logik Alpine.js (Diperkukuh dengan kalis Zon Masa) -->
+  <!-- Footer Sistem -->
+  <footer class="mt-auto py-6 text-center text-xs text-slate-400 border-t border-slate-200/60 bg-white/50 backdrop-blur-sm mb-16 md:mb-0">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-1.5 font-medium">
+      <span>Hak Cipta Terpelihara &copy; 2026 Unit Maklumat Kewangan Berkomputer (UMKB).</span>
+      <span class="hidden sm:inline">•</span>
+      <span>Pembangun: <strong class="text-slate-600 font-semibold">&copy;Jnol.Ai</strong></span>
+    </div>
+  </footer>
+
+  <!-- Logik Alpine.js -->
   <script>
     function bookingApp() {
       return {
+        // Gantikan URL di bawah dengan Web App URL anda daripada Deploy > New Deployment
         SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyWtAmQKktUZTkLlPRy4dj0u0OXo-FCBSR1XivDcJFB-UY3HXFTwOBTx18_CdHauKWj/exec',
         
         currentTab: 'booking',
@@ -748,7 +760,7 @@
               this.records = json.records || [];
             }
           } catch (e) {
-            console.error('Ralat fetching data:', e);
+            console.error('Ralat mengambil data:', e);
           } finally {
             this.loading = false;
           }
