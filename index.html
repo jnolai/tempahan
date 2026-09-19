@@ -55,7 +55,6 @@
         </button>
       </nav>
 
-      <!-- Ikon Profil / Notifikasi Elemen UI -->
       <div class="flex items-center space-x-2">
         <span class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 text-xs transition">
           <i class="fa-regular fa-bell"></i>
@@ -100,7 +99,7 @@
     <span class="flex-1" x-text="toast.message"></span>
   </div>
 
-  <!-- Modal Pop-up Salin ID Tempahan (Pengguna) -->
+  <!-- Modal Pop-up Salin ID Tempahan -->
   <div x-cloak x-show="successModal.show" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border border-slate-100 animate-in fade-in slide-in-from-bottom duration-200">
       <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -134,7 +133,7 @@
     </div>
   </div>
 
-  <!-- Modal Pengesahan Kelulusan & No Rujukan Surat (Admin) -->
+  <!-- Modal Kelulusan Rujukan Surat -->
   <div x-cloak x-show="approvalModal.show" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-150">
       <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
@@ -169,7 +168,7 @@
   <!-- Kandungan Aplikasi -->
   <main class="flex-1 max-w-md md:max-w-4xl w-full mx-auto px-4 py-5 mb-16 md:mb-6">
 
-    <!-- ================= TAB 1: TEMPAHAN & DETAIL BILIK ================= -->
+    <!-- ================= TAB 1: TEMPAHAN ================= -->
     <section x-show="currentTab === 'booking'" class="space-y-4" x-cloak>
       <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
         <div class="relative h-52 sm:h-64 w-full bg-slate-200">
@@ -197,7 +196,6 @@
             </div>
           </div>
 
-          <!-- Spesifikasi Pantas -->
           <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-100 text-center">
             <div class="p-2.5 bg-slate-50 rounded-2xl">
               <i class="fa-solid fa-desktop text-sky-600 text-sm mb-1 block"></i>
@@ -216,7 +214,6 @@
             </div>
           </div>
 
-          <!-- Kemudahan Tersedia -->
           <div class="mt-4">
             <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Kemudahan Bilik</div>
             <div class="flex flex-wrap gap-1.5">
@@ -266,7 +263,6 @@
           <div>
             <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Pilih Slot Sesi</label>
             <div class="space-y-2">
-              <!-- Sesi 1 -->
               <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
                      :class="[
                        isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') 
@@ -288,7 +284,6 @@
                 </span>
               </label>
 
-              <!-- Sesi 2 -->
               <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
                      :class="[
                        isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') 
@@ -310,7 +305,6 @@
                 </span>
               </label>
 
-              <!-- Sesi 3 -->
               <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
                      :class="[
                        isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') 
@@ -332,7 +326,6 @@
                 </span>
               </label>
 
-              <!-- Sesi 4 (Full Day) -->
               <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
                      :class="[
                        isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') 
@@ -410,7 +403,7 @@
       </div>
     </section>
 
-    <!-- ================= TAB 2: SEMAKAN STATUS AWAM ================= -->
+    <!-- ================= TAB 2: SEMAKAN STATUS ================= -->
     <section x-show="currentTab === 'status'" class="space-y-4" x-cloak>
       <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100">
         <div class="text-center mb-4">
@@ -445,11 +438,14 @@
               </span>
             </div>
 
-            <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
               <div><span class="text-slate-400 text-[10px] block">Tarikh:</span> <span class="font-semibold text-slate-800" x-text="formatDate(searchResult['Tarikh Tempahan'] || searchResult.tarikh)"></span></div>
               <div><span class="text-slate-400 text-[10px] block">Sesi:</span> <span class="font-semibold text-slate-800" x-text="searchResult['Sesi Masa'] || searchResult.sesi"></span></div>
               <div><span class="text-slate-400 text-[10px] block">Pemohon:</span> <span class="font-semibold text-slate-800" x-text="searchResult['Nama Pemohon'] || searchResult.nama"></span></div>
-              <div><span class="text-slate-400 text-[10px] block">Bahagian:</span> <span class="font-semibold text-slate-800" x-text="searchResult['Bahagian / Unit'] || searchResult.bahagian || '-'"></span></div>
+              <div><span class="text-slate-400 text-[10px] block">Bahagian / Unit:</span> <span class="font-semibold text-slate-800" x-text="searchResult['Bahagian / Unit'] || searchResult.bahagian || '-'"></span></div>
+              <div><span class="text-slate-400 text-[10px] block">Emel:</span> <span class="font-semibold text-slate-800" x-text="searchResult['Emel Pemohon'] || searchResult.email || '-'"></span></div>
+              <div><span class="text-slate-400 text-[10px] block">No. Telefon:</span> <span class="font-semibold text-slate-800" x-text="searchResult['No. Telefon'] || searchResult.telefon || '-'"></span></div>
+              <div><span class="text-slate-400 text-[10px] block">Bil. Peserta:</span> <span class="font-semibold text-slate-800" x-text="(searchResult['Bil. Peserta'] || searchResult.peserta || '-') + ' Pax'"></span></div>
             </div>
 
             <div class="pt-2 border-t border-slate-100 text-xs">
@@ -457,7 +453,6 @@
               <p class="font-semibold text-slate-800" x-text="searchResult['Tajuk Program / Latihan'] || searchResult.tajuk"></p>
             </div>
 
-            <!-- Paparan No Rujukan Surat & Catatan -->
             <template x-if="searchResult['No. Rujukan Surat'] || searchResult.noRujukan">
               <div class="bg-sky-50/80 border border-sky-100 p-3 rounded-2xl text-xs">
                 <span class="text-sky-700 text-[10px] font-bold uppercase tracking-wider block mb-0.5">No. Rujukan Surat Rasmi:</span>
@@ -533,68 +528,201 @@
           </div>
         </div>
 
-        <!-- Penapis Status Tab -->
-        <div class="flex space-x-1.5 overflow-x-auto pb-1">
-          <button @click="adminFilter = 'Semua'" :class="adminFilter === 'Semua' ? 'bg-sky-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Semua</button>
-          <button @click="adminFilter = 'Menunggu'" :class="adminFilter === 'Menunggu' ? 'bg-amber-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Menunggu</button>
-          <button @click="adminFilter = 'Lulus'" :class="adminFilter === 'Lulus' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Lulus</button>
-          <button @click="adminFilter = 'Ditolak'" :class="adminFilter === 'Ditolak' ? 'bg-rose-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Ditolak</button>
+        <!-- Suis Pilihan Paparan: Senarai vs Kalendar -->
+        <div class="flex items-center justify-between bg-slate-200/60 p-1 rounded-2xl">
+          <button @click="adminViewMode = 'list'"
+                  :class="adminViewMode === 'list' ? 'bg-white text-slate-900 shadow-sm font-bold' : 'text-slate-500 font-medium'"
+                  class="flex-1 py-2 rounded-xl text-xs transition flex items-center justify-center space-x-1.5">
+            <i class="fa-solid fa-list-ul"></i>
+            <span>Paparan Senarai</span>
+          </button>
+          <button @click="adminViewMode = 'calendar'"
+                  :class="adminViewMode === 'calendar' ? 'bg-white text-sky-600 shadow-sm font-bold' : 'text-slate-500 font-medium'"
+                  class="flex-1 py-2 rounded-xl text-xs transition flex items-center justify-center space-x-1.5">
+            <i class="fa-regular fa-calendar-days"></i>
+            <span>Paparan Kalendar</span>
+          </button>
         </div>
 
-        <!-- Senarai Kad Admin -->
-        <div class="space-y-3">
-          <template x-for="row in filteredRecords" :key="row['ID Tempahan'] || row.id">
-            <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-3">
-              <div class="flex justify-between items-start">
-                <div>
-                  <div class="font-bold text-sm text-slate-900" x-text="formatDate(row['Tarikh Tempahan'] || row.tarikh)"></div>
-                  <div class="text-[10px] font-mono text-slate-400" x-text="row['ID Tempahan'] || row.id"></div>
-                </div>
-                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold"
-                  :class="{
-                    'bg-emerald-100 text-emerald-800': (row['Status'] || row.status) === 'Lulus',
-                    'bg-amber-100 text-amber-800': (row['Status'] || row.status) === 'Menunggu',
-                    'bg-rose-100 text-rose-800': (row['Status'] || row.status) === 'Ditolak'
-                  }"
-                  x-text="row['Status'] || row.status">
-                </span>
-              </div>
+        <!-- ================= MOD PAPARAN 1: SENARAI (LIST VIEW) ================= -->
+        <div x-show="adminViewMode === 'list'" class="space-y-3">
+          <!-- Penapis Status Tab -->
+          <div class="flex space-x-1.5 overflow-x-auto pb-1">
+            <button @click="adminFilter = 'Semua'" :class="adminFilter === 'Semua' ? 'bg-sky-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Semua</button>
+            <button @click="adminFilter = 'Menunggu'" :class="adminFilter === 'Menunggu' ? 'bg-amber-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Menunggu</button>
+            <button @click="adminFilter = 'Lulus'" :class="adminFilter === 'Lulus' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Lulus</button>
+            <button @click="adminFilter = 'Ditolak'" :class="adminFilter === 'Ditolak' ? 'bg-rose-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Ditolak</button>
+          </div>
 
-              <div class="text-xs space-y-1">
-                <div class="font-bold text-sky-700" x-text="row['Sesi Masa'] || row.sesi"></div>
-                <div class="font-medium text-slate-800" x-text="row['Tajuk Program / Latihan'] || row.tajuk"></div>
-                <div class="text-slate-400 text-[11px]">
-                  <span x-text="row['Nama Pemohon'] || row.nama"></span> • <span x-text="row['Bahagian / Unit'] || row.bahagian || '-'"></span> (<span x-text="(row['Bil. Peserta'] || row.peserta) + ' Pax'"></span>)
-                </div>
-                <div class="text-slate-500 text-[11px]">
-                  Tel: <span x-text="row['No. Telefon'] || row.telefon || '-'"></span>
-                </div>
-                <template x-if="row['No. Rujukan Surat'] || row.noRujukan">
-                  <div class="text-[11px] text-emerald-700 font-mono font-medium pt-1">
-                    <i class="fa-solid fa-file-lines mr-1"></i> Ruj: <span x-text="row['No. Rujukan Surat'] || row.noRujukan"></span>
+          <!-- Senarai Kad Admin -->
+          <div class="space-y-3">
+            <template x-for="row in filteredRecords" :key="row['ID Tempahan'] || row.id">
+              <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-3">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <div class="font-bold text-sm text-slate-900" x-text="formatDate(row['Tarikh Tempahan'] || row.tarikh)"></div>
+                    <div class="text-[10px] font-mono text-slate-400" x-text="row['ID Tempahan'] || row.id"></div>
                   </div>
-                </template>
-              </div>
+                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold"
+                    :class="{
+                      'bg-emerald-100 text-emerald-800': (row['Status'] || row.status) === 'Lulus',
+                      'bg-amber-100 text-amber-800': (row['Status'] || row.status) === 'Menunggu',
+                      'bg-rose-100 text-rose-800': (row['Status'] || row.status) === 'Ditolak'
+                    }"
+                    x-text="row['Status'] || row.status">
+                  </span>
+                </div>
 
-              <!-- Butang Lulus / Tolak -->
-              <div class="flex space-x-2 pt-2 border-t border-slate-100">
-                <button @click="openApprovalModal(row)" class="flex-1 py-2 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white rounded-2xl text-xs font-bold transition flex items-center justify-center space-x-1">
-                  <i class="fa-solid fa-check"></i>
-                  <span>Lulus</span>
-                </button>
-                <button @click="updateStatus(row, 'Ditolak')" class="flex-1 py-2 bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white rounded-2xl text-xs font-bold transition flex items-center justify-center space-x-1">
-                  <i class="fa-solid fa-xmark"></i>
-                  <span>Tolak</span>
-                </button>
+                <div class="text-xs space-y-1">
+                  <div class="font-bold text-sky-700" x-text="row['Sesi Masa'] || row.sesi"></div>
+                  <div class="font-medium text-slate-800" x-text="row['Tajuk Program / Latihan'] || row.tajuk"></div>
+                  <div class="text-slate-400 text-[11px]">
+                    <span x-text="row['Nama Pemohon'] || row.nama"></span> • <span x-text="row['Bahagian / Unit'] || row.bahagian || '-'"></span> (<span x-text="(row['Bil. Peserta'] || row.peserta) + ' Pax'"></span>)
+                  </div>
+                  <div class="text-slate-500 text-[11px]">
+                    Tel: <span x-text="row['No. Telefon'] || row.telefon || '-'"></span>
+                  </div>
+                  <template x-if="row['No. Rujukan Surat'] || row.noRujukan">
+                    <div class="text-[11px] text-emerald-700 font-mono font-medium pt-1">
+                      <i class="fa-solid fa-file-lines mr-1"></i> Ruj: <span x-text="row['No. Rujukan Surat'] || row.noRujukan"></span>
+                    </div>
+                  </template>
+                </div>
+
+                <div class="flex space-x-2 pt-2 border-t border-slate-100">
+                  <button @click="openApprovalModal(row)" class="flex-1 py-2 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white rounded-2xl text-xs font-bold transition flex items-center justify-center space-x-1">
+                    <i class="fa-solid fa-check"></i>
+                    <span>Lulus</span>
+                  </button>
+                  <button @click="updateStatus(row, 'Ditolak')" class="flex-1 py-2 bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white rounded-2xl text-xs font-bold transition flex items-center justify-center space-x-1">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span>Tolak</span>
+                  </button>
+                </div>
+              </div>
+            </template>
+
+            <template x-if="filteredRecords.length === 0">
+              <div class="p-8 text-center bg-white rounded-3xl border border-slate-100 text-slate-400 text-xs">
+                Tiada rekod tempahan ditemui.
+              </div>
+            </template>
+          </div>
+        </div>
+
+        <!-- ================= MOD PAPARAN 2: KALENDAR BULANAN ================= -->
+        <div x-show="adminViewMode === 'calendar'" class="space-y-4" x-cloak>
+          <!-- Kad Kalendar Minimalis Gaya Inspirasi Gambar -->
+          <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
+            <!-- Navigasi Bulan & Tahun -->
+            <div class="flex items-center justify-between mb-5 px-2">
+              <button @click="prevCalMonth" class="w-8 h-8 rounded-xl bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-600 transition">
+                <i class="fa-solid fa-chevron-left text-xs"></i>
+              </button>
+              <h3 class="text-sm sm:text-base font-bold text-slate-800 tracking-wide" x-text="currentCalMonthYear"></h3>
+              <button @click="nextCalMonth" class="w-8 h-8 rounded-xl bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-600 transition">
+                <i class="fa-solid fa-chevron-right text-xs"></i>
+              </button>
+            </div>
+
+            <!-- Hari Dalam Minggu -->
+            <div class="grid grid-cols-7 text-center mb-2">
+              <template x-for="dayName in ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu', 'Ahad']">
+                <div class="text-[11px] font-bold text-slate-400 uppercase py-1" x-text="dayName.slice(0, 3)"></div>
+              </template>
+            </div>
+
+            <!-- Grid Hari (Tarikh Kalendar) -->
+            <div class="grid grid-cols-7 gap-y-2 text-center text-xs">
+              <!-- Kotak Kosong Sebelum Hari Pertama Bulan -->
+              <template x-for="blank in calendarBlankDays">
+                <div class="h-10"></div>
+              </template>
+
+              <!-- Tarikh Bulan Semasa -->
+              <template x-for="dayObj in calendarMonthDays" :key="dayObj.dateStr">
+                <div class="h-10 flex flex-col items-center justify-center relative cursor-pointer group"
+                     @click="selectCalendarDate(dayObj.dateStr)">
+                  
+                  <!-- Penunjuk Bulatan Tarikh Aktif / Bertempah -->
+                  <div class="w-8 h-8 rounded-full flex items-center justify-center font-semibold transition relative"
+                       :class="[
+                         selectedCalendarDate === dayObj.dateStr 
+                           ? 'bg-slate-900 text-white shadow-md' 
+                           : (dayObj.hasBooking ? 'bg-sky-500 text-white font-bold shadow-sm ring-2 ring-sky-200' : 'text-slate-700 hover:bg-slate-100')
+                       ]">
+                    <span x-text="dayObj.day"></span>
+                  </div>
+
+                  <!-- Dot Kecil Penanda Tempahan -->
+                  <template x-if="dayObj.hasBooking && selectedCalendarDate !== dayObj.dateStr">
+                    <span class="w-1 h-1 bg-sky-500 rounded-full mt-0.5"></span>
+                  </template>
+                </div>
+              </template>
+            </div>
+
+            <!-- Panduan Warna / Legend -->
+            <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-center space-x-4 text-[11px] text-slate-500">
+              <div class="flex items-center space-x-1.5">
+                <span class="w-3 h-3 rounded-full bg-sky-500 ring-2 ring-sky-200 inline-block"></span>
+                <span>Ada Tempahan</span>
+              </div>
+              <div class="flex items-center space-x-1.5">
+                <span class="w-3 h-3 rounded-full bg-slate-900 inline-block"></span>
+                <span>Tarikh Dipilih</span>
               </div>
             </div>
-          </template>
+          </div>
 
-          <template x-if="filteredRecords.length === 0">
-            <div class="p-8 text-center bg-white rounded-3xl border border-slate-100 text-slate-400 text-xs">
-              Tiada rekod tempahan ditemui.
+          <!-- Paparan Tempahan Mengikut Tarikh Yang Dipilih Dalam Kalendar -->
+          <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-3">
+            <div class="flex justify-between items-center pb-2 border-b border-slate-100">
+              <div class="text-xs font-bold text-slate-800">
+                <span>Tempahan Pada: </span>
+                <span class="text-sky-600 font-mono" x-text="formatDate(selectedCalendarDate)"></span>
+              </div>
+              <span class="text-[11px] font-semibold text-slate-400" x-text="bookingsForSelectedDate.length + ' Sesi Tempahan'"></span>
             </div>
-          </template>
+
+            <!-- Kad Tempahan Tarikh Terpilih -->
+            <div class="space-y-2.5">
+              <template x-for="item in bookingsForSelectedDate" :key="item['ID Tempahan'] || item.id">
+                <div class="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/60 space-y-2">
+                  <div class="flex justify-between items-center">
+                    <span class="font-bold text-xs text-sky-700" x-text="item['Sesi Masa'] || item.sesi"></span>
+                    <span class="px-2 py-0.5 rounded-full text-[10px] font-bold"
+                          :class="{
+                            'bg-emerald-100 text-emerald-800': (item['Status'] || item.status) === 'Lulus',
+                            'bg-amber-100 text-amber-800': (item['Status'] || item.status) === 'Menunggu',
+                            'bg-rose-100 text-rose-800': (item['Status'] || item.status) === 'Ditolak'
+                          }"
+                          x-text="item['Status'] || item.status">
+                    </span>
+                  </div>
+
+                  <div class="text-xs text-slate-800 font-semibold" x-text="item['Tajuk Program / Latihan'] || item.tajuk"></div>
+                  
+                  <div class="text-[11px] text-slate-500">
+                    <span x-text="item['Nama Pemohon'] || item.nama"></span> • <span x-text="item['Bahagian / Unit'] || item.bahagian || '-'"></span> (<span x-text="(item['Bil. Peserta'] || item.peserta) + ' Pax'"></span>)
+                  </div>
+
+                  <template x-if="item['No. Rujukan Surat'] || item.noRujukan">
+                    <div class="text-[11px] text-emerald-700 font-mono font-medium">
+                      <i class="fa-solid fa-file-lines mr-1"></i> Ruj: <span x-text="item['No. Rujukan Surat'] || item.noRujukan"></span>
+                    </div>
+                  </template>
+                </div>
+              </template>
+
+              <template x-if="bookingsForSelectedDate.length === 0">
+                <div class="py-6 text-center text-slate-400 text-xs">
+                  <i class="fa-regular fa-calendar-xmark text-2xl mb-1 text-slate-300 block"></i>
+                  Tiada rekod tempahan pada tarikh ini.
+                </div>
+              </template>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -624,6 +752,12 @@
         ADMIN_SECRET: '1234',
         adminFilter: 'Semua',
 
+        // Kawalan Kalendar Admin
+        adminViewMode: 'list',
+        calYear: new Date().getFullYear(),
+        calMonth: new Date().getMonth(), // 0 = Jan, 11 = Dis
+        selectedCalendarDate: '',
+
         minDate: '',
         maxDate: '',
         dateError: '',
@@ -650,17 +784,20 @@
         init() {
           const today = new Date();
 
-          // Syarat: Minimum 2 hari awal
           const minD = new Date(today);
           minD.setDate(today.getDate() + 2);
           this.minDate = this.formatDateISO(minD);
 
-          // Syarat: Maksimum 30 hari ke hadapan
           const maxD = new Date(today);
           maxD.setDate(today.getDate() + 30);
           this.maxDate = this.formatDateISO(maxD);
 
           this.form.tarikh = this.minDate;
+          this.selectedCalendarDate = this.formatDateISO(today);
+
+          this.calYear = today.getFullYear();
+          this.calMonth = today.getMonth();
+
           this.fetchBookings();
         },
 
@@ -881,7 +1018,6 @@
           }
         },
 
-        // Modal kawalan kelulusan
         openApprovalModal(row) {
           this.approvalModal.targetRow = row;
           this.approvalModal.referenceNo = row['No. Rujukan Surat'] || row.noRujukan || '';
@@ -943,6 +1079,73 @@
         get filteredRecords() {
           if (this.adminFilter === 'Semua') return this.records;
           return this.records.filter(r => (r['Status'] || r.status) === this.adminFilter);
+        },
+
+        // ================= LOGIK KALENDAR ADMIN =================
+        get currentCalMonthYear() {
+          const dt = new Date(this.calYear, this.calMonth, 1);
+          return dt.toLocaleDateString('ms-MY', { month: 'long', year: 'numeric' });
+        },
+
+        get calendarBlankDays() {
+          const firstDayIndex = new Date(this.calYear, this.calMonth, 1).getDay();
+          // Isnin = 0, Ahad = 6
+          const monStart = (firstDayIndex === 0 ? 6 : firstDayIndex - 1);
+          return Array.from({ length: monStart });
+        },
+
+        get calendarMonthDays() {
+          const totalDays = new Date(this.calYear, this.calMonth + 1, 0).getDate();
+          const days = [];
+          
+          for (let d = 1; d <= totalDays; d++) {
+            const monthStr = String(this.calMonth + 1).padStart(2, '0');
+            const dayStr = String(d).padStart(2, '0');
+            const dateISO = `${this.calYear}-${monthStr}-${dayStr}`;
+
+            const hasActiveBooking = this.records.some(r => {
+              const rDate = this.formatDateYMD(r['Tarikh Tempahan'] || r.tarikh);
+              const rStatus = r['Status'] || r.status;
+              return rDate === dateISO && (rStatus === 'Lulus' || rStatus === 'Menunggu');
+            });
+
+            days.push({
+              day: d,
+              dateStr: dateISO,
+              hasBooking: hasActiveBooking
+            });
+          }
+          return days;
+        },
+
+        prevCalMonth() {
+          if (this.calMonth === 0) {
+            this.calMonth = 11;
+            this.calYear--;
+          } else {
+            this.calMonth--;
+          }
+        },
+
+        nextCalMonth() {
+          if (this.calMonth === 11) {
+            this.calMonth = 0;
+            this.calYear++;
+          } else {
+            this.calMonth++;
+          }
+        },
+
+        selectCalendarDate(dateISO) {
+          this.selectedCalendarDate = dateISO;
+        },
+
+        get bookingsForSelectedDate() {
+          if (!this.selectedCalendarDate) return [];
+          return this.records.filter(r => {
+            const rDate = this.formatDateYMD(r['Tarikh Tempahan'] || r.tarikh);
+            return rDate === this.selectedCalendarDate;
+          });
         },
 
         formatDate(d) {
