@@ -12,81 +12,81 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     [x-cloak] { display: none !important; }
-    /* Menghalang iOS Safari daripada zoom automatik semasa mengisi borang */
     input, select, textarea { font-size: 16px !important; }
     @media (min-width: 640px) {
       input, select, textarea { font-size: 0.875rem !important; }
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white" x-data="bookingApp()">
+<body class="bg-slate-100/70 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white" x-data="bookingApp()">
 
-  <!-- Bar Navigasi Desktop & Tablet -->
-  <header class="bg-blue-900 text-white shadow-md sticky top-0 z-40">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center h-16">
+  <!-- Top App Bar / Header Bergaya Mobile App -->
+  <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100 shadow-sm">
+    <div class="max-w-md md:max-w-4xl mx-auto px-4 sm:px-6 h-16 flex justify-between items-center">
       <div class="flex items-center space-x-3">
-        <div class="bg-blue-800 p-2.5 rounded-xl text-blue-200 shadow-inner">
-          <i class="fa-solid fa-chalkboard-user text-lg sm:text-xl"></i>
+        <div class="w-10 h-10 rounded-2xl bg-sky-50 flex items-center justify-center text-sky-600 shadow-sm border border-sky-100">
+          <i class="fa-solid fa-desktop text-base"></i>
         </div>
         <div>
-          <h1 class="font-bold text-base sm:text-lg leading-tight tracking-tight">Bilik Latihan UMKB</h1>
-          <p class="text-[11px] sm:text-xs text-blue-200">Unit Maklumat Kewangan Berkomputer</p>
+          <h1 class="font-bold text-sm sm:text-base text-slate-900 leading-tight">Bilik Latihan UMKB</h1>
+          <p class="text-[11px] text-slate-400 font-medium">Unit Maklumat Kewangan Berkomputer</p>
         </div>
       </div>
 
-      <!-- Tab Navigasi Atas (Desktop & Tablet) -->
-      <nav class="hidden md:flex space-x-1.5 bg-blue-950/40 p-1 rounded-xl border border-blue-800/50">
+      <!-- Tab Desktop -->
+      <nav class="hidden md:flex items-center space-x-1 bg-slate-100/80 p-1 rounded-full border border-slate-200/50">
         <button @click="currentTab = 'booking'"
-          :class="currentTab === 'booking' ? 'bg-blue-700 text-white shadow-sm font-semibold' : 'text-blue-200 hover:text-white hover:bg-blue-800/60'"
-          class="px-3.5 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2">
-          <i class="fa-solid fa-calendar-plus"></i>
+          :class="currentTab === 'booking' ? 'bg-sky-600 text-white shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'"
+          class="px-4 py-1.5 rounded-full text-xs transition flex items-center space-x-1.5">
+          <i class="fa-regular fa-calendar-check"></i>
           <span>Borang Tempahan</span>
         </button>
         <button @click="currentTab = 'status'"
-          :class="currentTab === 'status' ? 'bg-blue-700 text-white shadow-sm font-semibold' : 'text-blue-200 hover:text-white hover:bg-blue-800/60'"
-          class="px-3.5 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2">
+          :class="currentTab === 'status' ? 'bg-sky-600 text-white shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'"
+          class="px-4 py-1.5 rounded-full text-xs transition flex items-center space-x-1.5">
           <i class="fa-solid fa-magnifying-glass"></i>
           <span>Semak Status</span>
         </button>
         <button @click="currentTab = 'admin'"
-          :class="currentTab === 'admin' ? 'bg-blue-700 text-white shadow-sm font-semibold' : 'text-blue-200 hover:text-white hover:bg-blue-800/60'"
-          class="px-3.5 py-2 rounded-lg text-xs font-medium transition flex items-center space-x-2">
+          :class="currentTab === 'admin' ? 'bg-sky-600 text-white shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'"
+          class="px-4 py-1.5 rounded-full text-xs transition flex items-center space-x-1.5">
           <i class="fa-solid fa-shield-halved"></i>
           <span>Admin</span>
         </button>
       </nav>
+
+      <!-- Ikon Profil / Notifikasi Elemen UI -->
+      <div class="flex items-center space-x-2">
+        <span class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 text-xs transition">
+          <i class="fa-regular fa-bell"></i>
+        </span>
+      </div>
     </div>
   </header>
 
-  <!-- Bar Navigasi Bawah (Khusus Mudah Alih / Mobile Bottom Bar) -->
-  <div class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200 z-40 md:hidden flex justify-around items-center px-2 py-2 shadow-lg">
+  <!-- Mobile Bottom Navigation Bar (Gaya UI App) -->
+  <div class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-100 z-40 md:hidden flex justify-around items-center px-4 py-2 shadow-lg">
     <button @click="currentTab = 'booking'"
-      :class="currentTab === 'booking' ? 'text-blue-700 font-bold' : 'text-slate-500 hover:text-slate-800'"
-      class="flex flex-col items-center justify-center flex-1 py-1 text-center transition">
-      <div class="p-1 rounded-lg" :class="currentTab === 'booking' ? 'bg-blue-50' : ''">
-        <i class="fa-solid fa-calendar-plus text-base"></i>
-      </div>
-      <span class="text-[10px] mt-0.5 tracking-tight">Tempahan</span>
+      :class="currentTab === 'booking' ? 'text-sky-600 font-bold' : 'text-slate-400'"
+      class="flex flex-col items-center justify-center flex-1 py-1 transition">
+      <i class="fa-regular fa-calendar-plus text-base"></i>
+      <span class="text-[10px] mt-1">Tempah</span>
     </button>
     <button @click="currentTab = 'status'"
-      :class="currentTab === 'status' ? 'text-blue-700 font-bold' : 'text-slate-500 hover:text-slate-800'"
-      class="flex flex-col items-center justify-center flex-1 py-1 text-center transition">
-      <div class="p-1 rounded-lg" :class="currentTab === 'status' ? 'bg-blue-50' : ''">
-        <i class="fa-solid fa-magnifying-glass text-base"></i>
-      </div>
-      <span class="text-[10px] mt-0.5 tracking-tight">Semakan</span>
+      :class="currentTab === 'status' ? 'text-sky-600 font-bold' : 'text-slate-400'"
+      class="flex flex-col items-center justify-center flex-1 py-1 transition">
+      <i class="fa-solid fa-magnifying-glass text-base"></i>
+      <span class="text-[10px] mt-1">Semak</span>
     </button>
     <button @click="currentTab = 'admin'"
-      :class="currentTab === 'admin' ? 'text-blue-700 font-bold' : 'text-slate-500 hover:text-slate-800'"
-      class="flex flex-col items-center justify-center flex-1 py-1 text-center transition">
-      <div class="p-1 rounded-lg" :class="currentTab === 'admin' ? 'bg-blue-50' : ''">
-        <i class="fa-solid fa-shield-halved text-base"></i>
-      </div>
-      <span class="text-[10px] mt-0.5 tracking-tight">Pentadbir</span>
+      :class="currentTab === 'admin' ? 'text-sky-600 font-bold' : 'text-slate-400'"
+      class="flex flex-col items-center justify-center flex-1 py-1 transition">
+      <i class="fa-solid fa-shield-halved text-base"></i>
+      <span class="text-[10px] mt-1">Admin</span>
     </button>
   </div>
 
-  <!-- Notifikasi Toast -->
+  <!-- Toast Notification -->
   <div x-cloak x-show="toast.show" 
        x-transition:enter="transition ease-out duration-300 transform"
        x-transition:enter-start="opacity-0 translate-y-4 scale-95"
@@ -95,520 +95,486 @@
        x-transition:leave-start="opacity-100 translate-y-0 scale-100"
        x-transition:leave-end="opacity-0 translate-y-4 scale-95"
        :class="toast.type === 'error' ? 'bg-rose-600' : 'bg-emerald-600'"
-       class="fixed bottom-20 md:bottom-6 right-4 left-4 sm:left-auto sm:max-w-sm text-white px-4 py-3 rounded-2xl shadow-2xl z-50 flex items-center space-x-3 text-xs sm:text-sm font-medium">
+       class="fixed bottom-20 md:bottom-6 right-4 left-4 sm:left-auto sm:max-w-sm text-white px-4 py-3 rounded-2xl shadow-xl z-50 flex items-center space-x-3 text-xs sm:text-sm font-medium">
     <i :class="toast.type === 'error' ? 'fa-circle-exclamation' : 'fa-circle-check'" class="fa-solid text-lg flex-shrink-0"></i>
     <span class="flex-1" x-text="toast.message"></span>
   </div>
 
   <!-- Modal Pop-up Salin ID Tempahan -->
   <div x-cloak x-show="successModal.show" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-t-3xl sm:rounded-2xl max-w-md w-full p-6 text-center shadow-2xl border border-slate-100 animate-in fade-in slide-in-from-bottom duration-200">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border border-slate-100 animate-in fade-in slide-in-from-bottom duration-200">
       <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
         <i class="fa-solid fa-circle-check text-2xl"></i>
       </div>
-      <h3 class="text-lg sm:text-xl font-bold text-slate-800 mb-1">Permohonan Berjaya Dihantar!</h3>
+      <h3 class="text-lg font-bold text-slate-800 mb-1">Permohonan Berjaya Dihantar!</h3>
       <p class="text-xs text-slate-500 mb-5 leading-relaxed">
-        Sila salin dan simpan <strong>No. ID Tempahan</strong> ini untuk membuat semakan kelulusan secara dalam talian.
+        Sila salin No. ID Tempahan ini untuk semakan kelulusan.
       </p>
       
-      <!-- Kad Salin ID -->
-      <div class="bg-blue-50/70 border-2 border-dashed border-blue-300 rounded-2xl p-4 mb-6">
-        <div class="text-[10px] uppercase font-bold text-blue-700 tracking-wider mb-1">No. ID Tempahan Anda</div>
+      <div class="bg-sky-50/70 border border-dashed border-sky-300 rounded-2xl p-4 mb-6">
+        <div class="text-[10px] uppercase font-bold text-sky-700 tracking-wider mb-1">ID Tempahan Anda</div>
         <div class="text-lg sm:text-xl font-mono font-black text-slate-900 tracking-wider select-all mb-3" x-text="successModal.id"></div>
         
         <button @click="copyId(successModal.id)" 
-                class="w-full py-3 sm:py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-sm active:scale-95"
-                :class="copied ? 'bg-emerald-600 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'">
+                class="w-full py-2.5 px-4 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-sm active:scale-95"
+                :class="copied ? 'bg-emerald-600 text-white' : 'bg-sky-600 hover:bg-sky-700 text-white'">
           <i :class="copied ? 'fa-solid fa-check' : 'fa-regular fa-copy'"></i>
-          <span x-text="copied ? 'Berjaya Disalin!' : 'Salin No. ID Tempahan'"></span>
+          <span x-text="copied ? 'Berjaya Disalin!' : 'Salin No. ID'"></span>
         </button>
       </div>
 
-      <div class="grid grid-cols-2 gap-3 pb-2 sm:pb-0">
-        <button @click="successModal.show = false; copied = false;" class="py-3 sm:py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+      <div class="grid grid-cols-2 gap-3 pb-4 sm:pb-0">
+        <button @click="successModal.show = false; copied = false;" class="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
           Tutup
         </button>
-        <button @click="goToStatusTab(successModal.id)" class="py-3 sm:py-2.5 bg-blue-900 hover:bg-blue-950 text-white font-semibold rounded-xl text-xs transition">
+        <button @click="goToStatusTab(successModal.id)" class="py-2.5 bg-slate-900 hover:bg-black text-white font-semibold rounded-xl text-xs transition">
           Semak Status
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Kandungan Utama Aplikasi -->
-  <main class="flex-1 max-w-7xl w-full mx-auto px-3.5 sm:px-6 lg:px-8 py-4 sm:py-8">
+  <!-- Kandungan Aplikasi -->
+  <main class="flex-1 max-w-md md:max-w-4xl w-full mx-auto px-4 py-5 mb-16 md:mb-6">
 
-    <!-- ================= TAB 1: BORANG TEMPAHAN ================= -->
-    <section x-show="currentTab === 'booking'" class="max-w-2xl mx-auto" x-cloak>
-      <div class="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/80 p-5 sm:p-8">
-        <div class="border-b border-slate-100 pb-4 sm:pb-5 mb-5 sm:mb-6">
-          <h2 class="text-lg sm:text-xl font-bold text-slate-800 flex items-center space-x-2">
-            <span class="p-2 bg-blue-50 text-blue-600 rounded-xl text-xs sm:text-sm"><i class="fa-regular fa-calendar-check"></i></span>
-            <span>Permohonan Tempahan Bilik</span>
-          </h2>
-          <p class="text-xs text-slate-500 mt-1">Tempahan dibuka minimum 2 hari sebelum tarikh penggunaan dan sehingga 30 hari ke hadapan.</p>
+    <!-- ================= TAB 1: TEMPAHAN & DETAIL BILIK (UI APP HOTEL STYLE) ================= -->
+    <section x-show="currentTab === 'booking'" class="space-y-4" x-cloak>
+      
+      <!-- Kad Info & Preview Bilik (Menggunakan Gambar Komputer Bilik Latihan) -->
+      <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
+        <div class="relative h-52 sm:h-64 w-full bg-slate-200">
+          <img src="Room_100_Computers.jpg" alt="Bilik Latihan UMKB" class="w-full h-full object-cover">
+          <span class="absolute top-4 left-4 bg-sky-600/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-md">
+            Makmal Komputer DBKL
+          </span>
+          <span class="absolute top-4 right-4 bg-white/90 text-rose-500 w-8 h-8 rounded-full flex items-center justify-center text-xs shadow-sm backdrop-blur-md">
+            <i class="fa-solid fa-heart"></i>
+          </span>
         </div>
 
-        <form @submit.prevent="submitBooking" class="space-y-5 sm:space-y-6">
+        <div class="p-5">
+          <div class="flex justify-between items-start">
+            <div>
+              <h2 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">Bilik Latihan Komputer UMKB</h2>
+              <p class="text-xs text-slate-400 mt-0.5 flex items-center">
+                <i class="fa-solid fa-location-dot text-sky-500 mr-1.5 text-[11px]"></i>
+                Tingkat 10, Menara DBKL 1, Kuala Lumpur
+              </p>
+            </div>
+            <div class="flex items-center space-x-1 text-amber-400 text-xs font-bold bg-amber-50 px-2.5 py-1 rounded-xl">
+              <i class="fa-solid fa-star"></i>
+              <span class="text-slate-700 text-xs font-semibold">4.9</span>
+            </div>
+          </div>
+
+          <!-- Spesifikasi Pantas (Pills) -->
+          <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-100 text-center">
+            <div class="p-2.5 bg-slate-50 rounded-2xl">
+              <i class="fa-solid fa-desktop text-sky-600 text-sm mb-1 block"></i>
+              <div class="text-xs font-bold text-slate-800">40 PC</div>
+              <div class="text-[10px] text-slate-400">Komputer Lengkap</div>
+            </div>
+            <div class="p-2.5 bg-slate-50 rounded-2xl">
+              <i class="fa-solid fa-users text-emerald-600 text-sm mb-1 block"></i>
+              <div class="text-xs font-bold text-slate-800">40 Pax</div>
+              <div class="text-[10px] text-slate-400">Kapasiti Penuh</div>
+            </div>
+            <div class="p-2.5 bg-slate-50 rounded-2xl">
+              <i class="fa-solid fa-wifi text-indigo-600 text-sm mb-1 block"></i>
+              <div class="text-xs font-bold text-slate-800">LAN / Wi-Fi</div>
+              <div class="text-[10px] text-slate-400">Rangkaian Pantas</div>
+            </div>
+          </div>
+
+          <!-- Kemudahan Tersedia (Chips Sesuai Filter UI) -->
+          <div class="mt-4">
+            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Kemudahan Bilik</div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="px-2.5 py-1 bg-sky-50 text-sky-700 text-[11px] font-medium rounded-full flex items-center gap-1.5">
+                <i class="fa-solid fa-chalkboard text-[10px]"></i> Smart Projector
+              </span>
+              <span class="px-2.5 py-1 bg-sky-50 text-sky-700 text-[11px] font-medium rounded-full flex items-center gap-1.5">
+                <i class="fa-solid fa-snowflake text-[10px]"></i> Penghawa Dingin
+              </span>
+              <span class="px-2.5 py-1 bg-sky-50 text-sky-700 text-[11px] font-medium rounded-full flex items-center gap-1.5">
+                <i class="fa-solid fa-volume-high text-[10px]"></i> Sistem Audio & PA
+              </span>
+              <span class="px-2.5 py-1 bg-sky-50 text-sky-700 text-[11px] font-medium rounded-full flex items-center gap-1.5">
+                <i class="fa-solid fa-plug text-[10px]"></i> Soket Kuasa Meja
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Borang Pilihan Tarikh & Sesi -->
+      <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-800 mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-sliders text-sky-600"></i>
+          <span>Pilih Tarikh & Sesi Tempahan</span>
+        </h3>
+
+        <form @submit.prevent="submitBooking" class="space-y-4">
           <!-- Tarikh -->
           <div>
-            <div class="flex justify-between items-center mb-1.5">
-              <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600">Tarikh Tempahan</label>
-              <span class="text-[10px] sm:text-[11px] text-blue-600 font-medium">Syarat: 2 hari awal - 30 hari</span>
+            <div class="flex justify-between items-center mb-1">
+              <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tarikh Penggunaan</label>
+              <span class="text-[10px] text-sky-600 font-semibold">Buka 2 - 30 hari awal</span>
             </div>
             <input type="date" x-model="form.tarikh" required 
               :min="minDate" 
               :max="maxDate"
               @change="validateDateRule"
-              class="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+              class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-700 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
             
-            <div x-cloak x-show="dateError" class="mt-2 p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-start space-x-2">
-              <i class="fa-solid fa-circle-info text-amber-600 mt-0.5 flex-shrink-0"></i>
+            <div x-cloak x-show="dateError" class="mt-2 p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-center gap-2">
+              <i class="fa-solid fa-circle-info text-amber-600"></i>
               <span x-text="dateError"></span>
             </div>
           </div>
 
-          <!-- Sesi Masa -->
+          <!-- Sesi Pilihan (Gaya Chips Butang Pilihan) -->
           <div>
-            <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">Pilih Sesi Masa</label>
-            <div class="space-y-2.5">
+            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Pilih Slot Sesi</label>
+            <div class="space-y-2">
               
               <!-- Sesi 1 -->
-              <label class="relative flex items-center justify-between p-3 sm:p-3.5 border rounded-xl sm:rounded-2xl transition cursor-pointer"
+              <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
                      :class="[
                        isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') 
-                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
-                         : (form.sesi === 'Sesi 1: 09:00 AM - 11:00 AM' ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-600' : 'border-slate-200 hover:bg-slate-50')
+                         ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
+                         : (form.sesi === 'Sesi 1: 09:00 AM - 11:00 AM' ? 'border-sky-500 bg-sky-50/60 ring-2 ring-sky-500/20' : 'border-slate-100 hover:bg-slate-50')
                      ]">
-                <div class="flex items-center space-x-3 pr-2">
+                <div class="flex items-center space-x-3">
                   <input type="radio" name="sesi" value="Sesi 1: 09:00 AM - 11:00 AM" x-model="form.sesi" 
                          :disabled="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')"
-                         class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                         class="w-4 h-4 text-sky-600 focus:ring-sky-500">
                   <div>
-                    <div class="text-xs sm:text-sm font-semibold text-slate-800">Sesi 1 (Pagi)</div>
-                    <div class="text-[11px] sm:text-xs text-slate-500 leading-tight mt-0.5">09:00 AM – 11:00 AM (2 Jam)</div>
+                    <div class="text-xs font-bold text-slate-800">Sesi 1 (Pagi)</div>
+                    <div class="text-[11px] text-slate-400">09:00 AM – 11:00 AM (2 Jam)</div>
                   </div>
                 </div>
-                <template x-if="!isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')">
-                  <span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-emerald-100 text-emerald-800 flex-shrink-0">Tersedia</span>
-                </template>
-                <template x-if="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')">
-                  <span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-rose-100 text-rose-800 flex-shrink-0">Penuh</span>
-                </template>
+                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
+                      :class="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
+                      x-text="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') ? 'Penuh' : 'Tersedia'">
+                </span>
               </label>
 
               <!-- Sesi 2 -->
-              <label class="relative flex items-center justify-between p-3 sm:p-3.5 border rounded-xl sm:rounded-2xl transition cursor-pointer"
+              <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
                      :class="[
                        isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') 
-                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
-                         : (form.sesi === 'Sesi 2: 11:30 AM - 01:00 PM' ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-600' : 'border-slate-200 hover:bg-slate-50')
+                         ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
+                         : (form.sesi === 'Sesi 2: 11:30 AM - 01:00 PM' ? 'border-sky-500 bg-sky-50/60 ring-2 ring-sky-500/20' : 'border-slate-100 hover:bg-slate-50')
                      ]">
-                <div class="flex items-center space-x-3 pr-2">
+                <div class="flex items-center space-x-3">
                   <input type="radio" name="sesi" value="Sesi 2: 11:30 AM - 01:00 PM" x-model="form.sesi" 
                          :disabled="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')"
-                         class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                         class="w-4 h-4 text-sky-600 focus:ring-sky-500">
                   <div>
-                    <div class="text-xs sm:text-sm font-semibold text-slate-800">Sesi 2 (Tengah Hari)</div>
-                    <div class="text-[11px] sm:text-xs text-slate-500 leading-tight mt-0.5">11:30 AM – 01:00 PM (1.5 Jam)</div>
+                    <div class="text-xs font-bold text-slate-800">Sesi 2 (Tengah Hari)</div>
+                    <div class="text-[11px] text-slate-400">11:30 AM – 01:00 PM (1.5 Jam)</div>
                   </div>
                 </div>
-                <template x-if="!isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')">
-                  <span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-emerald-100 text-emerald-800 flex-shrink-0">Tersedia</span>
-                </template>
-                <template x-if="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')">
-                  <span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-rose-100 text-rose-800 flex-shrink-0">Penuh</span>
-                </template>
+                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
+                      :class="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
+                      x-text="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') ? 'Penuh' : 'Tersedia'">
+                </span>
               </label>
 
               <!-- Sesi 3 -->
-              <label class="relative flex items-center justify-between p-3 sm:p-3.5 border rounded-xl sm:rounded-2xl transition cursor-pointer"
+              <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
                      :class="[
                        isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') 
-                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
-                         : (form.sesi === 'Sesi 3: 02:30 PM - 04:30 PM' ? 'border-blue-600 bg-blue-50/70 ring-1 ring-blue-600' : 'border-slate-200 hover:bg-slate-50')
+                         ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
+                         : (form.sesi === 'Sesi 3: 02:30 PM - 04:30 PM' ? 'border-sky-500 bg-sky-50/60 ring-2 ring-sky-500/20' : 'border-slate-100 hover:bg-slate-50')
                      ]">
-                <div class="flex items-center space-x-3 pr-2">
+                <div class="flex items-center space-x-3">
                   <input type="radio" name="sesi" value="Sesi 3: 02:30 PM - 04:30 PM" x-model="form.sesi" 
                          :disabled="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')"
-                         class="w-4 h-4 text-blue-600 focus:ring-blue-500">
+                         class="w-4 h-4 text-sky-600 focus:ring-sky-500">
                   <div>
-                    <div class="text-xs sm:text-sm font-semibold text-slate-800">Sesi 3 (Petang)</div>
-                    <div class="text-[11px] sm:text-xs text-slate-500 leading-tight mt-0.5">02:30 PM – 04:30 PM (2 Jam)</div>
+                    <div class="text-xs font-bold text-slate-800">Sesi 3 (Petang)</div>
+                    <div class="text-[11px] text-slate-400">02:30 PM – 04:30 PM (2 Jam)</div>
                   </div>
                 </div>
-                <template x-if="!isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')">
-                  <span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-emerald-100 text-emerald-800 flex-shrink-0">Tersedia</span>
-                </template>
-                <template x-if="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')">
-                  <span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-rose-100 text-rose-800 flex-shrink-0">Penuh</span>
-                </template>
+                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
+                      :class="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
+                      x-text="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') ? 'Penuh' : 'Tersedia'">
+                </span>
               </label>
 
-              <!-- Sesi 4 (Sehari Penuh) -->
-              <label class="relative flex items-center justify-between p-3 sm:p-3.5 border rounded-xl sm:rounded-2xl transition cursor-pointer"
+              <!-- Sesi 4 (Full Day) -->
+              <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
                      :class="[
                        isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') 
-                         ? 'border-rose-200 bg-rose-50/50 opacity-75 cursor-not-allowed' 
-                         : (form.sesi === 'Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)' ? 'border-indigo-600 bg-indigo-50/70 ring-1 ring-indigo-600' : 'border-slate-200 hover:bg-slate-50')
+                         ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
+                         : (form.sesi === 'Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)' ? 'border-indigo-500 bg-indigo-50/60 ring-2 ring-indigo-500/20' : 'border-slate-100 hover:bg-slate-50')
                      ]">
-                <div class="flex items-center space-x-3 pr-2">
+                <div class="flex items-center space-x-3">
                   <input type="radio" name="sesi" value="Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)" x-model="form.sesi" 
                          :disabled="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')"
                          class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
                   <div>
-                    <div class="flex items-center space-x-1.5 flex-wrap">
-                      <span class="text-xs sm:text-sm font-semibold text-slate-800">Sesi 4 (Sehari Penuh)</span>
-                      <span class="text-[9px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700">Pakej</span>
+                    <div class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <span>Sesi 4 (Sehari Penuh)</span>
+                      <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-bold">Pakej</span>
                     </div>
-                    <div class="text-[11px] sm:text-xs text-slate-500 leading-tight mt-0.5">09:00 AM – 04:30 PM (Pagi, Tgh Hari & Petang)</div>
+                    <div class="text-[11px] text-slate-400">09:00 AM – 04:30 PM</div>
                   </div>
                 </div>
-                <template x-if="!isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')">
-                  <span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-emerald-100 text-emerald-800 flex-shrink-0">Tersedia</span>
-                </template>
-                <template x-if="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')">
-                  <span class="text-[10px] sm:text-xs font-semibold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md bg-rose-100 text-rose-800 flex-shrink-0">Penuh</span>
-                </template>
+                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
+                      :class="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
+                      x-text="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') ? 'Penuh' : 'Tersedia'">
+                </span>
               </label>
-
-            </div>
-
-            <!-- Notis Bertindih -->
-            <div x-cloak x-show="isSlotBooked(form.sesi)" 
-                 class="mt-3 p-3.5 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 flex items-start space-x-2.5">
-              <i class="fa-solid fa-triangle-exclamation text-rose-600 text-base mt-0.5 flex-shrink-0"></i>
-              <div class="text-xs leading-relaxed">
-                <span class="font-bold block mb-0.5">Slot Masa Tidak Tersedia</span>
-                Maaf, <strong x-text="form.sesi"></strong> pada tarikh <strong x-text="formatDate(form.tarikh)"></strong> telah ditempah atau bertindih. Sila pilih sesi atau tarikh lain.
-              </div>
             </div>
           </div>
 
-          <!-- Butiran Pemohon -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 sm:gap-4">
-            <div>
-              <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Nama Pemohon</label>
-              <input type="text" x-model="form.nama" placeholder="Cth: Ahmad Razak" required
-                class="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+          <!-- Maklumat Pemohon -->
+          <div class="space-y-3 pt-2">
+            <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Maklumat Permohonan</div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <input type="text" x-model="form.nama" placeholder="Nama Penuh Pemohon" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+              
+              <input type="email" x-model="form.email" placeholder="Emel Rasmi (Cth: nama@dbkl.gov.my)" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+
+              <input type="tel" x-model="form.telefon" placeholder="No. Telefon / Sambungan" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+
+              <input type="text" x-model="form.bahagian" placeholder="Bahagian / Jabatan" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
             </div>
-            <div>
-              <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Emel Pemohon (Rekod)</label>
-              <input type="email" x-model="form.email" placeholder="Cth: ahmad@dbkl.gov.my" required
-                class="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
-            </div>
-            <div>
-              <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">No. Telefon</label>
-              <input type="tel" x-model="form.telefon" placeholder="Cth: 012-3456789" required
-                class="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
-            </div>
-            <div>
-              <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Bahagian / Unit</label>
-              <input type="text" x-model="form.bahagian" placeholder="Cth: UMKB / Jabatan Kewangan" required
-                class="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <input type="text" x-model="form.tajuk" placeholder="Tajuk Latihan / Program" required
+                class="sm:col-span-2 w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+              
+              <input type="number" min="1" max="40" x-model="form.peserta" placeholder="Bil. Peserta (Maks: 40)" required
+                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
             </div>
           </div>
 
-          <!-- Butiran Kursus -->
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
-            <div class="sm:col-span-2">
-              <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Tajuk Program / Latihan</label>
-              <input type="text" x-model="form.tajuk" placeholder="Cth: Bengkel Penggunaan Sistem Kewangan" required
-                class="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
-            </div>
-            <div>
-              <label class="block text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-600 mb-1">Bil. Peserta</label>
-              <input type="number" min="1" max="40" x-model="form.peserta" placeholder="Maks: 40" required
-                class="w-full px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none transition">
-            </div>
+          <!-- Sticky-Style Action Button (Gaya Booking App) -->
+          <div class="pt-3">
+            <button type="submit" :disabled="loading || isSlotBooked(form.sesi) || dateError !== ''"
+              class="w-full py-3.5 px-6 bg-sky-600 hover:bg-sky-700 active:scale-[0.98] text-white font-bold rounded-2xl text-sm transition duration-150 flex items-center justify-center space-x-2 shadow-lg shadow-sky-600/25 disabled:opacity-50 disabled:cursor-not-allowed">
+              <template x-if="!loading && !isSlotBooked(form.sesi) && !dateError">
+                <span class="flex items-center space-x-2">
+                  <i class="fa-solid fa-bolt"></i>
+                  <span>Hantar Permohonan Bilik</span>
+                </span>
+              </template>
+              <template x-if="!loading && (isSlotBooked(form.sesi) || dateError !== '')">
+                <span>Slot Tidak Tersedia / Tarikh Tidak Sah</span>
+              </template>
+              <template x-if="loading">
+                <span class="flex items-center space-x-2">
+                  <i class="fa-solid fa-spinner fa-spin"></i>
+                  <span>Sedang Menghantar Tempahan...</span>
+                </span>
+              </template>
+            </button>
           </div>
-
-          <!-- Butang Hantar -->
-          <button type="submit" :disabled="loading || isSlotBooked(form.sesi) || dateError !== ''"
-            class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 active:scale-[0.99] text-white font-semibold rounded-xl text-sm transition duration-150 flex items-center justify-center space-x-2 shadow-lg shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed">
-            <template x-if="!loading && !isSlotBooked(form.sesi) && !dateError">
-              <span class="flex items-center space-x-2">
-                <i class="fa-solid fa-paper-plane"></i>
-                <span>Hantar Permohonan Tempahan</span>
-              </span>
-            </template>
-            <template x-if="!loading && (isSlotBooked(form.sesi) || dateError !== '')">
-              <span class="flex items-center space-x-2">
-                <i class="fa-solid fa-ban"></i>
-                <span>Slot Tidak Tersedia / Bertindih</span>
-              </span>
-            </template>
-            <template x-if="loading">
-              <span class="flex items-center space-x-2">
-                <i class="fa-solid fa-spinner fa-spin"></i>
-                <span>Memproses Tempahan...</span>
-              </span>
-            </template>
-          </button>
         </form>
       </div>
+
     </section>
 
-    <!-- ================= TAB 2: SEMAKAN STATUS AWAM ================= -->
-    <section x-show="currentTab === 'status'" class="max-w-xl mx-auto" x-cloak>
-      <div class="bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/80 p-5 sm:p-8">
-        <div class="border-b border-slate-100 pb-4 sm:pb-5 mb-5 sm:mb-6 text-center">
-          <h2 class="text-lg sm:text-xl font-bold text-slate-800">Semak Status Permohonan</h2>
-          <p class="text-xs text-slate-500 mt-1">Masukkan No. ID Tempahan atau No. Telefon yang didaftarkan</p>
+    <!-- ================= TAB 2: SEMAKAN STATUS AWAM (UI HASIL CARIAN) ================= -->
+    <section x-show="currentTab === 'status'" class="space-y-4" x-cloak>
+      <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100">
+        <div class="text-center mb-4">
+          <h2 class="text-base sm:text-lg font-bold text-slate-900">Semakan Status Tempahan</h2>
+          <p class="text-xs text-slate-400">Masukkan No. ID Tempahan atau No. Telefon yang didaftarkan</p>
         </div>
 
-        <div class="flex space-x-2 mb-6">
-          <input type="text" x-model="searchQuery" placeholder="Cth: TRN-20260918-001 atau 0123456789"
+        <div class="flex items-center space-x-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-200">
+          <input type="text" x-model="searchQuery" placeholder="Cth: TRN-20260918-001 / 0123456789"
             @keyup.enter="searchBooking"
-            class="flex-1 px-3.5 py-3 sm:py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:ring-2 focus:ring-blue-600 focus:outline-none">
-          <button @click="searchBooking" class="px-5 py-3 sm:py-2.5 bg-blue-600 text-white rounded-xl font-medium text-sm hover:bg-blue-700 transition shadow-sm active:scale-95">
+            class="flex-1 px-3 py-2 bg-transparent text-xs sm:text-sm focus:outline-none text-slate-800">
+          <button @click="searchBooking" class="px-4 py-2.5 bg-sky-600 text-white rounded-xl text-xs font-bold hover:bg-sky-700 transition shadow-sm active:scale-95">
             <i class="fa-solid fa-magnifying-glass"></i>
           </button>
         </div>
 
+        <!-- Kad Hasil Semakan (Hotel Search Result Card Style) -->
         <template x-if="searchResult">
-          <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 sm:p-5 space-y-3 text-xs sm:text-sm">
-            <div class="flex justify-between items-center pb-3 border-b border-slate-200">
-              <span class="font-bold font-mono text-blue-900" x-text="searchResult['ID Tempahan'] || searchResult.id"></span>
-              <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold"
+          <div class="mt-5 bg-white border border-slate-100 rounded-3xl p-4 shadow-sm space-y-3">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div>
+                <span class="text-[10px] uppercase font-bold text-slate-400">ID Rekod</span>
+                <div class="font-mono font-bold text-sm text-sky-800" x-text="searchResult['ID Tempahan'] || searchResult.id"></div>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider"
                 :class="{
-                  'bg-emerald-100 text-emerald-800': (searchResult['Status'] || searchResult.status) === 'Lulus',
-                  'bg-amber-100 text-amber-800': (searchResult['Status'] || searchResult.status) === 'Menunggu',
-                  'bg-rose-100 text-rose-800': (searchResult['Status'] || searchResult.status) === 'Ditolak'
+                  'bg-emerald-50 text-emerald-700 border border-emerald-200': (searchResult['Status'] || searchResult.status) === 'Lulus',
+                  'bg-amber-50 text-amber-700 border border-amber-200': (searchResult['Status'] || searchResult.status) === 'Menunggu',
+                  'bg-rose-50 text-rose-700 border border-rose-200': (searchResult['Status'] || searchResult.status) === 'Ditolak'
                 }"
                 x-text="searchResult['Status'] || searchResult.status">
               </span>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              <div><span class="text-slate-500 text-[11px] block">Tarikh:</span> <p class="font-semibold text-slate-800" x-text="formatDate(searchResult['Tarikh Tempahan'] || searchResult.tarikh)"></p></div>
-              <div><span class="text-slate-500 text-[11px] block">Sesi Masa:</span> <p class="font-semibold text-slate-800" x-text="searchResult['Sesi Masa'] || searchResult.sesi"></p></div>
-              <div><span class="text-slate-500 text-[11px] block">Pemohon:</span> <p class="font-semibold text-slate-800" x-text="(searchResult['Nama Pemohon'] || searchResult.nama) + ' (' + (searchResult['Bahagian / Unit'] || searchResult.bahagian || '-') + ')'"></p></div>
-              <div><span class="text-slate-500 text-[11px] block">No. Telefon:</span> <p class="font-semibold text-slate-800" x-text="searchResult['No. Telefon'] || searchResult.telefon || '-'"></p></div>
-              <div><span class="text-slate-500 text-[11px] block">Emel:</span> <p class="font-semibold text-slate-800 truncate" x-text="searchResult['Emel Pemohon'] || searchResult.email || '-'"></p></div>
+
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div><span class="text-slate-400 text-[10px] block">Tarikh:</span> <span class="font-semibold text-slate-800" x-text="formatDate(searchResult['Tarikh Tempahan'] || searchResult.tarikh)"></span></div>
+              <div><span class="text-slate-400 text-[10px] block">Sesi:</span> <span class="font-semibold text-slate-800" x-text="searchResult['Sesi Masa'] || searchResult.sesi"></span></div>
+              <div><span class="text-slate-400 text-[10px] block">Pemohon:</span> <span class="font-semibold text-slate-800" x-text="searchResult['Nama Pemohon'] || searchResult.nama"></span></div>
+              <div><span class="text-slate-400 text-[10px] block">Bahagian:</span> <span class="font-semibold text-slate-800" x-text="searchResult['Bahagian / Unit'] || searchResult.bahagian || '-'"></span></div>
             </div>
-            <div class="pt-2 border-t border-slate-200">
-              <span class="text-slate-500 text-[11px] block">Tajuk Program:</span>
-              <p class="font-semibold text-slate-800 mt-0.5" x-text="searchResult['Tajuk Program / Latihan'] || searchResult.tajuk"></p>
+
+            <div class="pt-2 border-t border-slate-100 text-xs">
+              <span class="text-slate-400 text-[10px] block">Tajuk Program:</span>
+              <p class="font-semibold text-slate-800" x-text="searchResult['Tajuk Program / Latihan'] || searchResult.tajuk"></p>
             </div>
-            <div>
-              <span class="text-slate-500 text-[11px] block">Catatan Pentadbir:</span>
-              <p class="text-slate-700 italic mt-0.5" x-text="(searchResult['Catatan Admin'] || searchResult.catatan) || 'Tiada catatan'"></p>
+
+            <div class="bg-slate-50 p-3 rounded-2xl text-xs">
+              <span class="text-slate-400 text-[10px] font-bold block mb-0.5">Catatan Pentadbir:</span>
+              <p class="text-slate-600 italic" x-text="(searchResult['Catatan Admin'] || searchResult.catatan) || 'Tiada catatan diberikan.'"></p>
             </div>
           </div>
         </template>
-        
+
         <template x-if="searchNotFound">
-          <div class="text-center py-8 text-slate-400 text-xs sm:text-sm">
-            <i class="fa-regular fa-circle-question text-3xl mb-2 text-slate-300"></i>
-            <p>Tiada rekod tempahan dijumpai bagi carian tersebut.</p>
+          <div class="text-center py-8 text-slate-400 text-xs">
+            <i class="fa-regular fa-folder-open text-2xl mb-1 text-slate-300"></i>
+            <p>Tiada rekod tempahan dijumpai bagi carian ini.</p>
           </div>
         </template>
       </div>
     </section>
 
-    <!-- ================= TAB 3: DASHBOARD ADMIN ================= -->
+    <!-- ================= TAB 3: PENTADBIR UMKB ================= -->
     <section x-show="currentTab === 'admin'" x-cloak>
       <!-- Log Masuk Admin -->
-      <div x-show="!adminLoggedIn" class="max-w-sm mx-auto bg-white rounded-2xl sm:rounded-3xl shadow-sm border border-slate-200/80 p-6 sm:p-8 text-center">
-        <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
-          <i class="fa-solid fa-lock text-xl"></i>
+      <div x-show="!adminLoggedIn" class="max-w-sm mx-auto bg-white rounded-3xl shadow-sm border border-slate-100 p-6 text-center">
+        <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+          <i class="fa-solid fa-lock text-lg"></i>
         </div>
-        <h3 class="font-bold text-slate-800 text-lg">Akses Pentadbir UMKB</h3>
-        <p class="text-xs text-slate-500 mt-1 mb-4">Sila masukkan PIN keselamatan pentadbir.</p>
+        <h3 class="font-bold text-slate-800 text-base">Pentadbir UMKB</h3>
+        <p class="text-xs text-slate-400 mt-1 mb-4">Masukkan PIN pentadbir untuk pengurusan tempahan.</p>
         <form @submit.prevent="loginAdmin">
-          <input type="password" x-model="adminPin" placeholder="PIN" class="w-full px-3 py-3 text-center text-lg tracking-widest border border-slate-200 rounded-xl mb-3 focus:ring-2 focus:ring-blue-600 focus:outline-none">
-          <button type="submit" class="w-full py-3 bg-blue-600 text-white rounded-xl text-sm font-semibold hover:bg-blue-700 transition">Log Masuk</button>
+          <input type="password" x-model="adminPin" placeholder="PIN" class="w-full px-4 py-2.5 text-center text-lg tracking-widest border border-slate-200 rounded-2xl mb-3 focus:ring-2 focus:ring-sky-500 focus:outline-none">
+          <button type="submit" class="w-full py-2.5 bg-sky-600 text-white rounded-2xl text-xs font-bold hover:bg-sky-700 transition">Log Masuk</button>
         </form>
       </div>
 
-      <!-- Dashboard Setelah Log Masuk -->
-      <div x-show="adminLoggedIn" class="space-y-4 sm:space-y-6">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <!-- Dashboard Admin -->
+      <div x-show="adminLoggedIn" class="space-y-4">
+        <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-xl sm:text-2xl font-bold text-slate-800">Papan Semakan Pentadbir</h2>
-            <p class="text-xs text-slate-500">Urus kelulusan dan pemantauan bilik latihan UMKB</p>
+            <h2 class="text-lg font-bold text-slate-900">Senarai Tempahan Masuk</h2>
+            <p class="text-xs text-slate-400">Panel kelulusan Unit Maklumat Kewangan Berkomputer</p>
           </div>
-          <div class="flex items-center space-x-2 self-end sm:self-auto">
-            <button @click="fetchBookings" class="px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 shadow-sm flex items-center space-x-1.5">
+          <div class="flex items-center space-x-2">
+            <button @click="fetchBookings" class="p-2.5 bg-white border border-slate-200 rounded-2xl text-xs text-slate-600 hover:bg-slate-50 shadow-sm">
               <i class="fa-solid fa-rotate" :class="{'fa-spin': loading}"></i>
-              <span>Kemaskini</span>
             </button>
-            <button @click="adminLoggedIn = false" class="px-3 py-2 bg-rose-50 text-rose-600 rounded-xl text-xs font-semibold hover:bg-rose-100 transition">
-              Log Keluar
+            <button @click="adminLoggedIn = false" class="px-3 py-2 bg-rose-50 text-rose-600 rounded-2xl text-xs font-bold hover:bg-rose-100 transition">
+              Keluar
             </button>
           </div>
         </div>
 
-        <!-- Kad KPI (2 Kolum Mobile / 4 Kolum Desktop) -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          <div class="bg-white p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-slate-200/80 shadow-sm">
-            <div class="text-[11px] sm:text-xs font-medium text-slate-500">Jumlah Tempahan</div>
-            <div class="text-xl sm:text-2xl font-bold text-slate-800 mt-0.5 sm:mt-1" x-text="records.length"></div>
+        <!-- Metrik Status (Chips Ringkas) -->
+        <div class="grid grid-cols-4 gap-2">
+          <div class="bg-white p-3 rounded-2xl border border-slate-100 text-center shadow-sm">
+            <div class="text-[10px] text-slate-400 font-bold uppercase">Semua</div>
+            <div class="text-base font-bold text-slate-800 mt-0.5" x-text="records.length"></div>
           </div>
-          <div class="bg-amber-50/70 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-amber-200/80 shadow-sm">
-            <div class="text-[11px] sm:text-xs font-medium text-amber-700">Menunggu</div>
-            <div class="text-xl sm:text-2xl font-bold text-amber-800 mt-0.5 sm:mt-1" x-text="countStatus('Menunggu')"></div>
+          <div class="bg-amber-50/60 p-3 rounded-2xl border border-amber-100 text-center shadow-sm">
+            <div class="text-[10px] text-amber-600 font-bold uppercase">Menunggu</div>
+            <div class="text-base font-bold text-amber-800 mt-0.5" x-text="countStatus('Menunggu')"></div>
           </div>
-          <div class="bg-emerald-50/70 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-emerald-200/80 shadow-sm">
-            <div class="text-[11px] sm:text-xs font-medium text-emerald-700">Diluluskan</div>
-            <div class="text-xl sm:text-2xl font-bold text-emerald-800 mt-0.5 sm:mt-1" x-text="countStatus('Lulus')"></div>
+          <div class="bg-emerald-50/60 p-3 rounded-2xl border border-emerald-100 text-center shadow-sm">
+            <div class="text-[10px] text-emerald-600 font-bold uppercase">Lulus</div>
+            <div class="text-base font-bold text-emerald-800 mt-0.5" x-text="countStatus('Lulus')"></div>
           </div>
-          <div class="bg-rose-50/70 p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-rose-200/80 shadow-sm">
-            <div class="text-[11px] sm:text-xs font-medium text-rose-700">Ditolak</div>
-            <div class="text-xl sm:text-2xl font-bold text-rose-800 mt-0.5 sm:mt-1" x-text="countStatus('Ditolak')"></div>
+          <div class="bg-rose-50/60 p-3 rounded-2xl border border-rose-100 text-center shadow-sm">
+            <div class="text-[10px] text-rose-600 font-bold uppercase">Ditolak</div>
+            <div class="text-base font-bold text-rose-800 mt-0.5" x-text="countStatus('Ditolak')"></div>
           </div>
         </div>
 
-        <!-- Penapis Status & Jadual Rekod -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200/80 overflow-hidden">
-          <div class="p-3 sm:p-4 border-b border-slate-100 flex items-center justify-between overflow-x-auto">
-            <div class="flex space-x-1.5 flex-nowrap min-w-max">
-              <button @click="adminFilter = 'Semua'" :class="adminFilter === 'Semua' ? 'bg-blue-900 text-white' : 'bg-slate-100 text-slate-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">Semua</button>
-              <button @click="adminFilter = 'Menunggu'" :class="adminFilter === 'Menunggu' ? 'bg-amber-600 text-white' : 'bg-slate-100 text-slate-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">Menunggu</button>
-              <button @click="adminFilter = 'Lulus'" :class="adminFilter === 'Lulus' ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">Lulus</button>
-              <button @click="adminFilter = 'Ditolak'" :class="adminFilter === 'Ditolak' ? 'bg-rose-600 text-white' : 'bg-slate-100 text-slate-600'" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition">Ditolak</button>
-            </div>
-          </div>
+        <!-- Penapis Status Tab -->
+        <div class="flex space-x-1.5 overflow-x-auto pb-1">
+          <button @click="adminFilter = 'Semua'" :class="adminFilter === 'Semua' ? 'bg-sky-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Semua</button>
+          <button @click="adminFilter = 'Menunggu'" :class="adminFilter === 'Menunggu' ? 'bg-amber-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Menunggu</button>
+          <button @click="adminFilter = 'Lulus'" :class="adminFilter === 'Lulus' ? 'bg-emerald-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Lulus</button>
+          <button @click="adminFilter = 'Ditolak'" :class="adminFilter === 'Ditolak' ? 'bg-rose-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Ditolak</button>
+        </div>
 
-          <!-- 1. Paparan Card View (Mobile & Skrin Kecil) -->
-          <div class="block lg:hidden divide-y divide-slate-100">
-            <template x-for="row in filteredRecords" :key="row['ID Tempahan'] || row.id">
-              <div class="p-4 space-y-3">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <div class="font-bold text-sm text-slate-800" x-text="formatDate(row['Tarikh Tempahan'] || row.tarikh)"></div>
-                    <div class="text-[10px] font-mono text-slate-400 mt-0.5" x-text="row['ID Tempahan'] || row.id"></div>
-                  </div>
-                  <span class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold"
-                    :class="{
-                      'bg-emerald-100 text-emerald-800': (row['Status'] || row.status) === 'Lulus',
-                      'bg-amber-100 text-amber-800': (row['Status'] || row.status) === 'Menunggu',
-                      'bg-rose-100 text-rose-800': (row['Status'] || row.status) === 'Ditolak'
-                    }"
-                    x-text="row['Status'] || row.status">
-                  </span>
+        <!-- Senarai Kad Admin (Card View Mobile & Desktop) -->
+        <div class="space-y-3">
+          <template x-for="row in filteredRecords" :key="row['ID Tempahan'] || row.id">
+            <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-3">
+              <div class="flex justify-between items-start">
+                <div>
+                  <div class="font-bold text-sm text-slate-900" x-text="formatDate(row['Tarikh Tempahan'] || row.tarikh)"></div>
+                  <div class="text-[10px] font-mono text-slate-400" x-text="row['ID Tempahan'] || row.id"></div>
                 </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold"
+                  :class="{
+                    'bg-emerald-100 text-emerald-800': (row['Status'] || row.status) === 'Lulus',
+                    'bg-amber-100 text-amber-800': (row['Status'] || row.status) === 'Menunggu',
+                    'bg-rose-100 text-rose-800': (row['Status'] || row.status) === 'Ditolak'
+                  }"
+                  x-text="row['Status'] || row.status">
+                </span>
+              </div>
 
-                <div class="text-xs space-y-1">
-                  <div class="font-semibold text-slate-700 flex items-center space-x-1.5">
-                    <i class="fa-regular fa-clock text-blue-600 text-[11px]"></i>
-                    <span x-text="row['Sesi Masa'] || row.sesi"></span>
-                  </div>
-                  <div class="text-slate-800 font-medium" x-text="row['Tajuk Program / Latihan'] || row.tajuk"></div>
-                  <div class="text-[11px] text-slate-500">
-                    <span x-text="row['Nama Pemohon'] || row.nama"></span> • <span x-text="row['Bahagian / Unit'] || row.bahagian || '-'"></span>
-                  </div>
-                  <div class="flex items-center space-x-3 text-[11px] pt-1 text-slate-600">
-                    <span><i class="fa-solid fa-phone text-[10px] text-emerald-600 mr-1"></i><span x-text="row['No. Telefon'] || row.telefon || '-'"></span></span>
-                    <span><i class="fa-solid fa-users text-[10px] text-blue-600 mr-1"></i><span x-text="(row['Bil. Peserta'] || row.peserta) + ' Pax'"></span></span>
-                  </div>
+              <div class="text-xs space-y-1">
+                <div class="font-bold text-sky-700" x-text="row['Sesi Masa'] || row.sesi"></div>
+                <div class="font-medium text-slate-800" x-text="row['Tajuk Program / Latihan'] || row.tajuk"></div>
+                <div class="text-slate-400 text-[11px]">
+                  <span x-text="row['Nama Pemohon'] || row.nama"></span> • <span x-text="row['Bahagian / Unit'] || row.bahagian || '-'"></span> (<span x-text="(row['Bil. Peserta'] || row.peserta) + ' Pax'"></span>)
                 </div>
-
-                <!-- Butang Tindakan Kelulusan Mudah Alih -->
-                <div class="flex space-x-2 pt-2 border-t border-slate-100">
-                  <button @click="updateStatus(row, 'Lulus')" class="flex-1 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white rounded-xl text-xs font-semibold transition flex items-center justify-center space-x-1.5 active:scale-95">
-                    <i class="fa-solid fa-check"></i>
-                    <span>Luluskan</span>
-                  </button>
-                  <button @click="updateStatus(row, 'Ditolak')" class="flex-1 py-2 bg-rose-50 text-rose-700 hover:bg-rose-600 hover:text-white rounded-xl text-xs font-semibold transition flex items-center justify-center space-x-1.5 active:scale-95">
-                    <i class="fa-solid fa-xmark"></i>
-                    <span>Tolak</span>
-                  </button>
+                <div class="text-slate-500 text-[11px]">
+                  Tel: <span x-text="row['No. Telefon'] || row.telefon || '-'"></span>
                 </div>
               </div>
-            </template>
-            <template x-if="filteredRecords.length === 0">
-              <div class="p-6 text-center text-slate-400 text-xs">Tiada rekod tempahan ditemui.</div>
-            </template>
-          </div>
 
-          <!-- 2. Paparan Table View (Laptop, Desktop & Tablet Lebar) -->
-          <div class="hidden lg:block overflow-x-auto">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-50 text-slate-500 uppercase tracking-wider font-semibold border-b border-slate-100">
-                <tr>
-                  <th class="px-4 py-3">Tarikh / ID</th>
-                  <th class="px-4 py-3">Sesi Masa</th>
-                  <th class="px-4 py-3">Pemohon & Kontak</th>
-                  <th class="px-4 py-3">Program / Peserta</th>
-                  <th class="px-4 py-3">Status</th>
-                  <th class="px-4 py-3 text-center">Tindakan Admin</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-100">
-                <template x-for="row in filteredRecords" :key="row['ID Tempahan'] || row.id">
-                  <tr class="hover:bg-slate-50/70 transition">
-                    <td class="px-4 py-3">
-                      <div class="font-semibold text-slate-800" x-text="formatDate(row['Tarikh Tempahan'] || row.tarikh)"></div>
-                      <div class="text-[10px] font-mono text-slate-400" x-text="row['ID Tempahan'] || row.id"></div>
-                    </td>
-                    <td class="px-4 py-3 font-medium text-slate-700" x-text="row['Sesi Masa'] || row.sesi"></td>
-                    <td class="px-4 py-3">
-                      <div class="font-bold text-slate-800 text-sm" x-text="row['Nama Pemohon'] || row.nama"></div>
-                      <div class="text-slate-500 text-[11px] font-medium mb-1" x-text="row['Bahagian / Unit'] || row.bahagian || '-'"></div>
-                      <div class="text-blue-600 text-[11px] flex items-center space-x-1.5">
-                        <i class="fa-regular fa-envelope text-[10px] w-3"></i>
-                        <span x-text="row['Emel Pemohon'] || row.email || '-'"></span>
-                      </div>
-                      <div class="text-emerald-700 text-[11px] flex items-center space-x-1.5 mt-0.5 font-medium">
-                        <i class="fa-solid fa-phone text-[10px] w-3"></i>
-                        <span x-text="row['No. Telefon'] || row.telefon || '-'"></span>
-                      </div>
-                    </td>
-                    <td class="px-4 py-3">
-                      <div class="font-medium text-slate-800 truncate max-w-[200px]" x-text="row['Tajuk Program / Latihan'] || row.tajuk"></div>
-                      <div class="text-slate-400" x-text="(row['Bil. Peserta'] || row.peserta) + ' Orang'"></div>
-                    </td>
-                    <td class="px-4 py-3">
-                      <span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold"
-                        :class="{
-                          'bg-emerald-100 text-emerald-800': (row['Status'] || row.status) === 'Lulus',
-                          'bg-amber-100 text-amber-800': (row['Status'] || row.status) === 'Menunggu',
-                          'bg-rose-100 text-rose-800': (row['Status'] || row.status) === 'Ditolak'
-                        }"
-                        x-text="row['Status'] || row.status">
-                      </span>
-                    </td>
-                    <td class="px-4 py-3 text-center">
-                      <div class="flex justify-center space-x-1.5">
-                        <button @click="updateStatus(row, 'Lulus')" title="Luluskan" class="p-2 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-xl transition">
-                          <i class="fa-solid fa-check"></i>
-                        </button>
-                        <button @click="updateStatus(row, 'Ditolak')" title="Tolak" class="p-2 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl transition">
-                          <i class="fa-solid fa-xmark"></i>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                </template>
-                <template x-if="filteredRecords.length === 0">
-                  <tr>
-                    <td colspan="6" class="px-4 py-8 text-center text-slate-400">Tiada rekod tempahan ditemui.</td>
-                  </tr>
-                </template>
-              </tbody>
-            </table>
-          </div>
+              <!-- Butang Lulus / Tolak -->
+              <div class="flex space-x-2 pt-2 border-t border-slate-100">
+                <button @click="updateStatus(row, 'Lulus')" class="flex-1 py-2 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white rounded-2xl text-xs font-bold transition flex items-center justify-center space-x-1">
+                  <i class="fa-solid fa-check"></i>
+                  <span>Lulus</span>
+                </button>
+                <button @click="updateStatus(row, 'Ditolak')" class="flex-1 py-2 bg-rose-50 hover:bg-rose-600 text-rose-700 hover:text-white rounded-2xl text-xs font-bold transition flex items-center justify-center space-x-1">
+                  <i class="fa-solid fa-xmark"></i>
+                  <span>Tolak</span>
+                </button>
+              </div>
+            </div>
+          </template>
+
+          <template x-if="filteredRecords.length === 0">
+            <div class="p-8 text-center bg-white rounded-3xl border border-slate-100 text-slate-400 text-xs">
+              Tiada rekod tempahan ditemui.
+            </div>
+          </template>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Footer Sistem -->
-  <footer class="mt-auto py-6 text-center text-xs text-slate-400 border-t border-slate-200/60 bg-white/50 backdrop-blur-sm mb-16 md:mb-0">
-    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-1.5 font-medium">
-      <span>Hak Cipta Terpelihara &copy; 2026 Unit Maklumat Kewangan Berkomputer (UMKB).</span>
+  <!-- Footer -->
+  <footer class="mt-auto py-5 text-center text-xs text-slate-400 border-t border-slate-100 bg-white mb-14 md:mb-0">
+    <div class="max-w-md md:max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-1">
+      <span>&copy; 2026 Unit Maklumat Kewangan Berkomputer (UMKB)</span>
       <span class="hidden sm:inline">•</span>
-      <span>Pembangun: <strong class="text-slate-600 font-semibold">&copy;Jnol.Ai</strong></span>
+      <span>Pembangun: <strong class="text-slate-700 font-semibold">&copy;Jnol.Ai</strong></span>
     </div>
   </footer>
 
-  <!-- Logik Alpine.js -->
+  <!-- Logik Alpine.js (Kekal Sepenuhnya Sedia Ada) -->
   <script>
     function bookingApp() {
       return {
-        // Gantikan URL di bawah dengan Web App URL anda daripada Deploy > New Deployment
         SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyWtAmQKktUZTkLlPRy4dj0u0OXo-FCBSR1XivDcJFB-UY3HXFTwOBTx18_CdHauKWj/exec',
         
         currentTab: 'booking',
