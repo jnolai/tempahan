@@ -64,7 +64,7 @@
     </div>
   </header>
 
-  <!-- Mobile Bottom Navigation Bar (Gaya UI App) -->
+  <!-- Mobile Bottom Navigation Bar -->
   <div class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-100 z-40 md:hidden flex justify-around items-center px-4 py-2 shadow-lg">
     <button @click="currentTab = 'booking'"
       :class="currentTab === 'booking' ? 'text-sky-600 font-bold' : 'text-slate-400'"
@@ -100,7 +100,7 @@
     <span class="flex-1" x-text="toast.message"></span>
   </div>
 
-  <!-- Modal Pop-up Salin ID Tempahan -->
+  <!-- Modal Pop-up Salin ID Tempahan (Pengguna) -->
   <div x-cloak x-show="successModal.show" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border border-slate-100 animate-in fade-in slide-in-from-bottom duration-200">
       <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
@@ -134,13 +134,43 @@
     </div>
   </div>
 
+  <!-- Modal Pengesahan Kelulusan & No Rujukan Surat (Admin) -->
+  <div x-cloak x-show="approvalModal.show" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-150">
+      <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+        <i class="fa-solid fa-file-circle-check text-xl"></i>
+      </div>
+      <h3 class="text-base font-bold text-slate-900 text-center mb-1">Kelulusan Tempahan</h3>
+      <p class="text-xs text-slate-500 text-center mb-4">
+        Sila masukkan nombor rujukan surat rasmi bagi permohonan <span class="font-mono font-bold text-slate-700" x-text="approvalModal.targetRow ? (approvalModal.targetRow['ID Tempahan'] || approvalModal.targetRow.id) : ''"></span>.
+      </p>
+
+      <form @submit.prevent="confirmApproval">
+        <div class="mb-4">
+          <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5">No. Rujukan Surat</label>
+          <input type="text" x-model="approvalModal.referenceNo" required placeholder="Cth: DBKL/JK/UMKB/2026(01)"
+                 class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-800 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:outline-none transition">
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <button type="button" @click="closeApprovalModal" 
+                  class="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+            Batal
+          </button>
+          <button type="submit" 
+                  class="py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs transition shadow-md shadow-emerald-600/20 active:scale-95">
+            OK (Luluskan)
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Kandungan Aplikasi -->
   <main class="flex-1 max-w-md md:max-w-4xl w-full mx-auto px-4 py-5 mb-16 md:mb-6">
 
-    <!-- ================= TAB 1: TEMPAHAN & DETAIL BILIK (UI APP HOTEL STYLE) ================= -->
+    <!-- ================= TAB 1: TEMPAHAN & DETAIL BILIK ================= -->
     <section x-show="currentTab === 'booking'" class="space-y-4" x-cloak>
-      
-      <!-- Kad Info & Preview Bilik (Menggunakan Gambar Komputer Bilik Latihan) -->
       <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
         <div class="relative h-52 sm:h-64 w-full bg-slate-200">
           <img src="Room_100_Computers.jpg" alt="Bilik Latihan UMKB" class="w-full h-full object-cover">
@@ -167,7 +197,7 @@
             </div>
           </div>
 
-          <!-- Spesifikasi Pantas (Pills) -->
+          <!-- Spesifikasi Pantas -->
           <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-100 text-center">
             <div class="p-2.5 bg-slate-50 rounded-2xl">
               <i class="fa-solid fa-desktop text-sky-600 text-sm mb-1 block"></i>
@@ -186,7 +216,7 @@
             </div>
           </div>
 
-          <!-- Kemudahan Tersedia (Chips Sesuai Filter UI) -->
+          <!-- Kemudahan Tersedia -->
           <div class="mt-4">
             <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Kemudahan Bilik</div>
             <div class="flex flex-wrap gap-1.5">
@@ -215,7 +245,6 @@
         </h3>
 
         <form @submit.prevent="submitBooking" class="space-y-4">
-          <!-- Tarikh -->
           <div>
             <div class="flex justify-between items-center mb-1">
               <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tarikh Penggunaan</label>
@@ -233,11 +262,10 @@
             </div>
           </div>
 
-          <!-- Sesi Pilihan (Gaya Chips Butang Pilihan) -->
+          <!-- Sesi Pilihan -->
           <div>
             <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Pilih Slot Sesi</label>
             <div class="space-y-2">
-              
               <!-- Sesi 1 -->
               <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
                      :class="[
@@ -358,7 +386,6 @@
             </div>
           </div>
 
-          <!-- Sticky-Style Action Button (Gaya Booking App) -->
           <div class="pt-3">
             <button type="submit" :disabled="loading || isSlotBooked(form.sesi) || dateError !== ''"
               class="w-full py-3.5 px-6 bg-sky-600 hover:bg-sky-700 active:scale-[0.98] text-white font-bold rounded-2xl text-sm transition duration-150 flex items-center justify-center space-x-2 shadow-lg shadow-sky-600/25 disabled:opacity-50 disabled:cursor-not-allowed">
@@ -381,10 +408,9 @@
           </div>
         </form>
       </div>
-
     </section>
 
-    <!-- ================= TAB 2: SEMAKAN STATUS AWAM (UI HASIL CARIAN) ================= -->
+    <!-- ================= TAB 2: SEMAKAN STATUS AWAM ================= -->
     <section x-show="currentTab === 'status'" class="space-y-4" x-cloak>
       <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100">
         <div class="text-center mb-4">
@@ -401,7 +427,7 @@
           </button>
         </div>
 
-        <!-- Kad Hasil Semakan (Hotel Search Result Card Style) -->
+        <!-- Kad Hasil Semakan -->
         <template x-if="searchResult">
           <div class="mt-5 bg-white border border-slate-100 rounded-3xl p-4 shadow-sm space-y-3">
             <div class="flex items-center justify-between pb-3 border-b border-slate-100">
@@ -430,6 +456,14 @@
               <span class="text-slate-400 text-[10px] block">Tajuk Program:</span>
               <p class="font-semibold text-slate-800" x-text="searchResult['Tajuk Program / Latihan'] || searchResult.tajuk"></p>
             </div>
+
+            <!-- Paparan No Rujukan Surat & Catatan -->
+            <template x-if="searchResult['No. Rujukan Surat'] || searchResult.noRujukan">
+              <div class="bg-sky-50/80 border border-sky-100 p-3 rounded-2xl text-xs">
+                <span class="text-sky-700 text-[10px] font-bold uppercase tracking-wider block mb-0.5">No. Rujukan Surat Rasmi:</span>
+                <p class="text-slate-800 font-mono font-bold" x-text="searchResult['No. Rujukan Surat'] || searchResult.noRujukan"></p>
+              </div>
+            </template>
 
             <div class="bg-slate-50 p-3 rounded-2xl text-xs">
               <span class="text-slate-400 text-[10px] font-bold block mb-0.5">Catatan Pentadbir:</span>
@@ -479,7 +513,7 @@
           </div>
         </div>
 
-        <!-- Metrik Status (Chips Ringkas) -->
+        <!-- Metrik Status -->
         <div class="grid grid-cols-4 gap-2">
           <div class="bg-white p-3 rounded-2xl border border-slate-100 text-center shadow-sm">
             <div class="text-[10px] text-slate-400 font-bold uppercase">Semua</div>
@@ -507,7 +541,7 @@
           <button @click="adminFilter = 'Ditolak'" :class="adminFilter === 'Ditolak' ? 'bg-rose-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Ditolak</button>
         </div>
 
-        <!-- Senarai Kad Admin (Card View Mobile & Desktop) -->
+        <!-- Senarai Kad Admin -->
         <div class="space-y-3">
           <template x-for="row in filteredRecords" :key="row['ID Tempahan'] || row.id">
             <div class="bg-white rounded-3xl p-4 shadow-sm border border-slate-100 space-y-3">
@@ -535,11 +569,16 @@
                 <div class="text-slate-500 text-[11px]">
                   Tel: <span x-text="row['No. Telefon'] || row.telefon || '-'"></span>
                 </div>
+                <template x-if="row['No. Rujukan Surat'] || row.noRujukan">
+                  <div class="text-[11px] text-emerald-700 font-mono font-medium pt-1">
+                    <i class="fa-solid fa-file-lines mr-1"></i> Ruj: <span x-text="row['No. Rujukan Surat'] || row.noRujukan"></span>
+                  </div>
+                </template>
               </div>
 
               <!-- Butang Lulus / Tolak -->
               <div class="flex space-x-2 pt-2 border-t border-slate-100">
-                <button @click="updateStatus(row, 'Lulus')" class="flex-1 py-2 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white rounded-2xl text-xs font-bold transition flex items-center justify-center space-x-1">
+                <button @click="openApprovalModal(row)" class="flex-1 py-2 bg-emerald-50 hover:bg-emerald-600 text-emerald-700 hover:text-white rounded-2xl text-xs font-bold transition flex items-center justify-center space-x-1">
                   <i class="fa-solid fa-check"></i>
                   <span>Lulus</span>
                 </button>
@@ -571,7 +610,7 @@
     </div>
   </footer>
 
-  <!-- Logik Alpine.js (Kekal Sepenuhnya Sedia Ada) -->
+  <!-- Logik Alpine.js -->
   <script>
     function bookingApp() {
       return {
@@ -602,6 +641,7 @@
 
         toast: { show: false, message: '', type: 'success' },
         successModal: { show: false, id: '' },
+        approvalModal: { show: false, targetRow: null, referenceNo: '' },
         records: [],
         searchQuery: '',
         searchResult: null,
@@ -692,12 +732,10 @@
 
             if (rSesi === targetSesi) return true;
 
-            // Sesi 4 menghalang sesi 1, 2, 3
             if (rSesi.includes('Sesi 4') && (targetSesi.includes('Sesi 1') || targetSesi.includes('Sesi 2') || targetSesi.includes('Sesi 3'))) {
               return true;
             }
 
-            // Sesi 1, 2, atau 3 menghalang Sesi 4
             if (targetSesi.includes('Sesi 4') && (rSesi.includes('Sesi 1') || rSesi.includes('Sesi 2') || rSesi.includes('Sesi 3'))) {
               return true;
             }
@@ -763,7 +801,8 @@
                   'Bil. Peserta': this.form.peserta,
                   'Tajuk Program / Latihan': this.form.tajuk,
                   'Status': 'Menunggu',
-                  'Catatan Admin': ''
+                  'Catatan Admin': '',
+                  'No. Rujukan Surat': ''
                 });
                 this.successModal.id = backupId;
                 this.successModal.show = true;
@@ -842,17 +881,57 @@
           }
         },
 
-        async updateStatus(row, newStatus) {
+        // Modal kawalan kelulusan
+        openApprovalModal(row) {
+          this.approvalModal.targetRow = row;
+          this.approvalModal.referenceNo = row['No. Rujukan Surat'] || row.noRujukan || '';
+          this.approvalModal.show = true;
+        },
+
+        closeApprovalModal() {
+          this.approvalModal.show = false;
+          this.approvalModal.targetRow = null;
+          this.approvalModal.referenceNo = '';
+        },
+
+        async confirmApproval() {
+          if (!this.approvalModal.referenceNo.trim()) {
+            this.showToast('Sila masukkan No. Rujukan Surat!', 'error');
+            return;
+          }
+
+          const row = this.approvalModal.targetRow;
+          const refNo = this.approvalModal.referenceNo.trim();
+          
+          row['No. Rujukan Surat'] = refNo;
+          row.noRujukan = refNo;
+          row['Catatan Admin'] = `Ruj. Surat: ${refNo}`;
+          row.catatan = `Ruj. Surat: ${refNo}`;
+
+          this.closeApprovalModal();
+          await this.updateStatus(row, 'Lulus', refNo);
+        },
+
+        async updateStatus(row, newStatus, refNo = '') {
           const id = row['ID Tempahan'] || row.id;
           row['Status'] = newStatus;
           row.status = newStatus;
+          
           this.showToast(`Permohonan ${id} dikemaskini: ${newStatus}`);
 
           if (this.SCRIPT_URL && !this.SCRIPT_URL.includes('PASTE_URL')) {
+            const payload = { 
+              action: 'updateStatus', 
+              id: id, 
+              status: newStatus,
+              noRujukan: refNo || row['No. Rujukan Surat'] || row.noRujukan || '',
+              catatan: row['Catatan Admin'] || row.catatan || ''
+            };
+
             await fetch(this.SCRIPT_URL, {
               method: 'POST',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({ action: 'updateStatus', id: id, status: newStatus })
+              body: JSON.stringify(payload)
             });
           }
         },
