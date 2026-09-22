@@ -33,14 +33,8 @@
         </div>
       </div>
 
-      <!-- Tab Desktop -->
+      <!-- Tab Desktop (Hanya Semak Status & Admin) -->
       <nav class="hidden md:flex items-center space-x-1 bg-slate-100/80 p-1 rounded-full border border-slate-200/50">
-        <button @click="currentTab = 'booking'"
-          :class="currentTab === 'booking' ? 'bg-sky-600 text-white shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'"
-          class="px-4 py-1.5 rounded-full text-xs transition flex items-center space-x-1.5">
-          <i class="fa-regular fa-calendar-check"></i>
-          <span>Borang Tempahan</span>
-        </button>
         <button @click="currentTab = 'status'"
           :class="currentTab === 'status' ? 'bg-sky-600 text-white shadow-sm font-semibold' : 'text-slate-600 hover:text-slate-900'"
           class="px-4 py-1.5 rounded-full text-xs transition flex items-center space-x-1.5">
@@ -65,17 +59,11 @@
 
   <!-- Mobile Bottom Navigation Bar -->
   <div class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-100 z-40 md:hidden flex justify-around items-center px-4 py-2 shadow-lg">
-    <button @click="currentTab = 'booking'"
-      :class="currentTab === 'booking' ? 'text-sky-600 font-bold' : 'text-slate-400'"
-      class="flex flex-col items-center justify-center flex-1 py-1 transition">
-      <i class="fa-regular fa-calendar-plus text-base"></i>
-      <span class="text-[10px] mt-1">Tempah</span>
-    </button>
     <button @click="currentTab = 'status'"
       :class="currentTab === 'status' ? 'text-sky-600 font-bold' : 'text-slate-400'"
       class="flex flex-col items-center justify-center flex-1 py-1 transition">
       <i class="fa-solid fa-magnifying-glass text-base"></i>
-      <span class="text-[10px] mt-1">Semak</span>
+      <span class="text-[10px] mt-1">Semak Status</span>
     </button>
     <button @click="currentTab = 'admin'"
       :class="currentTab === 'admin' ? 'text-sky-600 font-bold' : 'text-slate-400'"
@@ -101,17 +89,17 @@
 
   <!-- Modal Pop-up Salin ID Tempahan -->
   <div x-cloak x-show="successModal.show" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border border-slate-100 animate-in fade-in slide-in-from-bottom duration-200">
+    <div class="bg-white rounded-t-3xl sm:rounded-3xl max-w-md w-full p-6 text-center shadow-2xl border border-slate-100">
       <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3">
         <i class="fa-solid fa-circle-check text-2xl"></i>
       </div>
-      <h3 class="text-lg font-bold text-slate-800 mb-1">Permohonan Berjaya Dihantar!</h3>
+      <h3 class="text-lg font-bold text-slate-800 mb-1">Tempahan Berjaya Dicipta!</h3>
       <p class="text-xs text-slate-500 mb-5 leading-relaxed">
-        Sila salin No. ID Tempahan ini untuk semakan kelulusan.
+        ID Tempahan telah dijana bagi permohonan ini.
       </p>
       
       <div class="bg-sky-50/70 border border-dashed border-sky-300 rounded-2xl p-4 mb-6">
-        <div class="text-[10px] uppercase font-bold text-sky-700 tracking-wider mb-1">ID Tempahan Anda</div>
+        <div class="text-[10px] uppercase font-bold text-sky-700 tracking-wider mb-1">No. ID Tempahan</div>
         <div class="text-lg sm:text-xl font-mono font-black text-slate-900 tracking-wider select-all mb-3" x-text="successModal.id"></div>
         
         <button @click="copyId(successModal.id)" 
@@ -135,7 +123,7 @@
 
   <!-- Modal Kelulusan Rujukan Surat -->
   <div x-cloak x-show="approvalModal.show" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-150">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100">
       <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
         <i class="fa-solid fa-file-circle-check text-xl"></i>
       </div>
@@ -168,242 +156,7 @@
   <!-- Kandungan Aplikasi -->
   <main class="flex-1 max-w-md md:max-w-4xl w-full mx-auto px-4 py-5 mb-16 md:mb-6">
 
-    <!-- ================= TAB 1: TEMPAHAN ================= -->
-    <section x-show="currentTab === 'booking'" class="space-y-4" x-cloak>
-      <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
-        <div class="relative h-52 sm:h-64 w-full bg-slate-200">
-          <img src="Room_100_Computers.jpg" alt="Bilik Latihan UMKB" class="w-full h-full object-cover">
-          <span class="absolute top-4 left-4 bg-sky-600/90 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider backdrop-blur-md">
-            Makmal Komputer DBKL
-          </span>
-          <span class="absolute top-4 right-4 bg-white/90 text-rose-500 w-8 h-8 rounded-full flex items-center justify-center text-xs shadow-sm backdrop-blur-md">
-            <i class="fa-solid fa-heart"></i>
-          </span>
-        </div>
-
-        <div class="p-5">
-          <div class="flex justify-between items-start">
-            <div>
-              <h2 class="text-lg sm:text-xl font-bold text-slate-900 leading-snug">BILIK KOMPUTER UMKB</h2>
-              <p class="text-xs text-slate-400 mt-0.5 flex items-center">
-                <i class="fa-solid fa-location-dot text-sky-500 mr-1.5 text-[11px]"></i>
-                Jabatan Kewangan, Tingkat 1, Menara DBKL 1, 50350 Kuala Lumpur
-              </p>
-            </div>
-            <div class="flex items-center space-x-1 text-amber-400 text-xs font-bold bg-amber-50 px-2.5 py-1 rounded-xl">
-              <i class="fa-solid fa-star"></i>
-              <span class="text-slate-700 text-xs font-semibold">4.9</span>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-100 text-center">
-            <div class="p-2.5 bg-slate-50 rounded-2xl">
-              <i class="fa-solid fa-desktop text-sky-600 text-sm mb-1 block"></i>
-              <div class="text-xs font-bold text-slate-800">25 PC</div>
-              <div class="text-[10px] text-slate-400">Komputer Lengkap</div>
-            </div>
-            <div class="p-2.5 bg-slate-50 rounded-2xl">
-              <i class="fa-solid fa-users text-emerald-600 text-sm mb-1 block"></i>
-              <div class="text-xs font-bold text-slate-800">25 Pax</div>
-              <div class="text-[10px] text-slate-400">Kapasiti Penuh</div>
-            </div>
-            <div class="p-2.5 bg-slate-50 rounded-2xl">
-              <i class="fa-solid fa-wifi text-indigo-600 text-sm mb-1 block"></i>
-              <div class="text-xs font-bold text-slate-800">LAN / Wi-Fi</div>
-              <div class="text-[10px] text-slate-400">Rangkaian Pantas</div>
-            </div>
-          </div>
-
-          <div class="mt-4">
-            <div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 mb-2">Kemudahan Bilik</div>
-            <div class="flex flex-wrap gap-1.5">
-              <span class="px-2.5 py-1 bg-sky-50 text-sky-700 text-[11px] font-medium rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-chalkboard text-[10px]"></i> Smart TV
-              </span>
-              <span class="px-2.5 py-1 bg-sky-50 text-sky-700 text-[11px] font-medium rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-snowflake text-[10px]"></i> Penghawa Dingin
-              </span>
-              <span class="px-2.5 py-1 bg-sky-50 text-sky-700 text-[11px] font-medium rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-volume-high text-[10px]"></i> Soket Kuasa Meja
-              </span>
-              <span class="px-2.5 py-1 bg-sky-50 text-sky-700 text-[11px] font-medium rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-shield-halved text-[10px]"></i> Akses Keselamatan (Touch Card)
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Borang Pilihan Tarikh & Sesi -->
-      <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100">
-        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-800 mb-3 flex items-center gap-2">
-          <i class="fa-solid fa-sliders text-sky-600"></i>
-          <span>Pilih Tarikh & Sesi Tempahan</span>
-        </h3>
-
-        <form @submit.prevent="submitBooking" class="space-y-4">
-          <div>
-            <div class="flex justify-between items-center mb-1">
-              <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tarikh Penggunaan</label>
-              <span class="text-[10px] text-sky-600 font-semibold">Buka 2 - 30 hari awal</span>
-            </div>
-            <input type="date" x-model="form.tarikh" required 
-              :min="minDate" 
-              :max="maxDate"
-              @change="validateDateRule"
-              class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-700 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
-            
-            <div x-cloak x-show="dateError" class="mt-2 p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-center gap-2">
-              <i class="fa-solid fa-circle-info text-amber-600"></i>
-              <span x-text="dateError"></span>
-            </div>
-          </div>
-
-          <!-- Sesi Pilihan -->
-          <div>
-            <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Pilih Slot Sesi</label>
-            <div class="space-y-2">
-              <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
-                     :class="[
-                       isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') 
-                         ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
-                         : (form.sesi === 'Sesi 1: 09:00 AM - 11:00 AM' ? 'border-sky-500 bg-sky-50/60 ring-2 ring-sky-500/20' : 'border-slate-100 hover:bg-slate-50')
-                     ]">
-                <div class="flex items-center space-x-3">
-                  <input type="radio" name="sesi" value="Sesi 1: 09:00 AM - 11:00 AM" x-model="form.sesi" 
-                         :disabled="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')"
-                         class="w-4 h-4 text-sky-600 focus:ring-sky-500">
-                  <div>
-                    <div class="text-xs font-bold text-slate-800">Sesi 1 (Pagi)</div>
-                    <div class="text-[11px] text-slate-400">09:00 AM – 11:00 AM (2 Jam)</div>
-                  </div>
-                </div>
-                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
-                      :class="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
-                      x-text="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') ? 'Penuh' : 'Tersedia'">
-                </span>
-              </label>
-
-              <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
-                     :class="[
-                       isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') 
-                         ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
-                         : (form.sesi === 'Sesi 2: 11:30 AM - 01:00 PM' ? 'border-sky-500 bg-sky-50/60 ring-2 ring-sky-500/20' : 'border-slate-100 hover:bg-slate-50')
-                     ]">
-                <div class="flex items-center space-x-3">
-                  <input type="radio" name="sesi" value="Sesi 2: 11:30 AM - 01:00 PM" x-model="form.sesi" 
-                         :disabled="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')"
-                         class="w-4 h-4 text-sky-600 focus:ring-sky-500">
-                  <div>
-                    <div class="text-xs font-bold text-slate-800">Sesi 2 (Tengah Hari)</div>
-                    <div class="text-[11px] text-slate-400">11:30 AM – 01:00 PM (1.5 Jam)</div>
-                  </div>
-                </div>
-                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
-                      :class="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
-                      x-text="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') ? 'Penuh' : 'Tersedia'">
-                </span>
-              </label>
-
-              <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
-                     :class="[
-                       isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') 
-                         ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
-                         : (form.sesi === 'Sesi 3: 02:30 PM - 04:30 PM' ? 'border-sky-500 bg-sky-50/60 ring-2 ring-sky-500/20' : 'border-slate-100 hover:bg-slate-50')
-                     ]">
-                <div class="flex items-center space-x-3">
-                  <input type="radio" name="sesi" value="Sesi 3: 02:30 PM - 04:30 PM" x-model="form.sesi" 
-                         :disabled="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')"
-                         class="w-4 h-4 text-sky-600 focus:ring-sky-500">
-                  <div>
-                    <div class="text-xs font-bold text-slate-800">Sesi 3 (Petang)</div>
-                    <div class="text-[11px] text-slate-400">02:30 PM – 04:30 PM (2 Jam)</div>
-                  </div>
-                </div>
-                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
-                      :class="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
-                      x-text="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') ? 'Penuh' : 'Tersedia'">
-                </span>
-              </label>
-
-              <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
-                     :class="[
-                       isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') 
-                         ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
-                         : (form.sesi === 'Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)' ? 'border-indigo-500 bg-indigo-50/60 ring-2 ring-indigo-500/20' : 'border-slate-100 hover:bg-slate-50')
-                     ]">
-                <div class="flex items-center space-x-3">
-                  <input type="radio" name="sesi" value="Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)" x-model="form.sesi" 
-                         :disabled="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')"
-                         class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
-                  <div>
-                    <div class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                      <span>Sesi 4 (Sehari Penuh)</span>
-                      <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-bold">Pakej</span>
-                    </div>
-                    <div class="text-[11px] text-slate-400">09:00 AM – 04:30 PM</div>
-                  </div>
-                </div>
-                <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
-                      :class="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
-                      x-text="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') ? 'Penuh' : 'Tersedia'">
-                </span>
-              </label>
-            </div>
-          </div>
-
-          <!-- Maklumat Pemohon -->
-          <div class="space-y-3 pt-2">
-            <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Maklumat Permohonan</div>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <input type="text" x-model="form.nama" placeholder="Nama Penuh Pemohon" required
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
-              
-              <input type="email" x-model="form.email" placeholder="Emel Rasmi (Cth: nama@dbkl.gov.my)" required
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
-
-              <input type="tel" x-model="form.telefon" placeholder="No. Telefon / Sambungan" required
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
-
-              <input type="text" x-model="form.bahagian" placeholder="Bahagian / Jabatan" required
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-              <input type="text" x-model="form.tajuk" placeholder="Tajuk Latihan / Program" required
-                class="sm:col-span-2 w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
-              
-              <input type="number" min="1" max="40" x-model="form.peserta" placeholder="Bil. Peserta (Maks: 25)" required
-                class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
-            </div>
-          </div>
-
-          <div class="pt-3">
-            <button type="submit" :disabled="loading || isSlotBooked(form.sesi) || dateError !== ''"
-              class="w-full py-3.5 px-6 bg-sky-600 hover:bg-sky-700 active:scale-[0.98] text-white font-bold rounded-2xl text-sm transition duration-150 flex items-center justify-center space-x-2 shadow-lg shadow-sky-600/25 disabled:opacity-50 disabled:cursor-not-allowed">
-              <template x-if="!loading && !isSlotBooked(form.sesi) && !dateError">
-                <span class="flex items-center space-x-2">
-                  <i class="fa-solid fa-bolt"></i>
-                  <span>Hantar Permohonan Bilik</span>
-                </span>
-              </template>
-              <template x-if="!loading && (isSlotBooked(form.sesi) || dateError !== '')">
-                <span>Slot Tidak Tersedia / Tarikh Tidak Sah</span>
-              </template>
-              <template x-if="loading">
-                <span class="flex items-center space-x-2">
-                  <i class="fa-solid fa-spinner fa-spin"></i>
-                  <span>Sedang Menghantar Tempahan...</span>
-                </span>
-              </template>
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
-
-    <!-- ================= TAB 2: SEMAKAN STATUS ================= -->
+    <!-- ================= TAB 1: SEMAKAN STATUS (ORANG AWAM) ================= -->
     <section x-show="currentTab === 'status'" class="space-y-4" x-cloak>
       <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100">
         <div class="text-center mb-4">
@@ -476,7 +229,7 @@
       </div>
     </section>
 
-    <!-- ================= TAB 3: PENTADBIR UMKB ================= -->
+    <!-- ================= TAB 2: PENTADBIR UMKB (TERMASUK BORANG TEMPAHAN) ================= -->
     <section x-show="currentTab === 'admin'" x-cloak>
       <!-- Log Masuk Admin -->
       <div x-show="!adminLoggedIn" class="max-w-sm mx-auto bg-white rounded-3xl shadow-sm border border-slate-100 p-6 text-center">
@@ -495,11 +248,11 @@
       <div x-show="adminLoggedIn" class="space-y-4">
         <div class="flex items-center justify-between">
           <div>
-            <h2 class="text-lg font-bold text-slate-900">Senarai Tempahan Masuk</h2>
-            <p class="text-xs text-slate-400">Panel kelulusan Unit Maklumat Kewangan Berkomputer</p>
+            <h2 class="text-lg font-bold text-slate-900">Panel Pentadbir</h2>
+            <p class="text-xs text-slate-400">Unit Maklumat Kewangan Berkomputer</p>
           </div>
           <div class="flex items-center space-x-2">
-            <button @click="fetchBookings" class="p-2.5 bg-white border border-slate-200 rounded-2xl text-xs text-slate-600 hover:bg-slate-50 shadow-sm">
+            <button @click="fetchBookings" class="p-2.5 bg-white border border-slate-200 rounded-2xl text-xs text-slate-600 hover:bg-slate-50 shadow-sm" title="Muat Semula">
               <i class="fa-solid fa-rotate" :class="{'fa-spin': loading}"></i>
             </button>
             <button @click="adminLoggedIn = false" class="px-3 py-2 bg-rose-50 text-rose-600 rounded-2xl text-xs font-bold hover:bg-rose-100 transition">
@@ -528,23 +281,29 @@
           </div>
         </div>
 
-        <!-- Suis Pilihan Paparan: Senarai vs Kalendar -->
-        <div class="flex items-center justify-between bg-slate-200/60 p-1 rounded-2xl">
+        <!-- Suis Pilihan Paparan Admin: Senarai vs Kalendar vs Borang Tempahan Baru -->
+        <div class="grid grid-cols-3 gap-1 bg-slate-200/60 p-1 rounded-2xl text-xs">
           <button @click="adminViewMode = 'list'"
                   :class="adminViewMode === 'list' ? 'bg-white text-slate-900 shadow-sm font-bold' : 'text-slate-500 font-medium'"
-                  class="flex-1 py-2 rounded-xl text-xs transition flex items-center justify-center space-x-1.5">
+                  class="py-2 rounded-xl transition flex items-center justify-center space-x-1">
             <i class="fa-solid fa-list-ul"></i>
-            <span>Paparan Senarai</span>
+            <span>Senarai</span>
           </button>
           <button @click="adminViewMode = 'calendar'"
                   :class="adminViewMode === 'calendar' ? 'bg-white text-sky-600 shadow-sm font-bold' : 'text-slate-500 font-medium'"
-                  class="flex-1 py-2 rounded-xl text-xs transition flex items-center justify-center space-x-1.5">
+                  class="py-2 rounded-xl transition flex items-center justify-center space-x-1">
             <i class="fa-regular fa-calendar-days"></i>
-            <span>Paparan Kalendar</span>
+            <span>Kalendar</span>
+          </button>
+          <button @click="adminViewMode = 'form'"
+                  :class="adminViewMode === 'form' ? 'bg-white text-emerald-600 shadow-sm font-bold' : 'text-slate-500 font-medium'"
+                  class="py-2 rounded-xl transition flex items-center justify-center space-x-1">
+            <i class="fa-solid fa-plus-circle"></i>
+            <span>Tempah Bilik</span>
           </button>
         </div>
 
-        <!-- ================= MOD PAPARAN 1: SENARAI (LIST VIEW) ================= -->
+        <!-- ================= MOD ADMIN 1: SENARAI (LIST VIEW) ================= -->
         <div x-show="adminViewMode === 'list'" class="space-y-3">
           <!-- Penapis Status Tab -->
           <div class="flex space-x-1.5 overflow-x-auto pb-1">
@@ -610,11 +369,9 @@
           </div>
         </div>
 
-        <!-- ================= MOD PAPARAN 2: KALENDAR BULANAN ================= -->
+        <!-- ================= MOD ADMIN 2: KALENDAR BULANAN ================= -->
         <div x-show="adminViewMode === 'calendar'" class="space-y-4" x-cloak>
-          <!-- Kad Kalendar Minimalis Gaya Inspirasi Gambar -->
           <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
-            <!-- Navigasi Bulan & Tahun -->
             <div class="flex items-center justify-between mb-5 px-2">
               <button @click="prevCalMonth" class="w-8 h-8 rounded-xl bg-slate-50 hover:bg-slate-100 flex items-center justify-center text-slate-600 transition">
                 <i class="fa-solid fa-chevron-left text-xs"></i>
@@ -625,26 +382,21 @@
               </button>
             </div>
 
-            <!-- Hari Dalam Minggu -->
             <div class="grid grid-cols-7 text-center mb-2">
               <template x-for="dayName in ['Isnin', 'Selasa', 'Rabu', 'Khamis', 'Jumaat', 'Sabtu', 'Ahad']">
                 <div class="text-[11px] font-bold text-slate-400 uppercase py-1" x-text="dayName.slice(0, 3)"></div>
               </template>
             </div>
 
-            <!-- Grid Hari (Tarikh Kalendar) -->
             <div class="grid grid-cols-7 gap-y-2 text-center text-xs">
-              <!-- Kotak Kosong Sebelum Hari Pertama Bulan -->
               <template x-for="blank in calendarBlankDays">
                 <div class="h-10"></div>
               </template>
 
-              <!-- Tarikh Bulan Semasa -->
               <template x-for="dayObj in calendarMonthDays" :key="dayObj.dateStr">
                 <div class="h-10 flex flex-col items-center justify-center relative cursor-pointer group"
                      @click="selectCalendarDate(dayObj.dateStr)">
                   
-                  <!-- Penunjuk Bulatan Tarikh Aktif / Bertempah -->
                   <div class="w-8 h-8 rounded-full flex items-center justify-center font-semibold transition relative"
                        :class="[
                          selectedCalendarDate === dayObj.dateStr 
@@ -654,7 +406,6 @@
                     <span x-text="dayObj.day"></span>
                   </div>
 
-                  <!-- Dot Kecil Penanda Tempahan -->
                   <template x-if="dayObj.hasBooking && selectedCalendarDate !== dayObj.dateStr">
                     <span class="w-1 h-1 bg-sky-500 rounded-full mt-0.5"></span>
                   </template>
@@ -662,7 +413,6 @@
               </template>
             </div>
 
-            <!-- Panduan Warna / Legend -->
             <div class="mt-5 pt-3 border-t border-slate-100 flex items-center justify-center space-x-4 text-[11px] text-slate-500">
               <div class="flex items-center space-x-1.5">
                 <span class="w-3 h-3 rounded-full bg-sky-500 ring-2 ring-sky-200 inline-block"></span>
@@ -675,7 +425,7 @@
             </div>
           </div>
 
-          <!-- Paparan Tempahan Mengikut Tarikh Yang Dipilih Dalam Kalendar -->
+          <!-- Paparan Tempahan Mengikut Tarikh Terpilih -->
           <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-3">
             <div class="flex justify-between items-center pb-2 border-b border-slate-100">
               <div class="text-xs font-bold text-slate-800">
@@ -685,7 +435,6 @@
               <span class="text-[11px] font-semibold text-slate-400" x-text="bookingsForSelectedDate.length + ' Sesi Tempahan'"></span>
             </div>
 
-            <!-- Kad Tempahan Tarikh Terpilih -->
             <div class="space-y-2.5">
               <template x-for="item in bookingsForSelectedDate" :key="item['ID Tempahan'] || item.id">
                 <div class="p-3.5 rounded-2xl border border-slate-100 bg-slate-50/60 space-y-2">
@@ -724,6 +473,181 @@
             </div>
           </div>
         </div>
+
+        <!-- ================= MOD ADMIN 3: BORANG TEMPAHAN BARU ================= -->
+        <div x-show="adminViewMode === 'form'" class="space-y-4" x-cloak>
+          <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
+            <div class="p-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
+              <div>
+                <h3 class="text-sm font-bold text-slate-800">Daftar Tempahan Bilik Latihan</h3>
+                <p class="text-[11px] text-slate-400">Tingkat 1, Menara DBKL 1 (Kapasiti: 25 PC)</p>
+              </div>
+              <span class="px-2.5 py-1 bg-sky-100 text-sky-800 text-[10px] font-bold rounded-full">Pentadbir Sahaja</span>
+            </div>
+
+            <div class="p-5 sm:p-6">
+              <form @submit.prevent="submitBooking" class="space-y-4">
+                <div>
+                  <div class="flex justify-between items-center mb-1">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Tarikh Penggunaan</label>
+                    <span class="text-[10px] text-sky-600 font-semibold">Buka 2 - 30 hari awal</span>
+                  </div>
+                  <input type="date" x-model="form.tarikh" required 
+                    :min="minDate" 
+                    :max="maxDate"
+                    @change="validateDateRule"
+                    class="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold text-slate-700 focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+                  
+                  <div x-cloak x-show="dateError" class="mt-2 p-2.5 bg-amber-50 border border-amber-200 rounded-xl text-amber-800 text-xs flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-amber-600"></i>
+                    <span x-text="dateError"></span>
+                  </div>
+                </div>
+
+                <!-- Sesi Pilihan -->
+                <div>
+                  <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Pilih Slot Sesi</label>
+                  <div class="space-y-2">
+                    <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
+                           :class="[
+                             isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') 
+                               ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
+                               : (form.sesi === 'Sesi 1: 09:00 AM - 11:00 AM' ? 'border-sky-500 bg-sky-50/60 ring-2 ring-sky-500/20' : 'border-slate-100 hover:bg-slate-50')
+                           ]">
+                      <div class="flex items-center space-x-3">
+                        <input type="radio" name="sesi" value="Sesi 1: 09:00 AM - 11:00 AM" x-model="form.sesi" 
+                               :disabled="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM')"
+                               class="w-4 h-4 text-sky-600 focus:ring-sky-500">
+                        <div>
+                          <div class="text-xs font-bold text-slate-800">Sesi 1 (Pagi)</div>
+                          <div class="text-[11px] text-slate-400">09:00 AM – 11:00 AM (2 Jam)</div>
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
+                            :class="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
+                            x-text="isSlotBooked('Sesi 1: 09:00 AM - 11:00 AM') ? 'Penuh' : 'Tersedia'">
+                      </span>
+                    </label>
+
+                    <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
+                           :class="[
+                             isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') 
+                               ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
+                               : (form.sesi === 'Sesi 2: 11:30 AM - 01:00 PM' ? 'border-sky-500 bg-sky-50/60 ring-2 ring-sky-500/20' : 'border-slate-100 hover:bg-slate-50')
+                           ]">
+                      <div class="flex items-center space-x-3">
+                        <input type="radio" name="sesi" value="Sesi 2: 11:30 AM - 01:00 PM" x-model="form.sesi" 
+                               :disabled="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM')"
+                               class="w-4 h-4 text-sky-600 focus:ring-sky-500">
+                        <div>
+                          <div class="text-xs font-bold text-slate-800">Sesi 2 (Tengah Hari)</div>
+                          <div class="text-[11px] text-slate-400">11:30 AM – 01:00 PM (1.5 Jam)</div>
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
+                            :class="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
+                            x-text="isSlotBooked('Sesi 2: 11:30 AM - 01:00 PM') ? 'Penuh' : 'Tersedia'">
+                      </span>
+                    </label>
+
+                    <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
+                           :class="[
+                             isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') 
+                               ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
+                               : (form.sesi === 'Sesi 3: 02:30 PM - 04:30 PM' ? 'border-sky-500 bg-sky-50/60 ring-2 ring-sky-500/20' : 'border-slate-100 hover:bg-slate-50')
+                           ]">
+                      <div class="flex items-center space-x-3">
+                        <input type="radio" name="sesi" value="Sesi 3: 02:30 PM - 04:30 PM" x-model="form.sesi" 
+                               :disabled="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM')"
+                               class="w-4 h-4 text-sky-600 focus:ring-sky-500">
+                        <div>
+                          <div class="text-xs font-bold text-slate-800">Sesi 3 (Petang)</div>
+                          <div class="text-[11px] text-slate-400">02:30 PM – 04:30 PM (2 Jam)</div>
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
+                            :class="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
+                            x-text="isSlotBooked('Sesi 3: 02:30 PM - 04:30 PM') ? 'Penuh' : 'Tersedia'">
+                      </span>
+                    </label>
+
+                    <label class="flex items-center justify-between p-3 border rounded-2xl transition cursor-pointer"
+                           :class="[
+                             isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') 
+                               ? 'border-rose-200 bg-rose-50/60 opacity-70 cursor-not-allowed' 
+                               : (form.sesi === 'Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)' ? 'border-indigo-500 bg-indigo-50/60 ring-2 ring-indigo-500/20' : 'border-slate-100 hover:bg-slate-50')
+                           ]">
+                      <div class="flex items-center space-x-3">
+                        <input type="radio" name="sesi" value="Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)" x-model="form.sesi" 
+                               :disabled="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)')"
+                               class="w-4 h-4 text-indigo-600 focus:ring-indigo-500">
+                        <div>
+                          <div class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                            <span>Sesi 4 (Sehari Penuh)</span>
+                            <span class="text-[9px] bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-full font-bold">Pakej</span>
+                          </div>
+                          <div class="text-[11px] text-slate-400">09:00 AM – 04:30 PM</div>
+                        </div>
+                      </div>
+                      <span class="text-[10px] font-bold px-2.5 py-1 rounded-full"
+                            :class="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'"
+                            x-text="isSlotBooked('Sesi 4: 09:00 AM - 04:30 PM (Sehari Penuh)') ? 'Penuh' : 'Tersedia'">
+                      </span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Maklumat Pemohon -->
+                <div class="space-y-3 pt-2">
+                  <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Maklumat Permohonan</div>
+                  
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <input type="text" x-model="form.nama" placeholder="Nama Penuh Pemohon" required
+                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+                    
+                    <input type="email" x-model="form.email" placeholder="Emel Rasmi (Cth: nama@dbkl.gov.my)" required
+                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+
+                    <input type="tel" x-model="form.telefon" placeholder="No. Telefon / Sambungan" required
+                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+
+                    <input type="text" x-model="form.bahagian" placeholder="Bahagian / Jabatan" required
+                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+                  </div>
+
+                  <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <input type="text" x-model="form.tajuk" placeholder="Tajuk Latihan / Program" required
+                      class="sm:col-span-2 w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+                    
+                    <input type="number" min="1" max="40" x-model="form.peserta" placeholder="Bil. Peserta (Maks: 25)" required
+                      class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
+                  </div>
+                </div>
+
+                <div class="pt-3">
+                  <button type="submit" :disabled="loading || isSlotBooked(form.sesi) || dateError !== ''"
+                    class="w-full py-3.5 px-6 bg-sky-600 hover:bg-sky-700 active:scale-[0.98] text-white font-bold rounded-2xl text-sm transition duration-150 flex items-center justify-center space-x-2 shadow-lg shadow-sky-600/25 disabled:opacity-50 disabled:cursor-not-allowed">
+                    <template x-if="!loading && !isSlotBooked(form.sesi) && !dateError">
+                      <span class="flex items-center space-x-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Cipta & Hantar Tempahan</span>
+                      </span>
+                    </template>
+                    <template x-if="!loading && (isSlotBooked(form.sesi) || dateError !== '')">
+                      <span>Slot Tidak Tersedia / Tarikh Tidak Sah</span>
+                    </template>
+                    <template x-if="loading">
+                      <span class="flex items-center space-x-2">
+                        <i class="fa-solid fa-spinner fa-spin"></i>
+                        <span>Sedang Memproses Tempahan...</span>
+                      </span>
+                    </template>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -744,7 +668,7 @@
       return {
         SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbyBxSLa_a_pfCnlPxQ_5puTcRlehtXSKE2zJbL9-dhJl5ikNXj8fLM7wnw4B7OxFZBq/exec',
         
-        currentTab: 'booking',
+        currentTab: 'status', // Default paparan kepada Semakan Status
         loading: false,
         copied: false,
         adminLoggedIn: false,
@@ -752,7 +676,7 @@
         ADMIN_SECRET: 'UMKB13813',
         adminFilter: 'Semua',
 
-        // Kawalan Kalendar Admin
+        // Kawalan Navigasi Dalam Admin (list | calendar | form)
         adminViewMode: 'list',
         calYear: new Date().getFullYear(),
         calMonth: new Date().getMonth(), // 0 = Jan, 11 = Dis
@@ -944,6 +868,7 @@
                 this.successModal.id = backupId;
                 this.successModal.show = true;
                 this.resetForm();
+                this.adminViewMode = 'list';
                 this.loading = false;
               }, 500);
               return;
@@ -972,6 +897,7 @@
               this.successModal.id = assignedId;
               this.successModal.show = true;
               this.resetForm();
+              this.adminViewMode = 'list';
               this.fetchBookings();
             }
 
@@ -980,6 +906,7 @@
             this.successModal.id = backupId;
             this.successModal.show = true;
             this.resetForm();
+            this.adminViewMode = 'list';
             this.fetchBookings();
           } finally {
             this.loading = false;
@@ -1089,7 +1016,6 @@
 
         get calendarBlankDays() {
           const firstDayIndex = new Date(this.calYear, this.calMonth, 1).getDay();
-          // Isnin = 0, Ahad = 6
           const monStart = (firstDayIndex === 0 ? 6 : firstDayIndex - 1);
           return Array.from({ length: monStart });
         },
