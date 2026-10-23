@@ -16,7 +16,6 @@
     @media (min-width: 640px) {
       input, select, textarea { font-size: 0.875rem !important; }
     }
-    /* Custom scrollbar for email draft preview */
     .custom-scrollbar::-webkit-scrollbar {
       width: 6px;
     }
@@ -35,7 +34,7 @@
 </head>
 <body class="bg-slate-100/70 text-slate-800 font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500 selection:text-white" x-data="bookingApp()">
 
-  <!-- Top App Bar / Header -->
+  <!-- Header -->
   <header class="bg-white/80 backdrop-blur-md sticky top-0 z-40 border-b border-slate-100 shadow-sm">
     <div class="max-w-md md:max-w-4xl mx-auto px-4 sm:px-6 h-16 flex justify-between items-center">
       <div class="flex items-center space-x-3">
@@ -102,11 +101,41 @@
     <span class="flex-1" x-text="toast.message"></span>
   </div>
 
-  <!-- ================= MODAL TEMPAHAN BERJAYA & DRAF EMEL RASMI ================= -->
+  <!-- Pop-Up Mesej Status Pilihan 2 -->
+  <div x-cloak x-show="statusPopup.show" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-6 text-center shadow-2xl border border-slate-100">
+      <div class="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-sm"
+           :class="{
+             'bg-amber-100 text-amber-600': statusPopup.type === 'menunggu',
+             'bg-rose-100 text-rose-600': statusPopup.type === 'ditolak',
+             'bg-emerald-100 text-emerald-600': statusPopup.type === 'lulus'
+           }">
+        <i class="fa-solid text-2xl"
+           :class="{
+             'fa-clock': statusPopup.type === 'menunggu',
+             'fa-circle-xmark': statusPopup.type === 'ditolak',
+             'fa-circle-check': statusPopup.type === 'lulus'
+           }"></i>
+      </div>
+
+      <h3 class="text-base font-bold text-slate-900 mb-1" x-text="statusPopup.title"></h3>
+      <p class="text-xs text-slate-600 leading-relaxed my-3" x-text="statusPopup.message"></p>
+
+      <button @click="statusPopup.show = false" 
+              class="w-full mt-2 py-2.5 rounded-2xl text-xs font-bold text-white transition active:scale-95 shadow-md"
+              :class="{
+                'bg-amber-600 hover:bg-amber-700 shadow-amber-600/20': statusPopup.type === 'menunggu',
+                'bg-rose-600 hover:bg-rose-700 shadow-rose-600/20': statusPopup.type === 'ditolak',
+                'bg-emerald-600 hover:bg-emerald-700 shadow-emerald-600/20': statusPopup.type === 'lulus'
+              }">
+        Faham & Tutup
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal Tempahan Berjaya & Draf Emel -->
   <div x-cloak x-show="successModal.show" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-5 bg-slate-900/70 backdrop-blur-sm overflow-y-auto">
     <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 text-left shadow-2xl border border-slate-100 my-auto max-h-[92vh] flex flex-col">
-      
-      <!-- Modal Header -->
       <div class="flex items-start justify-between pb-3 border-b border-slate-100">
         <div class="flex items-center space-x-3">
           <div class="w-11 h-11 bg-emerald-100 text-emerald-600 rounded-2xl flex items-center justify-center shrink-0">
@@ -122,10 +151,7 @@
         </button>
       </div>
 
-      <!-- Modal Body (Scrollable if needed) -->
       <div class="overflow-y-auto custom-scrollbar pr-1 py-3 space-y-4">
-        
-        <!-- Kad No ID Tempahan -->
         <div class="bg-gradient-to-r from-sky-50 to-indigo-50 border border-sky-200/80 rounded-2xl p-3.5 flex items-center justify-between gap-2">
           <div>
             <span class="text-[10px] uppercase font-bold text-sky-700 tracking-wider block">No. ID Tempahan (TRN)</span>
@@ -139,15 +165,13 @@
           </button>
         </div>
 
-        <!-- Notis Perhatian Pentadbir -->
         <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 text-[11px] text-amber-800 flex items-start space-x-2.5">
           <i class="fa-solid fa-triangle-exclamation text-amber-600 text-sm mt-0.5 shrink-0"></i>
           <p class="leading-relaxed">
-            <strong>Tindakan Pentadbir:</strong> Sila salin atau e-melkan teks rasmi di bawah kepada pemohon (<span class="font-semibold text-slate-800" x-text="successModal.data?.email || 'pemohon'"></span>) bagi memohon surat rasmi dengan no. rujukan untuk kelulusan. Tempahan boleh dibatalkan sekiranya tiada surat rasmi diterima.
+            <strong>Tindakan Pentadbir:</strong> Sila salin atau e-melkan teks rasmi di bawah kepada pemohon (<span class="font-semibold text-slate-800" x-text="successModal.data?.email || 'pemohon'"></span>) bagi memohon surat rasmi dengan no. rujukan untuk kelulusan.
           </p>
         </div>
 
-        <!-- Draf Teks Emel Pemohon -->
         <div>
           <div class="flex items-center justify-between mb-1.5">
             <label class="text-[11px] font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
@@ -156,11 +180,9 @@
             </label>
             <span class="text-[10px] text-slate-400">Automatik dari data tempahan</span>
           </div>
-
           <div class="relative bg-slate-900 text-slate-100 rounded-2xl p-3.5 border border-slate-800 font-mono text-[11px] leading-relaxed select-all custom-scrollbar max-h-52 overflow-y-auto whitespace-pre-wrap" x-text="generateEmailText()"></div>
         </div>
 
-        <!-- Butang Cepat Tindakan Emel -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
           <button @click="copyEmailDraft()" 
                   class="w-full py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 shadow-sm"
@@ -177,7 +199,6 @@
         </div>
       </div>
 
-      <!-- Modal Footer -->
       <div class="pt-3 mt-2 border-t border-slate-100 grid grid-cols-2 gap-3">
         <button @click="successModal.show = false; copiedType = '';" class="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
           Tutup
@@ -186,11 +207,10 @@
           Semak Status
         </button>
       </div>
-
     </div>
   </div>
 
-  <!-- Modal Kelulusan Rujukan Surat -->
+  <!-- Modal Kelulusan Pentadbir -->
   <div x-cloak x-show="approvalModal.show" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
     <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl border border-slate-100">
       <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
@@ -225,20 +245,26 @@
   <!-- Kandungan Aplikasi -->
   <main class="flex-1 max-w-md md:max-w-4xl w-full mx-auto px-4 py-5 mb-16 md:mb-6">
 
-    <!-- ================= TAB 1: SEMAKAN STATUS ================= -->
+    <!-- ================= TAB 1: SEMAKAN STATUS MENGGUNAKAN TRN ================= -->
     <section x-show="currentTab === 'status'" class="space-y-4" x-cloak>
       <div class="bg-white rounded-3xl p-5 sm:p-6 shadow-sm border border-slate-100">
         <div class="text-center mb-4">
           <h2 class="text-base sm:text-lg font-bold text-slate-900">Semakan Status Tempahan</h2>
-          <p class="text-xs text-slate-400">Masukkan No. ID Tempahan atau No. Telefon yang didaftarkan</p>
+          <p class="text-xs text-slate-400">Masukkan No. ID Tempahan (TRN) anda</p>
         </div>
 
-        <div class="flex items-center space-x-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-200">
-          <input type="text" x-model="searchQuery" placeholder="Cth: TRN-20260918-001 / 0123456789"
+        <div class="flex items-center space-x-2 bg-slate-50 p-1.5 rounded-2xl border border-slate-200 focus-within:border-sky-500 transition">
+          <div class="pl-2.5 text-slate-400">
+            <i class="fa-solid fa-receipt text-xs"></i>
+          </div>
+          <input type="text" x-model="searchQuery" 
+            @input="searchQuery = searchQuery.toUpperCase()"
+            placeholder="Cth: TRN-20261023-257"
             @keyup.enter="searchBooking"
-            class="flex-1 px-3 py-2 bg-transparent text-xs sm:text-sm focus:outline-none text-slate-800">
-          <button @click="searchBooking" class="px-4 py-2.5 bg-sky-600 text-white rounded-xl text-xs font-bold hover:bg-sky-700 transition shadow-sm active:scale-95">
+            class="flex-1 px-2 py-2 bg-transparent text-xs sm:text-sm font-mono focus:outline-none text-slate-800 uppercase">
+          <button @click="searchBooking" class="px-4 py-2.5 bg-sky-600 text-white rounded-xl text-xs font-bold hover:bg-sky-700 transition shadow-sm active:scale-95 flex items-center space-x-1.5">
             <i class="fa-solid fa-magnifying-glass"></i>
+            <span class="hidden sm:inline">Semak</span>
           </button>
         </div>
 
@@ -258,6 +284,32 @@
                 }"
                 x-text="searchResult['Status'] || searchResult.status">
               </span>
+            </div>
+
+            <!-- Banner Paparan Status Pilihan 2 -->
+            <div class="rounded-2xl p-3 text-xs leading-relaxed border flex items-start space-x-2.5"
+                 :class="{
+                   'bg-amber-50/80 border-amber-200 text-amber-900': (searchResult['Status'] || searchResult.status) === 'Menunggu',
+                   'bg-rose-50/80 border-rose-200 text-rose-900': (searchResult['Status'] || searchResult.status) === 'Ditolak',
+                   'bg-emerald-50/80 border-emerald-200 text-emerald-900': (searchResult['Status'] || searchResult.status) === 'Lulus'
+                 }">
+              <i class="fa-solid mt-0.5 shrink-0 text-sm"
+                 :class="{
+                   'fa-circle-info text-amber-600': (searchResult['Status'] || searchResult.status) === 'Menunggu',
+                   'fa-circle-xmark text-rose-600': (searchResult['Status'] || searchResult.status) === 'Ditolak',
+                   'fa-circle-check text-emerald-600': (searchResult['Status'] || searchResult.status) === 'Lulus'
+                 }"></i>
+              <div class="flex-1">
+                <template x-if="(searchResult['Status'] || searchResult.status) === 'Menunggu'">
+                  <p><strong>Status: Menunggu Tindakan.</strong> Pihak kami masih belum menerima no. rujukan surat permohonan tempahan daripada pihak tuan/puan. Sila kemukakan dokumen berkaitan untuk tindakan selanjutnya.</p>
+                </template>
+                <template x-if="(searchResult['Status'] || searchResult.status) === 'Ditolak'">
+                  <p>Dukacita dimaklumkan, tempahan ini telah dibatalkan/ditolak secara automatik kerana surat permohonan tidak diterima dalam tempoh yang diperuntukkan.</p>
+                </template>
+                <template x-if="(searchResult['Status'] || searchResult.status) === 'Lulus'">
+                  <p><strong>Tempahan berjaya!</strong> Tarikh dan masa tempahan telah disahkan. Sila semak emel anda untuk maklumat terperinci.</p>
+                </template>
+              </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
@@ -292,7 +344,7 @@
         <template x-if="searchNotFound">
           <div class="text-center py-8 text-slate-400 text-xs">
             <i class="fa-regular fa-folder-open text-2xl mb-1 text-slate-300"></i>
-            <p>Tiada rekod tempahan dijumpai bagi carian ini.</p>
+            <p>Tiada rekod tempahan dijumpai bagi No. TRN ini.</p>
           </div>
         </template>
       </div>
@@ -300,7 +352,6 @@
 
     <!-- ================= TAB 2: PENTADBIR UMKB ================= -->
     <section x-show="currentTab === 'admin'" x-cloak>
-      <!-- Log Masuk Admin -->
       <div x-show="!adminLoggedIn" class="max-w-sm mx-auto bg-white rounded-3xl shadow-sm border border-slate-100 p-6 text-center">
         <div class="w-12 h-12 bg-sky-50 text-sky-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
           <i class="fa-solid fa-lock text-lg"></i>
@@ -313,7 +364,6 @@
         </form>
       </div>
 
-      <!-- Dashboard Admin -->
       <div x-show="adminLoggedIn" class="space-y-4">
         <div class="flex items-center justify-between">
           <div>
@@ -350,7 +400,6 @@
           </div>
         </div>
 
-        <!-- Suis Pilihan Paparan Admin: Senarai vs Kalendar vs Borang Tempahan Baru -->
         <div class="grid grid-cols-3 gap-1 bg-slate-200/60 p-1 rounded-2xl text-xs">
           <button @click="adminViewMode = 'list'"
                   :class="adminViewMode === 'list' ? 'bg-white text-slate-900 shadow-sm font-bold' : 'text-slate-500 font-medium'"
@@ -372,7 +421,7 @@
           </button>
         </div>
 
-        <!-- ================= MOD ADMIN 1: SENARAI (LIST VIEW) ================= -->
+        <!-- MOD ADMIN 1: SENARAI -->
         <div x-show="adminViewMode === 'list'" class="space-y-3">
           <div class="flex space-x-1.5 overflow-x-auto pb-1">
             <button @click="adminFilter = 'Semua'" :class="adminFilter === 'Semua' ? 'bg-sky-600 text-white' : 'bg-white text-slate-600 border border-slate-200'" class="px-3 py-1 rounded-full text-xs font-semibold transition">Semua</button>
@@ -436,7 +485,7 @@
           </div>
         </div>
 
-        <!-- ================= MOD ADMIN 2: KALENDAR BULANAN ================= -->
+        <!-- MOD ADMIN 2: KALENDAR -->
         <div x-show="adminViewMode === 'calendar'" class="space-y-4" x-cloak>
           <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100">
             <div class="flex items-center justify-between mb-5 px-2">
@@ -492,7 +541,6 @@
             </div>
           </div>
 
-          <!-- Paparan Tempahan Mengikut Tarikh Terpilih -->
           <div class="bg-white rounded-3xl p-5 shadow-sm border border-slate-100 space-y-3">
             <div class="flex justify-between items-center pb-2 border-b border-slate-100">
               <div class="text-xs font-bold text-slate-800">
@@ -518,11 +566,9 @@
                   </div>
 
                   <div class="text-xs text-slate-800 font-semibold" x-text="item['Tajuk Program / Latihan'] || item.tajuk"></div>
-                  
                   <div class="text-[11px] text-slate-500">
                     <span x-text="item['Nama Pemohon'] || item.nama"></span> • <span x-text="item['Bahagian / Unit'] || item.bahagian || '-'"></span> (<span x-text="(item['Bil. Peserta'] || item.peserta) + ' Pax'"></span>)
                   </div>
-
                   <template x-if="item['No. Rujukan Surat'] || item.noRujukan">
                     <div class="text-[11px] text-emerald-700 font-mono font-medium">
                       <i class="fa-solid fa-file-lines mr-1"></i> Ruj: <span x-text="item['No. Rujukan Surat'] || item.noRujukan"></span>
@@ -541,7 +587,7 @@
           </div>
         </div>
 
-        <!-- ================= MOD ADMIN 3: BORANG TEMPAHAN BARU ================= -->
+        <!-- MOD ADMIN 3: BORANG TEMPAHAN BARU -->
         <div x-show="adminViewMode === 'form'" class="space-y-4" x-cloak>
           <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100">
             <div class="p-4 bg-slate-50 border-b border-slate-100 flex items-center justify-between">
@@ -571,7 +617,6 @@
                   </div>
                 </div>
 
-                <!-- Sesi Pilihan -->
                 <div>
                   <label class="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Pilih Slot Sesi</label>
                   <div class="space-y-2">
@@ -664,10 +709,8 @@
                   </div>
                 </div>
 
-                <!-- Maklumat Pemohon -->
                 <div class="space-y-3 pt-2">
                   <div class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Maklumat Permohonan</div>
-                  
                   <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <input type="text" x-model="form.nama" placeholder="Nama Penuh Pemohon" required
                       class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-2xl text-xs focus:bg-white focus:ring-2 focus:ring-sky-500 focus:outline-none transition">
@@ -729,7 +772,7 @@
     </div>
   </footer>
 
-  <!-- Logik Alpine.js -->
+  <!-- Alpine JS Script -->
   <script>
     function bookingApp() {
       return {
@@ -737,7 +780,7 @@
         
         currentTab: 'status',
         loading: false,
-        copiedType: '', // 'id' | 'email' | ''
+        copiedType: '',
         adminLoggedIn: false,
         adminPin: '',
         ADMIN_SECRET: 'UMKB13813',
@@ -766,6 +809,14 @@
         toast: { show: false, message: '', type: 'success' },
         successModal: { show: false, id: '', data: null },
         approvalModal: { show: false, targetRow: null, referenceNo: '' },
+        
+        statusPopup: {
+          show: false,
+          type: '',
+          title: '',
+          message: ''
+        },
+
         records: [],
         searchQuery: '',
         searchResult: null,
@@ -818,7 +869,6 @@
           setTimeout(() => { this.toast.show = false; }, 4000);
         },
 
-        // Helper untuk salin teks secara universal
         copyText(text, type = '') {
           try {
             const textArea = document.createElement("textarea");
@@ -974,7 +1024,6 @@ Tingkat 1, Menara DBKL 1`;
           const nowStr = new Date();
           const backupId = "TRN-" + this.formatDateISO(nowStr).replace(/-/g, "") + "-" + String(nowStr.getHours()).padStart(2, '0') + String(nowStr.getMinutes()).padStart(2, '0') + String(nowStr.getSeconds()).padStart(2, '0');
           
-          // Simpan snapshot borang untuk draf emel
           const formDataSnapshot = { ...this.form };
 
           try {
@@ -1059,18 +1108,51 @@ Tingkat 1, Menara DBKL 1`;
           this.dateError = '';
         },
 
+        // ================= LOGIK SEMAKAN STATUS KHUSUS TRN =================
         searchBooking() {
-          const q = this.searchQuery.trim().toLowerCase();
-          if (!q) return;
+          // Bersihkan input daripada ruang kosong dan jadikan huruf besar
+          const q = this.searchQuery.trim().replace(/\s+/g, '').toUpperCase();
+          
+          if (!q) {
+            this.showToast('Sila masukkan No. ID Tempahan (TRN)', 'error');
+            return;
+          }
+
+          // Carian khusus padanan TRN pada lajur rekod tempahan
           const found = this.records.find(r => {
-            const id = (r['ID Tempahan'] || r.id || '').toString().toLowerCase();
-            const tel = (r['No. Telefon'] || r.telefon || '').toString().toLowerCase();
-            return id.includes(q) || tel.includes(q);
+            const rawId = (r['ID Tempahan'] || r.id || r['ID'] || '').toString().trim().replace(/\s+/g, '').toUpperCase();
+            return rawId === q || rawId.includes(q);
           });
 
           if (found) {
             this.searchResult = found;
             this.searchNotFound = false;
+
+            // Papar Pop-up Status Berdasarkan Pilihan 2
+            const currentStat = (found['Status'] || found.status || '').toString().trim().toLowerCase();
+
+            if (currentStat === 'menunggu') {
+              this.statusPopup = {
+                show: true,
+                type: 'menunggu',
+                title: 'Status: MENUNGGU',
+                message: 'Status: Menunggu Tindakan. Pihak kami masih belum menerima no. rujukan surat permohonan tempahan daripada pihak tuan/puan. Sila kemukakan dokumen berkaitan untuk tindakan selanjutnya.'
+              };
+            } else if (currentStat === 'ditolak') {
+              this.statusPopup = {
+                show: true,
+                type: 'ditolak',
+                title: 'Status: DITOLAK',
+                message: 'Dukacita dimaklumkan, tempahan ini telah dibatalkan/ditolak secara automatik kerana surat permohonan tidak diterima dalam tempoh yang diperuntukkan.'
+              };
+            } else if (currentStat === 'lulus') {
+              this.statusPopup = {
+                show: true,
+                type: 'lulus',
+                title: 'Status: LULUS',
+                message: 'Tempahan berjaya! Tarikh dan masa tempahan telah disahkan. Sila semak emel anda untuk maklumat terperinci.'
+              };
+            }
           } else {
             this.searchResult = null;
             this.searchNotFound = true;
@@ -1118,7 +1200,7 @@ Tingkat 1, Menara DBKL 1`;
             const payload = { 
               action: 'updateStatus', 
               id: id, 
-              status: newStatus,
+              status: newStatus, 
               noRujukan: refNo || row['No. Rujukan Surat'] || row.noRujukan || '',
               catatan: row['Catatan Admin'] || row.catatan || ''
             };
@@ -1140,7 +1222,6 @@ Tingkat 1, Menara DBKL 1`;
           return this.records.filter(r => (r['Status'] || r.status) === this.adminFilter);
         },
 
-        // Kalendar Admin
         get currentCalMonthYear() {
           const dt = new Date(this.calYear, this.calMonth, 1);
           return dt.toLocaleDateString('ms-MY', { month: 'long', year: 'numeric' });
