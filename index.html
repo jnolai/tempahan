@@ -63,7 +63,23 @@
         </button>
       </nav>
 
-      <div class="flex items-center space-x-2">
+      <!-- Indikator Status Auto-Sync & Notifikasi -->
+      <div class="flex items-center space-x-2 sm:space-x-3">
+        <!-- Penunjuk Sync Visual -->
+        <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-slate-100/90 border border-slate-200/60 text-[11px] text-slate-500">
+          <span class="relative flex h-2 w-2">
+            <span x-show="isSyncing" class="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+            <span :class="isSyncing ? 'bg-sky-500' : 'bg-emerald-500'" class="relative inline-flex rounded-full h-2 w-2 transition-colors duration-300"></span>
+          </span>
+          <span class="font-medium hidden sm:inline" x-show="!isSyncing">
+            Disegerak: <strong class="text-slate-700 font-semibold" x-text="lastSyncTime"></strong>
+          </span>
+          <span class="font-medium text-sky-600 flex items-center gap-1" x-show="isSyncing" x-cloak>
+            <i class="fa-solid fa-arrows-rotate fa-spin text-[10px]"></i>
+            <span class="hidden sm:inline">Menyegerak...</span>
+          </span>
+        </div>
+
         <span class="w-9 h-9 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200 text-xs transition">
           <i class="fa-regular fa-bell"></i>
         </span>
@@ -371,8 +387,8 @@
             <p class="text-xs text-slate-400">Unit Maklumat Kewangan Berkomputer</p>
           </div>
           <div class="flex items-center space-x-2">
-            <button @click="fetchBookings" class="p-2.5 bg-white border border-slate-200 rounded-2xl text-xs text-slate-600 hover:bg-slate-50 shadow-sm" title="Muat Semula">
-              <i class="fa-solid fa-rotate" :class="{'fa-spin': loading}"></i>
+            <button @click="fetchBookings(false)" class="p-2.5 bg-white border border-slate-200 rounded-2xl text-xs text-slate-600 hover:bg-slate-50 shadow-sm" title="Muat Semula">
+              <i class="fa-solid fa-rotate" :class="{'fa-spin': isSyncing}"></i>
             </button>
             <button @click="adminLoggedIn = false" class="px-3 py-2 bg-rose-50 text-rose-600 rounded-2xl text-xs font-bold hover:bg-rose-100 transition">
               Keluar
@@ -780,6 +796,8 @@
         
         currentTab: 'status',
         loading: false,
+        isSyncing: false,
+        lastSyncTime: '--:--',
         copiedType: '',
         adminLoggedIn: false,
         adminPin: '',
@@ -839,7 +857,15 @@
           this.calYear = today.getFullYear();
           this.calMonth = today.getMonth();
 
-          this.fetchBookings();
+          // Panggilan data kali pertama
+          this.fetchBookings(false);
+
+          // Auto-sync setiap 1 minit (60,000 ms)
+          setInterval(() => {
+            if (!this.loading && !this.isSyncing) {
+              this.fetchBookings(true);
+            }
+          }, 60000);
         },
 
         formatDateISO(dateObj) {
@@ -915,7 +941,7 @@ Salam Sejahtera Tuan / Puan,
 Permohonan tempahan bilik latihan telah direkodkan dalam sistem iROOMA seperti butiran berikut:
 
 1. No. ID Tempahan : ${id}
-2. Tarikh          : ${tarikhFmt}
+​2. Tarikh          : ${tarikhFmt}
 3. Sesi Masa       : ${sesi}
 4. Tajuk Program   : ${tajuk}
 5. Bil. Peserta    : ${peserta} orang
@@ -985,25 +1011,51 @@ Tingkat 1, Menara DBKL 1`;
           if (this.adminPin === this.ADMIN_SECRET) {
             this.adminLoggedIn = true;
             this.adminPin = '';
-            this.fetchBookings();
+            this.fetchBookings(false);
           } else {
             this.showToast('PIN keselamatan tidak sah!', 'error');
           }
         },
 
-        async fetchBookings() {
+        async fetchBookings(isBackground = false) {
           if (!this.SCRIPT_URL || this.SCRIPT_URL.includes('PASTE_URL')) return;
-          this.loading = true;
+          
+          if (!isBackground) {
+            this.loading = true;
+          }
+          this.isSyncing = true;
+
           try {
             const res = await fetch(this.SCRIPT_URL);
             const json = await res.json();
             if (json.status === 'success') {
               this.records = json.records || [];
+
+              const now = new Date();
+              this.lastSyncTime = now.toLocaleTimeString('ms-MY', { 
+                hour: '2-digit', 
+                minute: '2-digit', 
+                second: '2-digit',
+                hour12: true 
+              });
+
+              // Kemaskini paparan hasil carian jika sedang dibuka
+              if (this.searchQuery && this.searchResult) {
+                const q = this.searchQuery.trim().replace(/\s+/g, '').toUpperCase();
+                const updated = this.records.find(r => {
+                  const rawId = (r['ID Tempahan'] || r.id || '').toString().trim().replace(/\s+/g, '').toUpperCase();
+                  return rawId === q;
+                });
+                if (updated) this.searchResult = updated;
+              }
             }
           } catch (e) {
-            console.error('Ralat mengambil data:', e);
+            console.error('Ralat semasa mengambil data:', e);
           } finally {
-            this.loading = false;
+            if (!isBackground) {
+              this.loading = false;
+            }
+            this.isSyncing = false;
           }
         },
 
@@ -1071,14 +1123,14 @@ Tingkat 1, Menara DBKL 1`;
 
             if (result.status === 'error') {
               this.showToast(result.message || 'Slot masa ini telah ditempah oleh pemohon lain.', 'error');
-              this.fetchBookings();
+              this.fetchBookings(false);
             } else {
               this.successModal.id = assignedId;
               this.successModal.data = formDataSnapshot;
               this.successModal.show = true;
               this.resetForm();
               this.adminViewMode = 'list';
-              this.fetchBookings();
+              this.fetchBookings(false);
             }
 
           } catch (err) {
@@ -1088,7 +1140,7 @@ Tingkat 1, Menara DBKL 1`;
             this.successModal.show = true;
             this.resetForm();
             this.adminViewMode = 'list';
-            this.fetchBookings();
+            this.fetchBookings(false);
           } finally {
             this.loading = false;
           }
@@ -1108,9 +1160,7 @@ Tingkat 1, Menara DBKL 1`;
           this.dateError = '';
         },
 
-        // ================= LOGIK SEMAKAN STATUS KHUSUS TRN =================
         searchBooking() {
-          // Bersihkan input daripada ruang kosong dan jadikan huruf besar
           const q = this.searchQuery.trim().replace(/\s+/g, '').toUpperCase();
           
           if (!q) {
@@ -1118,7 +1168,6 @@ Tingkat 1, Menara DBKL 1`;
             return;
           }
 
-          // Carian khusus padanan TRN pada lajur rekod tempahan
           const found = this.records.find(r => {
             const rawId = (r['ID Tempahan'] || r.id || r['ID'] || '').toString().trim().replace(/\s+/g, '').toUpperCase();
             return rawId === q || rawId.includes(q);
@@ -1128,7 +1177,6 @@ Tingkat 1, Menara DBKL 1`;
             this.searchResult = found;
             this.searchNotFound = false;
 
-            // Papar Pop-up Status Berdasarkan Pilihan 2
             const currentStat = (found['Status'] || found.status || '').toString().trim().toLowerCase();
 
             if (currentStat === 'menunggu') {
